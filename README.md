@@ -31,8 +31,7 @@
 
 Requires Home Assistant 2025.1 or newer. On Home Assistant 2026.11 and newer the Marketplace is built in.
 
-1. Open **Settings → Marketplace** and search for **Familienkalender**, then select **Download**.
-   *Not listed yet?* Use the link at the top, or in the Marketplace choose **Add from link** and enter `https://github.com/uh-si/familienkalender`.
+1. Use the link at the top, or open **Settings → Marketplace**, choose **Add from link** and enter `https://github.com/uh-si/familienkalender`. Then select **Install**.
 2. Go to **Settings → Devices & services → Add integration** and choose **Familienkalender**. Select your state and enter the names of your family members.
 3. Edit a dashboard, select **Add card** and search for **Familienkalender**. The card registers itself as a dashboard resource – nothing else to configure.
 
@@ -86,8 +85,7 @@ This is a community project. It is not made, tested or supported by the Home Ass
 
 ### Installation
 
-1. **Einstellungen → Marketplace** öffnen, nach **Familienkalender** suchen und **Herunterladen** wählen.
-   *Noch nicht im Katalog?* Den Link oben verwenden oder im Marketplace **Über Link hinzufügen** wählen und `https://github.com/uh-si/familienkalender` eingeben.
+1. Den Link oben verwenden oder **Einstellungen → Marketplace → Über Link hinzufügen** wählen und `https://github.com/uh-si/familienkalender` eingeben, dann **Installieren**.
 2. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Familienkalender**: Bundesland wählen und die Namen der Familienmitglieder eintragen.
 3. Dashboard bearbeiten → **Karte hinzufügen** → **Familienkalender**.
 

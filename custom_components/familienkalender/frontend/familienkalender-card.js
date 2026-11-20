@@ -3,7 +3,7 @@
  * Eigenständig, keine externen Abhängigkeiten.
  */
 (() => {
-const FK_CARD_VERSION = "1.7.0";
+const FK_CARD_VERSION = "1.7.1";
 
 /* ---------- Sprachen: Deutsch (Standard), Ungarisch, Englisch ---------- */
 const I18N = {
@@ -423,6 +423,10 @@ button { font:inherit; color:inherit; cursor:pointer; }
 .ag-item .bar { width:5px; border-radius:3px; flex:none; }
 .ag-item .when { width:52px; flex:none; font-size:13px; font-variant-numeric:tabular-nums; color:var(--secondary-text-color,#666); line-height:1.35; }
 .ag-item .what { flex:1; min-width:0; }
+.ag-del { all:unset; box-sizing:border-box; flex:none; align-self:center; width:38px; height:38px; margin:-4px -4px -4px 0; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--secondary-text-color,#777); }
+.ag-del svg { width:21px; height:21px; fill:currentColor; }
+.ag-del:hover, .ag-del:focus-visible { color:var(--fk-red); background:rgba(217,48,37,.1); }
 .ag-item .what .n { font-size:15px; font-weight:500; overflow:hidden; text-overflow:ellipsis; }
 .ag-item .what .m { font-size:12.5px; color:var(--secondary-text-color,#777); margin-top:3px; display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
 .tag { display:inline-flex; align-items:center; gap:4px; font-size:11.5px; padding:1px 8px 1px 3px; border-radius:10px; background:var(--fk-bg, var(--card-background-color,#fff)); }
@@ -647,6 +651,7 @@ button { font:inherit; color:inherit; cursor:pointer; }
 `;
 
 const ICON = {
+  trash: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4h-3.5z",
   search: "M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z",
   prev: "M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z",
   next: "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z",
@@ -1123,7 +1128,7 @@ class FamilienkalenderCard extends HTMLElement {
         ${hol ? `<span class="hn">${esc(trName(hol))}</span>` : ""}</div>`;
       for (const it of byDay.get(k)) {
         if (it.fer) { h += `<div class="ov-fer"><b>${esc(trName(it.fer.name))}</b><span>${T.listUntil(addDays(it.fer._e, -1))}</span></div>`; continue; }
-        h += this._agItem(it.ev, day, this._whenList(it.ev, day));
+        h += this._agItem(it.ev, day, this._whenList(it.ev, day), null, true);
       }
     }
     return h + `</div>`;
@@ -1246,7 +1251,7 @@ class FamilienkalenderCard extends HTMLElement {
     if (inp && had) { inp.focus(); if (pos !== null) try { inp.setSelectionRange(pos, pos); } catch (_) {} }
   }
 
-  _agItem(ev, day, whenOverride, words) {
+  _agItem(ev, day, whenOverride, words, trash) {
     const cols = this._colors(ev);
     let when;
     if (ev.all_day) when = T.alldayAgenda;
@@ -1265,6 +1270,7 @@ class FamilienkalenderCard extends HTMLElement {
       <div class="when">${when}</div>
       <div class="what"><div class="n">${title}</div>
         <div class="m">${tags}${ev.location ? `<span>· ${this._hl(ev.location, W)}</span>` : ""}${rec}</div></div>
+      ${trash && this._perm.delete ? `<button class="ag-del" data-a="ov-del" data-k="${esc(ev.key)}" title="${esc(T.del)}" aria-label="${esc(T.del)}">${svg(ICON.trash)}</button>` : ""}
     </div>`;
   }
 
@@ -1470,7 +1476,8 @@ class FamilienkalenderCard extends HTMLElement {
       foot = `<span class="sp"></span><button class="btn" data-a="scope-cancel">${T.cancel}</button>`;
     } else if (d.mode === "del") {
       title = T.delQ;
-      body = d.ev.recurrence ? `<p class="hint">${T.delRec(esc(d.ev.title))}</p>` : `<p class="hint">${T.delFinal(esc(d.ev.title))}</p>`;
+      body = (d.ev.recurrence ? `<p class="hint">${T.delRec(esc(d.ev.title))}</p>` : `<p class="hint">${T.delFinal(esc(d.ev.title))}</p>`)
+        + `<p class="hint" style="margin-top:4px">${esc(longDate(d.ev._s))}${d.ev.all_day ? "" : ` · ${hm(d.ev._s)}${T.uhr}`}</p>`;
       foot = d.ev.recurrence
         ? `<button class="btn" data-a="close">${T.cancel}</button><span class="sp"></span><button class="btn del" data-a="del-one">${T.onlyThis}</button><button class="btn pri" style="background:var(--fk-red)" data-a="del-all">${T.wholeSeries}</button>`
         : `<span class="sp"></span><button class="btn" data-a="close">${T.cancel}</button><button class="btn pri" style="background:var(--fk-red)" data-a="del-all">${T.del}</button>`;
@@ -1987,7 +1994,7 @@ class FamilienkalenderCard extends HTMLElement {
     if (this._suppressClick && (a === "open" || a === "slot")) return; // Klick direkt nach dem Ziehen ignorieren
     const W = ["add", "add-on", "slot", "save", "edit", "dup", "scope-one", "scope-all", "import", "do-import", "pick", "pick-all", "who-next"];
     if (W.includes(a) && !this._perm.write) return;
-    if (["del", "del-one", "del-all"].includes(a) && !this._perm.delete) return;
+    if (["del", "del-one", "del-all", "ov-del"].includes(a) && !this._perm.delete) { if (a === "ov-del") e.stopPropagation(); return; }
     switch (a) {
       case "prev": return this._move(-1);
       case "next": return this._move(1);
@@ -2062,6 +2069,12 @@ class FamilienkalenderCard extends HTMLElement {
       }
       case "toast-act": { const act = this._toastAct; this._toastMsg = null; this._toastAct = null; clearTimeout(this._tt); this._render(); if (act) act.fn(); return; }
       case "del": this._dlg = { mode: "del", ev: d.ev }; return this._render();
+      case "ov-del": {
+        e.stopPropagation(); // nicht zusätzlich den Termin öffnen
+        const ev = this._events.find((x) => x.key === el.dataset.k);
+        if (ev) { this._dlg = { mode: "del", ev, from: "list" }; this._render(); }
+        return;
+      }
       case "del-one": return this._delete(true);
       case "del-all": return this._delete(false);
       case "import": this._menu = false; this._dlg = { mode: "import", users: [] }; return this._render();

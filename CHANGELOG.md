@@ -1,5 +1,14 @@
 # Changelog / Änderungsprotokoll
 
+## 1.7.1 – 20.11.2026
+
+### Neu
+- Übersicht: Mülleimer rechts neben jedem Termin zum direkten Löschen – mit Sicherheitsabfrage (Titel, Datum und Uhrzeit; bei Serien „Nur diesen“ oder „Ganze Serie“) und „Rückgängig“. Nur für Konten mit Löschrecht sichtbar.
+- Löschabfrage zeigt jetzt auch Datum und Uhrzeit des Termins.
+
+### Geändert
+- README: Installation über „Über Link hinzufügen“ im Marketplace.
+
 ## 1.7.0 – 20.11.2026
 
 ### Neu
