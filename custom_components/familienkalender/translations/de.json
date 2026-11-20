@@ -1,0 +1,203 @@
+{
+  "title": "Familienkalender",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Familienkalender einrichten",
+        "description": "Wähle dein Bundesland. Daraus ergeben sich die Feiertage und Schulferien.",
+        "data": {
+          "state": "Bundesland",
+          "show_holidays": "Feiertage anzeigen",
+          "show_school_holidays": "Schulferien anzeigen (werden automatisch aktualisiert)"
+        }
+      },
+      "personen": {
+        "title": "Personen",
+        "description": "Trage bis zu 10 Personen ein. Leere Felder bleiben frei und können später unter „Konfigurieren“ ergänzt werden. Farben, Sprache und Benachrichtigungen stellst du ebenfalls dort ein.",
+        "data": {
+          "name_1": "Person 1",
+          "name_2": "Person 2",
+          "name_3": "Person 3",
+          "name_4": "Person 4",
+          "name_5": "Person 5",
+          "name_6": "Person 6",
+          "name_7": "Person 7",
+          "name_8": "Person 8",
+          "name_9": "Person 9",
+          "name_10": "Person 10"
+        }
+      }
+    },
+    "error": {
+      "keine_person": "Bitte mindestens eine Person eintragen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Familienkalender",
+        "menu_options": {
+          "personen": "Personen (Name, Farbe, aktiv, Push-Benachrichtigung, Sprache)",
+          "berechtigungen": "Berechtigungen (wer darf lesen, schreiben, löschen)",
+          "feiertage": "Feiertage & Schulferien",
+          "erinnerungen": "Erinnerungen",
+          "wandtablet": "Wandtablet-Modus (pro Konto)",
+          "sicherung": "Automatische Sicherung (ICS)",
+          "sprachansage": "Sprachansage (Lautsprecher & Alexa)"
+        }
+      },
+      "personen": {
+        "title": "Person auswählen",
+        "description": "Welche Person möchtest du bearbeiten? (✓ = aktiv, ✗ = inaktiv, — = frei) Der Eintrag 🏠 Haushalt ist für Termine ohne bestimmte Person (z. B. Müll, Handwerker).",
+        "data": {
+          "slot": "Person"
+        }
+      },
+      "person": {
+        "title": "Person {slot} bearbeiten",
+        "description": "Nur aktive Personen werden im Kalender angezeigt. Für Push-Erinnerungen den Benachrichtigungsdienst des Handys wählen (z. B. notify.mobile_app_…). Zusätzlich zur Push-Nachricht kann die Erinnerung angesagt werden – auf Lautsprechern (Mediaplayer) oder auf Alexa. Für Alexa die Entität „… Announce“ der Integration „Alexa Devices“ wählen (oder notify.alexa_media_… bei „Alexa Media Player“).",
+        "data": {
+          "name": "Name",
+          "color": "Farbe",
+          "active": "Aktiv",
+          "notify": "Push-Benachrichtigung an",
+          "lang": "Sprache der Push-Benachrichtigungen",
+          "speak_media": "Sprachansage auf Lautsprecher (Mediaplayer)",
+          "speak_alexa": "Sprachansage auf Alexa (Echo)"
+        }
+      },
+      "berechtigungen": {
+        "title": "Berechtigungen",
+        "description": "Lege für jedes Home-Assistant-Konto fest, was es im Kalender darf. Administratoren haben immer volle Rechte und erscheinen hier nicht. „Standard“ gilt für Konten, die später neu hinzukommen.",
+        "data": {
+          "default_permission": "Standard für neue Konten"
+        }
+      },
+      "feiertage": {
+        "title": "Feiertage & Schulferien",
+        "data": {
+          "state": "Bundesland",
+          "show_holidays": "Feiertage anzeigen",
+          "show_school_holidays": "Schulferien anzeigen",
+          "assumption_by": "Mariä Himmelfahrt als Feiertag (nur Bayern, gilt in katholisch geprägten Gemeinden)"
+        }
+      },
+      "erinnerungen": {
+        "title": "Erinnerungen",
+        "description": "Diese Erinnerungen sind bei neuen Terminen vorausgewählt. Ganztägige Termine erinnern zur eingestellten Uhrzeit.",
+        "data": {
+          "default_reminders": "Standard-Erinnerungen",
+          "allday_reminder_time": "Uhrzeit für ganztägige Termine"
+        }
+      },
+      "wandtablet": {
+        "title": "Wandtablet-Modus",
+        "description": "Für welche Home-Assistant-Konten soll der Wandtablet-Modus gelten? Dann springt der Kalender nach einer Zeit ohne Bedienung automatisch zurück auf „Heute“, zeigt eine große Uhr und wird nachts abgedunkelt.",
+        "data": {
+          "kiosk_timeout": "Zurück zu „Heute“ nach (Minuten ohne Bedienung)",
+          "kiosk_night": "Nachts abdunkeln",
+          "kiosk_night_start": "Abdunkeln ab",
+          "kiosk_night_end": "Abdunkeln bis",
+          "kiosk_solid": "Deckende Farben (gegen Grafikfehler)"
+        },
+        "data_description": {
+          "kiosk_solid": "Nur einschalten, wenn auf dem Wandtablet kleine hellere Kästchen erscheinen (manche Android-Tablets/Fully Kiosk). Die Karte nutzt dann deckende Farben; ein durchscheinender Theme-Hintergrund ist auf dem Tablet nicht mehr sichtbar."
+        }
+      },
+      "sicherung": {
+        "title": "Automatische Sicherung",
+        "description": "Einmal pro Woche werden alle Termine als ICS-Datei gespeichert in /config/familienkalender_backup/ics/ (zusätzlich zum normalen Home-Assistant-Backup).",
+        "data": {
+          "ics_backup": "Wöchentliche Sicherung",
+          "ics_backup_keep": "Anzahl aufbewahrter Sicherungen"
+        }
+      },
+      "sprachansage": {
+        "title": "Sprachansage",
+        "description": "Erinnerungen werden zusätzlich angesagt, wenn bei einer Person Lautsprecher oder Alexa-Geräte eingetragen sind (Konfigurieren → Personen). Während der Ruhezeit gibt es keine Ansagen.",
+        "data": {
+          "tts_engine": "Sprachausgabe für Lautsprecher (leer = automatisch)",
+          "quiet_start": "Ruhezeit ab",
+          "quiet_end": "Ruhezeit bis",
+          "test": "Nach dem Speichern eine Testansage abspielen"
+        }
+      }
+    },
+    "error": {
+      "name_fehlt": "Eine aktive Person braucht einen Namen."
+    }
+  },
+  "selector": {
+    "permission": {
+      "options": {
+        "read": "Nur lesen",
+        "write": "Schreiben (anlegen & bearbeiten)",
+        "full": "Schreiben + Löschen"
+      }
+    },
+    "language": {
+      "options": {
+        "de": "Deutsch",
+        "en": "Englisch",
+        "hu": "Ungarisch"
+      }
+    },
+    "reminder": {
+      "options": {
+        "0": "Zum Beginn / am Tag",
+        "5": "5 Minuten vorher",
+        "15": "15 Minuten vorher",
+        "30": "30 Minuten vorher",
+        "60": "1 Stunde vorher",
+        "120": "2 Stunden vorher",
+        "1440": "1 Tag vorher",
+        "2880": "2 Tage vorher",
+        "10080": "1 Woche vorher"
+      }
+    },
+    "state": {
+      "options": {
+        "bw": "Baden-Württemberg",
+        "by": "Bayern",
+        "be": "Berlin",
+        "bb": "Brandenburg",
+        "hb": "Bremen",
+        "hh": "Hamburg",
+        "he": "Hessen",
+        "mv": "Mecklenburg-Vorpommern",
+        "ni": "Niedersachsen",
+        "nw": "Nordrhein-Westfalen",
+        "rp": "Rheinland-Pfalz",
+        "sl": "Saarland",
+        "sn": "Sachsen",
+        "st": "Sachsen-Anhalt",
+        "sh": "Schleswig-Holstein",
+        "th": "Thüringen"
+      }
+    },
+    "slot": {
+      "options": {
+        "hh_on": "🏠 Haushalt ✓",
+        "hh_off": "🏠 Haushalt ✗"
+      }
+    }
+  },
+  "entity": {
+    "calendar": {
+      "holidays": {
+        "name": "Feiertage"
+      },
+      "school_holidays": {
+        "name": "Schulferien"
+      },
+      "household": {
+        "name": "Haushalt"
+      }
+    }
+  },
+  "device": {
+    "familienkalender": {
+      "name": "Familienkalender"
+    }
+  }
+}

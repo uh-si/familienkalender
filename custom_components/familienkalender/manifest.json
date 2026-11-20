@@ -1,0 +1,27 @@
+{
+  "domain": "familienkalender",
+  "name": "Familienkalender",
+  "after_dependencies": [
+    "lovelace",
+    "notify"
+  ],
+  "categories": [
+    "productivity_information.calendars_todos"
+  ],
+  "codeowners": [
+    "@uh-si"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "frontend",
+    "http",
+    "websocket_api"
+  ],
+  "documentation": "https://github.com/uh-si/familienkalender#readme",
+  "integration_type": "service",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/uh-si/familienkalender/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "1.7.0"
+}

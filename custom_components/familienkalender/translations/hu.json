@@ -1,0 +1,203 @@
+{
+  "title": "Családi naptár",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Családi naptár beállítása",
+        "description": "Válaszd ki a német szövetségi tartományt. Ez határozza meg az ünnepnapokat és az iskolai szüneteket.",
+        "data": {
+          "state": "Szövetségi tartomány",
+          "show_holidays": "Ünnepnapok megjelenítése",
+          "show_school_holidays": "Iskolai szünetek megjelenítése (automatikusan frissül)"
+        }
+      },
+      "personen": {
+        "title": "Személyek",
+        "description": "Adj meg legfeljebb 10 személyt. Az üres mezők szabadok maradnak, és később a „Konfigurálás” alatt pótolhatók. Ott állíthatod be a színeket, a nyelvet és az értesítéseket is.",
+        "data": {
+          "name_1": "1. személy",
+          "name_2": "2. személy",
+          "name_3": "3. személy",
+          "name_4": "4. személy",
+          "name_5": "5. személy",
+          "name_6": "6. személy",
+          "name_7": "7. személy",
+          "name_8": "8. személy",
+          "name_9": "9. személy",
+          "name_10": "10. személy"
+        }
+      }
+    },
+    "error": {
+      "keine_person": "Adj meg legalább egy személyt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Családi naptár",
+        "menu_options": {
+          "personen": "Személyek (név, szín, aktív, push-értesítés, nyelv)",
+          "berechtigungen": "Jogosultságok (ki olvashat, írhat, törölhet)",
+          "feiertage": "Ünnepnapok és iskolai szünetek",
+          "erinnerungen": "Emlékeztetők",
+          "wandtablet": "Fali tablet mód (fiókonként)",
+          "sicherung": "Automatikus mentés (ICS)",
+          "sprachansage": "Hangos bejelentés (hangszórók és Alexa)"
+        }
+      },
+      "personen": {
+        "title": "Személy kiválasztása",
+        "description": "Melyik személyt szeretnéd szerkeszteni? (✓ = aktív, ✗ = inaktív, — = szabad) A 🏠 Háztartás bejegyzés a nem konkrét személyhez kötött eseményekre szolgál (pl. szemétszállítás, szerelő).",
+        "data": {
+          "slot": "Személy"
+        }
+      },
+      "person": {
+        "title": "Személy szerkesztése ({slot})",
+        "description": "A naptárban csak az aktív személyek jelennek meg. Push-emlékeztetőhöz válaszd ki a telefon értesítési szolgáltatását (pl. notify.mobile_app_…). A push-értesítés mellett az emlékeztető hangosan is elhangozhat – hangszórón (médialejátszó) vagy Alexán. Alexához az „Alexa Devices” integráció „… Announce” entitását válaszd (vagy notify.alexa_media_… az „Alexa Media Player” esetén).",
+        "data": {
+          "name": "Név",
+          "color": "Szín",
+          "active": "Aktív",
+          "notify": "Push-értesítés küldése ide",
+          "lang": "A push-értesítések nyelve",
+          "speak_media": "Hangos bejelentés hangszórón (médialejátszó)",
+          "speak_alexa": "Hangos bejelentés Alexán (Echo)"
+        }
+      },
+      "berechtigungen": {
+        "title": "Jogosultságok",
+        "description": "Állítsd be, mit tehet az egyes Home Assistant-fiókok a naptárban. Az adminisztrátorok mindig teljes jogot kapnak, és itt nem jelennek meg. Az „Alapértelmezett” a később hozzáadott fiókokra vonatkozik.",
+        "data": {
+          "default_permission": "Alapértelmezett új fiókokhoz"
+        }
+      },
+      "feiertage": {
+        "title": "Ünnepnapok és iskolai szünetek",
+        "data": {
+          "state": "Szövetségi tartomány",
+          "show_holidays": "Ünnepnapok megjelenítése",
+          "show_school_holidays": "Iskolai szünetek megjelenítése",
+          "assumption_by": "Nagyboldogasszony ünnepnapként (csak Bajorország, a túlnyomóan katolikus településeken)"
+        }
+      },
+      "erinnerungen": {
+        "title": "Emlékeztetők",
+        "description": "Ezek az emlékeztetők új eseményeknél előre ki vannak jelölve. Az egész napos eseményeknél a beállított időpontban érkezik az emlékeztető.",
+        "data": {
+          "default_reminders": "Alapértelmezett emlékeztetők",
+          "allday_reminder_time": "Időpont egész napos eseményekhez"
+        }
+      },
+      "wandtablet": {
+        "title": "Fali tablet mód",
+        "description": "Mely Home Assistant-fiókoknál legyen bekapcsolva a fali tablet mód? Ekkor a naptár egy ideig tartó tétlenség után automatikusan visszaugrik a „Ma” nézetre, nagy órát mutat, és éjszaka elsötétül.",
+        "data": {
+          "kiosk_timeout": "Vissza a „Ma” nézetre ennyi perc tétlenség után",
+          "kiosk_night": "Éjszakai elsötétítés",
+          "kiosk_night_start": "Elsötétítés kezdete",
+          "kiosk_night_end": "Elsötétítés vége",
+          "kiosk_solid": "Fedő színek (grafikai hibák ellen)"
+        },
+        "data_description": {
+          "kiosk_solid": "Csak akkor kapcsold be, ha a fali tableten kis világosabb négyzetek jelennek meg (egyes Android tabletek/Fully Kiosk). A kártya ekkor fedő színeket használ; az áttetsző téma-háttér a tableten nem látszik."
+        }
+      },
+      "sicherung": {
+        "title": "Automatikus mentés",
+        "description": "Hetente egyszer az összes esemény ICS-fájlként mentésre kerül ide: /config/familienkalender_backup/ics/ (a szokásos Home Assistant-mentés mellett).",
+        "data": {
+          "ics_backup": "Heti mentés",
+          "ics_backup_keep": "Megőrzött mentések száma"
+        }
+      },
+      "sprachansage": {
+        "title": "Hangos bejelentés",
+        "description": "Az emlékeztetők hangosan is elhangzanak, ha egy személynél hangszóró vagy Alexa-eszköz van megadva (Konfigurálás → Személyek). A csendes időszakban nincs bejelentés.",
+        "data": {
+          "tts_engine": "Szövegfelolvasó a hangszórókhoz (üres = automatikus)",
+          "quiet_start": "Csendes időszak kezdete",
+          "quiet_end": "Csendes időszak vége",
+          "test": "Mentés után próbabejelentés lejátszása"
+        }
+      }
+    },
+    "error": {
+      "name_fehlt": "Az aktív személynek nevet kell adni."
+    }
+  },
+  "selector": {
+    "permission": {
+      "options": {
+        "read": "Csak olvasás",
+        "write": "Írás (létrehozás és szerkesztés)",
+        "full": "Írás + törlés"
+      }
+    },
+    "language": {
+      "options": {
+        "de": "Német",
+        "en": "Angol",
+        "hu": "Magyar"
+      }
+    },
+    "reminder": {
+      "options": {
+        "0": "Kezdéskor / az adott napon",
+        "5": "5 perccel előtte",
+        "15": "15 perccel előtte",
+        "30": "30 perccel előtte",
+        "60": "1 órával előtte",
+        "120": "2 órával előtte",
+        "1440": "1 nappal előtte",
+        "2880": "2 nappal előtte",
+        "10080": "1 héttel előtte"
+      }
+    },
+    "state": {
+      "options": {
+        "bw": "Baden-Württemberg",
+        "by": "Bajorország",
+        "be": "Berlin",
+        "bb": "Brandenburg",
+        "hb": "Bréma",
+        "hh": "Hamburg",
+        "he": "Hessen",
+        "mv": "Mecklenburg-Elő-Pomeránia",
+        "ni": "Alsó-Szászország",
+        "nw": "Észak-Rajna-Vesztfália",
+        "rp": "Rajna-vidék-Pfalz",
+        "sl": "Saar-vidék",
+        "sn": "Szászország",
+        "st": "Szász-Anhalt",
+        "sh": "Schleswig-Holstein",
+        "th": "Türingia"
+      }
+    },
+    "slot": {
+      "options": {
+        "hh_on": "🏠 Háztartás ✓",
+        "hh_off": "🏠 Háztartás ✗"
+      }
+    }
+  },
+  "entity": {
+    "calendar": {
+      "holidays": {
+        "name": "Ünnepnapok"
+      },
+      "school_holidays": {
+        "name": "Iskolai szünetek"
+      },
+      "household": {
+        "name": "Háztartás"
+      }
+    }
+  },
+  "device": {
+    "familienkalender": {
+      "name": "Családi naptár"
+    }
+  }
+}

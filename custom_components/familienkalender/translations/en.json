@@ -1,0 +1,203 @@
+{
+  "title": "Family calendar",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up family calendar",
+        "description": "Choose your German federal state. It determines public holidays and school holidays.",
+        "data": {
+          "state": "Federal state",
+          "show_holidays": "Show public holidays",
+          "show_school_holidays": "Show school holidays (updated automatically)"
+        }
+      },
+      "personen": {
+        "title": "People",
+        "description": "Enter up to 10 people. Empty fields stay free and can be added later under “Configure”, where you also set colours, language and notifications.",
+        "data": {
+          "name_1": "Person 1",
+          "name_2": "Person 2",
+          "name_3": "Person 3",
+          "name_4": "Person 4",
+          "name_5": "Person 5",
+          "name_6": "Person 6",
+          "name_7": "Person 7",
+          "name_8": "Person 8",
+          "name_9": "Person 9",
+          "name_10": "Person 10"
+        }
+      }
+    },
+    "error": {
+      "keine_person": "Please enter at least one person."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Family calendar",
+        "menu_options": {
+          "personen": "People (name, colour, active, push notification, language)",
+          "berechtigungen": "Permissions (who may read, write, delete)",
+          "feiertage": "Public & school holidays",
+          "erinnerungen": "Reminders",
+          "wandtablet": "Wall tablet mode (per account)",
+          "sicherung": "Automatic backup (ICS)",
+          "sprachansage": "Voice announcements (speakers & Alexa)"
+        }
+      },
+      "personen": {
+        "title": "Choose person",
+        "description": "Which person do you want to edit? (✓ = active, ✗ = inactive, — = free) The 🏠 Household entry is for events without a specific person (e.g. bins, tradespeople).",
+        "data": {
+          "slot": "Person"
+        }
+      },
+      "person": {
+        "title": "Edit person {slot}",
+        "description": "Only active people are shown in the calendar. For push reminders choose the phone's notification service (e.g. notify.mobile_app_…). In addition to the push message, the reminder can be announced – on speakers (media players) or on Alexa. For Alexa choose the “… Announce” entity of the “Alexa Devices” integration (or notify.alexa_media_… for “Alexa Media Player”).",
+        "data": {
+          "name": "Name",
+          "color": "Colour",
+          "active": "Active",
+          "notify": "Send push notification to",
+          "lang": "Language of push notifications",
+          "speak_media": "Voice announcement on speakers (media players)",
+          "speak_alexa": "Voice announcement on Alexa (Echo)"
+        }
+      },
+      "berechtigungen": {
+        "title": "Permissions",
+        "description": "Set what each Home Assistant account may do in the calendar. Administrators always have full rights and are not listed. “Default” applies to accounts added later.",
+        "data": {
+          "default_permission": "Default for new accounts"
+        }
+      },
+      "feiertage": {
+        "title": "Public & school holidays",
+        "data": {
+          "state": "Federal state",
+          "show_holidays": "Show public holidays",
+          "show_school_holidays": "Show school holidays",
+          "assumption_by": "Assumption Day as public holiday (Bavaria only, applies in predominantly Catholic municipalities)"
+        }
+      },
+      "erinnerungen": {
+        "title": "Reminders",
+        "description": "These reminders are preselected for new events. All-day events remind at the time set here.",
+        "data": {
+          "default_reminders": "Default reminders",
+          "allday_reminder_time": "Time for all-day events"
+        }
+      },
+      "wandtablet": {
+        "title": "Wall tablet mode",
+        "description": "Which Home Assistant accounts should use wall tablet mode? The calendar then jumps back to “Today” after a period without interaction, shows a large clock and dims at night.",
+        "data": {
+          "kiosk_timeout": "Back to “Today” after (minutes without interaction)",
+          "kiosk_night": "Dim at night",
+          "kiosk_night_start": "Dim from",
+          "kiosk_night_end": "Dim until",
+          "kiosk_solid": "Solid colours (against display glitches)"
+        },
+        "data_description": {
+          "kiosk_solid": "Only enable if small lighter boxes appear on the wall tablet (some Android tablets/Fully Kiosk). The card then uses solid colours; a see-through theme background is no longer visible on the tablet."
+        }
+      },
+      "sicherung": {
+        "title": "Automatic backup",
+        "description": "Once a week all events are saved as an ICS file in /config/familienkalender_backup/ics/ (in addition to the regular Home Assistant backup).",
+        "data": {
+          "ics_backup": "Weekly backup",
+          "ics_backup_keep": "Number of backups to keep"
+        }
+      },
+      "sprachansage": {
+        "title": "Voice announcements",
+        "description": "Reminders are also announced when speakers or Alexa devices are set for a person (Configure → People). No announcements during quiet hours.",
+        "data": {
+          "tts_engine": "Text-to-speech for speakers (empty = automatic)",
+          "quiet_start": "Quiet hours from",
+          "quiet_end": "Quiet hours until",
+          "test": "Play a test announcement after saving"
+        }
+      }
+    },
+    "error": {
+      "name_fehlt": "An active person needs a name."
+    }
+  },
+  "selector": {
+    "permission": {
+      "options": {
+        "read": "Read only",
+        "write": "Write (create & edit)",
+        "full": "Write + delete"
+      }
+    },
+    "language": {
+      "options": {
+        "de": "German",
+        "en": "English",
+        "hu": "Hungarian"
+      }
+    },
+    "reminder": {
+      "options": {
+        "0": "At start / on the day",
+        "5": "5 minutes before",
+        "15": "15 minutes before",
+        "30": "30 minutes before",
+        "60": "1 hour before",
+        "120": "2 hours before",
+        "1440": "1 day before",
+        "2880": "2 days before",
+        "10080": "1 week before"
+      }
+    },
+    "state": {
+      "options": {
+        "bw": "Baden-Württemberg",
+        "by": "Bavaria",
+        "be": "Berlin",
+        "bb": "Brandenburg",
+        "hb": "Bremen",
+        "hh": "Hamburg",
+        "he": "Hesse",
+        "mv": "Mecklenburg-Western Pomerania",
+        "ni": "Lower Saxony",
+        "nw": "North Rhine-Westphalia",
+        "rp": "Rhineland-Palatinate",
+        "sl": "Saarland",
+        "sn": "Saxony",
+        "st": "Saxony-Anhalt",
+        "sh": "Schleswig-Holstein",
+        "th": "Thuringia"
+      }
+    },
+    "slot": {
+      "options": {
+        "hh_on": "🏠 Household ✓",
+        "hh_off": "🏠 Household ✗"
+      }
+    }
+  },
+  "entity": {
+    "calendar": {
+      "holidays": {
+        "name": "Public holidays"
+      },
+      "school_holidays": {
+        "name": "School holidays"
+      },
+      "household": {
+        "name": "Household"
+      }
+    }
+  },
+  "device": {
+    "familienkalender": {
+      "name": "Family calendar"
+    }
+  }
+}
