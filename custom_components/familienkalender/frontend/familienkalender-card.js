@@ -3,7 +3,7 @@
  * Eigenständig, keine externen Abhängigkeiten.
  */
 (() => {
-const FK_CARD_VERSION = "1.7.1";
+const FK_CARD_VERSION = "1.7.2";
 
 /* ---------- Sprachen: Deutsch (Standard), Ungarisch, Englisch ---------- */
 const I18N = {

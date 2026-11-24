@@ -9,6 +9,9 @@
           "state": "Szövetségi tartomány",
           "show_holidays": "Ünnepnapok megjelenítése",
           "show_school_holidays": "Iskolai szünetek megjelenítése (automatikusan frissül)"
+        },
+        "data_description": {
+          "show_school_holidays": "Az iskolai szüneteket naponta egyszer letölti az internetről az OpenHolidays API-n keresztül (csak a tartomány kerül átküldésre, az események soha). Kikapcsolva maga a naptár nem használja az internetet; az ünnepnapokat mindig offline számolja."
         }
       },
       "personen": {
@@ -80,6 +83,9 @@
           "show_holidays": "Ünnepnapok megjelenítése",
           "show_school_holidays": "Iskolai szünetek megjelenítése",
           "assumption_by": "Nagyboldogasszony ünnepnapként (csak Bajorország, a túlnyomóan katolikus településeken)"
+        },
+        "data_description": {
+          "show_school_holidays": "Az iskolai szüneteket naponta egyszer letölti az internetről az OpenHolidays API-n keresztül (csak a tartomány kerül átküldésre, az események soha). Kikapcsolva maga a naptár nem használja az internetet; az ünnepnapokat mindig offline számolja."
         }
       },
       "erinnerungen": {

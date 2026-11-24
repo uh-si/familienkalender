@@ -1,6 +1,6 @@
 # Familienkalender
 
-**A shared family calendar for Home Assistant – for the wall tablet, the phone and the PC. Fully local, no cloud.**
+**A shared family calendar for Home Assistant – for the wall tablet, the phone and the PC. Your events stay in Home Assistant – no cloud account needed.**
 
 **[➜ Open in your Home Assistant Marketplace](https://my.home-assistant.io/redirect/marketplace_repository/?owner=uh-si&repository=familienkalender&category=integration)**
 
@@ -16,7 +16,7 @@
 - **Select several days** (drag with the mouse, or long-press and drag on touch screens) to create a multi-day event.
 - **Recurring events** (daily, weekly, monthly, yearly), change a single occurrence, drag & drop to move or resize, undo, birthdays with age.
 - **Reminders** as push notifications and as **voice announcements** on speakers (TTS) or Alexa devices, with quiet hours.
-- **Public holidays and school holidays** for every German state; school holidays update automatically.
+- **Public holidays and school holidays** for every German state. Public holidays are calculated offline; school holidays are downloaded from the OpenHolidays API (see [Privacy & internet access](#privacy--internet-access)).
 - **Permissions per Home Assistant user:** read only, write, or write and delete.
 - **Wall tablet mode** per user: clock and date in the header, dims at night, returns to today after inactivity.
 - **Light and dark mode** – follows your Home Assistant theme.
@@ -49,6 +49,16 @@ week_numbers: true
 language: de          # de | hu | en (default: device language)
 ```
 
+## Privacy & internet access
+
+Your events, people and settings are stored only in your Home Assistant and are never sent anywhere.
+
+The calendar uses the internet for **one thing only: school holidays**. When *Show school holidays* is enabled, it downloads them once a day (and after a restart) from the public [OpenHolidays API](https://www.openholidaysapi.org/) for the current and the next two years. The request contains only the country and state code (e.g. `DE-BY`) – no events, names or other personal data. The holidays are cached, so the calendar keeps showing them when the internet is unavailable.
+
+- Public holidays are calculated offline – no internet needed.
+- To use the calendar **without any internet access**, switch off *Show school holidays* under **Settings → Devices & services → Familienkalender → Configure → Holidays & school holidays**.
+- Push notifications and voice announcements use the notification and TTS services you choose in Home Assistant; whether those need the internet depends on the service.
+
 ## Updates and your data
 
 Updates are offered under **Settings → Updates**. Your events are stored in Home Assistant (`.storage/familienkalender.termine`) and are kept on every update. Weekly ICS backups are written to `/config/familienkalender_backup/`.
@@ -68,7 +78,7 @@ This is a community project. It is not made, tested or supported by the Home Ass
 
 ## Deutsch
 
-**Ein gemeinsamer Familienkalender für Home Assistant – fürs Wandtablet, Smartphone und den PC. Komplett lokal, ohne Cloud.**
+**Ein gemeinsamer Familienkalender für Home Assistant – fürs Wandtablet, Smartphone und den PC. Deine Termine bleiben in Home Assistant – kein Cloud-Konto nötig.**
 
 - Bis zu **10 Personen** mit eigener Farbe, dazu **Haushalt** für Termine ohne bestimmte Person.
 - Neuer Termin in Sekunden: **+** → **Für wen?** → fertig. Gemeinsame Termine erscheinen mehrfarbig.
@@ -76,7 +86,7 @@ This is a community project. It is not made, tested or supported by the Home Ass
 - **Mehrere Tage markieren** und daraus einen mehrtägigen Termin anlegen.
 - Wiederholungen, einzelne Termine einer Serie ändern, Verschieben per Ziehen, Rückgängig, Geburtstage mit Alter.
 - **Erinnerungen** per Push und **Sprachansage** (Lautsprecher oder Alexa), mit Ruhezeit.
-- **Feiertage und Schulferien** für jedes Bundesland, Schulferien aktualisieren sich automatisch.
+- **Feiertage und Schulferien** für jedes Bundesland. Feiertage werden offline berechnet, Schulferien von der OpenHolidays API geladen (siehe unten).
 - **Rechte pro Benutzer:** nur lesen, schreiben oder auch löschen.
 - **Wandtablet-Modus** mit Uhr, Nachtabdunklung und automatischer Rückkehr zu heute.
 - **Hell- und Dunkelmodus** passend zum Theme.
@@ -88,6 +98,10 @@ This is a community project. It is not made, tested or supported by the Home Ass
 1. Den Link oben verwenden oder **Einstellungen → Marketplace → Über Link hinzufügen** wählen und `https://github.com/uh-si/familienkalender` eingeben, dann **Installieren**.
 2. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Familienkalender**: Bundesland wählen und die Namen der Familienmitglieder eintragen.
 3. Dashboard bearbeiten → **Karte hinzufügen** → **Familienkalender**.
+
+### Datenschutz & Internetzugriff
+
+Termine, Personen und Einstellungen bleiben ausschließlich in deinem Home Assistant. Ins Internet geht der Kalender **nur für die Schulferien**: Ist *Schulferien anzeigen* eingeschaltet, lädt er sie einmal täglich (und nach einem Neustart) von der öffentlichen [OpenHolidays API](https://www.openholidaysapi.org/) – für das laufende und die zwei folgenden Jahre. Übermittelt wird nur das Bundesland (z. B. `DE-BY`), keine Termine oder Namen. Die Daten werden zwischengespeichert, fehlt das Internet, bleiben die Ferien sichtbar. Feiertage werden offline berechnet. Wer ganz ohne Internet arbeiten möchte, schaltet *Schulferien anzeigen* unter **Einstellungen → Geräte & Dienste → Familienkalender → Konfigurieren → Feiertage & Schulferien** aus. Push-Nachrichten und Sprachansagen laufen über die in Home Assistant gewählten Dienste.
 
 Die ausführliche Bedienungsanleitung liegt unter [`docs/Familienkalender-Anleitung.pdf`](docs/Familienkalender-Anleitung.pdf).
 

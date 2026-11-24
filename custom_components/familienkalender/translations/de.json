@@ -9,6 +9,9 @@
           "state": "Bundesland",
           "show_holidays": "Feiertage anzeigen",
           "show_school_holidays": "Schulferien anzeigen (werden automatisch aktualisiert)"
+        },
+        "data_description": {
+          "show_school_holidays": "Lädt die Schulferien einmal täglich aus dem Internet von der OpenHolidays API (übermittelt wird nur das Bundesland, keine Termine). Ausgeschaltet greift der Kalender selbst nicht auf das Internet zu; Feiertage werden immer offline berechnet."
         }
       },
       "personen": {
@@ -80,6 +83,9 @@
           "show_holidays": "Feiertage anzeigen",
           "show_school_holidays": "Schulferien anzeigen",
           "assumption_by": "Mariä Himmelfahrt als Feiertag (nur Bayern, gilt in katholisch geprägten Gemeinden)"
+        },
+        "data_description": {
+          "show_school_holidays": "Lädt die Schulferien einmal täglich aus dem Internet von der OpenHolidays API (übermittelt wird nur das Bundesland, keine Termine). Ausgeschaltet greift der Kalender selbst nicht auf das Internet zu; Feiertage werden immer offline berechnet."
         }
       },
       "erinnerungen": {

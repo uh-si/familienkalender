@@ -1,5 +1,11 @@
 # Changelog / Änderungsprotokoll
 
+## 1.7.2 – 24.11.2026
+
+### Geändert
+- Transparenz zum Internetzugriff: Der Kalender lädt nur die Schulferien aus dem Internet (OpenHolidays API, einmal täglich, übermittelt wird nur das Bundesland). Hinweis direkt am Schalter „Schulferien anzeigen“ (Einrichtung und Einstellungen), neuer Abschnitt „Datenschutz & Internetzugriff“ in README und Anleitung. Ausgeschaltet greift der Kalender selbst nicht auf das Internet zu.
+- Formulierung „komplett lokal“ präzisiert: Termine bleiben in Home Assistant.
+
 ## 1.7.1 – 20.11.2026
 
 ### Neu

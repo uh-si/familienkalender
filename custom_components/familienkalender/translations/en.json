@@ -9,6 +9,9 @@
           "state": "Federal state",
           "show_holidays": "Show public holidays",
           "show_school_holidays": "Show school holidays (updated automatically)"
+        },
+        "data_description": {
+          "show_school_holidays": "Downloads the school holidays once a day from the internet via the OpenHolidays API (only the state is sent, never your events). When switched off, the calendar itself does not access the internet; public holidays are always calculated offline."
         }
       },
       "personen": {
@@ -80,6 +83,9 @@
           "show_holidays": "Show public holidays",
           "show_school_holidays": "Show school holidays",
           "assumption_by": "Assumption Day as public holiday (Bavaria only, applies in predominantly Catholic municipalities)"
+        },
+        "data_description": {
+          "show_school_holidays": "Downloads the school holidays once a day from the internet via the OpenHolidays API (only the state is sent, never your events). When switched off, the calendar itself does not access the internet; public holidays are always calculated offline."
         }
       },
       "erinnerungen": {
