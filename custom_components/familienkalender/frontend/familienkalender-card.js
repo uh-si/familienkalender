@@ -3,7 +3,7 @@
  * Eigenständig, keine externen Abhängigkeiten.
  */
 (() => {
-const FK_CARD_VERSION = "1.7.2";
+const FK_CARD_VERSION = "1.8.0";
 
 /* ---------- Sprachen: Deutsch (Standard), Ungarisch, Englisch ---------- */
 const I18N = {
@@ -49,6 +49,16 @@ const I18N = {
     importTitle: "Termine importieren", importHint: "Wähle eine .ics-Datei (z. B. aus Google, Outlook oder Apple Kalender) und für wen die Termine eingetragen werden.",
     importBtn: "Importieren", importing: "Importiere…", importMenu: "Termine importieren (ICS)", exportMenu: "Termine exportieren (ICS)",
     exportTitle: "Termine exportieren", exportHint: "Erstellt eine .ics-Datei, die du in andere Kalender importieren kannst.", exportFrom: "Termine von", download: "Herunterladen",
+    printMenu: "Drucken / PDF", printTitle: "Kalenderblatt drucken", printPeople: "Personen", printColor: "Farbe",
+    printColors: ["Farbig", "Schwarz-weiß"], printBtn: "Drucken", pdfBtn: "PDF erstellen", pdfBusy: "Erstelle PDF …",
+    printLoading: "Vorschau wird erstellt …", pdfDone: "PDF gespeichert", pdfOpen: "PDF öffnen", pdfAgain: "Anderes Blatt",
+    pdfSendTo: (n) => `An ${n} senden`, pdfSent: (n) => `An ${n} gesendet`, pdfNoPush: "Zum Versenden aufs Handy in den Einstellungen bei einer Person einen Benachrichtigungsdienst eintragen.",
+    pdfStored: "Gespeichert in Home Assistant unter Medien › Familienkalender. Die letzten 10 Blätter bleiben erhalten.",
+    pdfFail: "PDF konnte nicht erstellt werden", sendFail: "Senden fehlgeschlagen", printedOn: (d) => `Gedruckt am ${d}`,
+    sheetWeek: (s, e) => s.getFullYear() !== e.getFullYear() ? `${s.getDate()}. ${I18N.de.months[s.getMonth()]} ${s.getFullYear()} – ${e.getDate()}. ${I18N.de.months[e.getMonth()]} ${e.getFullYear()}`
+      : s.getMonth() !== e.getMonth() ? `${s.getDate()}. ${I18N.de.months[s.getMonth()]} – ${e.getDate()}. ${I18N.de.months[e.getMonth()]} ${e.getFullYear()}`
+      : `${s.getDate()}.–${e.getDate()}. ${I18N.de.months[e.getMonth()]} ${e.getFullYear()}`,
+    sheetDay: (d) => `${d.getDate()}.${d.getMonth() + 1}.`,
     errTitle: "Bitte einen Titel eingeben.", errPerson: "Bitte mindestens eine Person wählen.", errDate: "Bitte ein Datum wählen.", errFile: "Bitte eine Datei wählen.",
     created: "Termin erstellt", saved: "Termin gespeichert", deleted: "Termin gelöscht", imported: (n) => `${n} Termin(e) importiert`,
     loadFail: "Termine konnten nicht geladen werden", saveFail: "Speichern fehlgeschlagen", deleteFail: "Löschen fehlgeschlagen",
@@ -61,6 +71,8 @@ const I18N = {
       not_setup: "Der Familienkalender ist nicht eingerichtet.", ics_invalid: "Das ist keine gültige ICS-Datei.",
       ics_too_big: "Die Datei ist zu groß (max. 3 MB).", ics_too_many: "Die Datei enthält zu viele Termine.", invalid: "Ungültige Eingabe.",
       birth_year: "Ungültiges Geburtsjahr.",
+      pdf_invalid: "Das PDF ist ungültig.", pdf_too_big: "Das PDF ist zu groß.", pdf_gone: "Das Kalenderblatt gibt es nicht mehr – bitte neu erstellen.",
+      no_push: "Für diese Person ist keine Push-Benachrichtigung eingerichtet.", push_failed: "Senden fehlgeschlagen – ist die Companion-App eingerichtet?",
     },
   },
   en: {
@@ -105,6 +117,16 @@ const I18N = {
     importTitle: "Import events", importHint: "Choose an .ics file (e.g. from Google, Outlook or Apple Calendar) and who the events are for.",
     importBtn: "Import", importing: "Importing…", importMenu: "Import events (ICS)", exportMenu: "Export events (ICS)",
     exportTitle: "Export events", exportHint: "Creates an .ics file you can import into other calendars.", exportFrom: "Events of", download: "Download",
+    printMenu: "Print / PDF", printTitle: "Print calendar sheet", printPeople: "People", printColor: "Colour",
+    printColors: ["Colour", "Black & white"], printBtn: "Print", pdfBtn: "Create PDF", pdfBusy: "Creating PDF …",
+    printLoading: "Creating preview …", pdfDone: "PDF saved", pdfOpen: "Open PDF", pdfAgain: "Another sheet",
+    pdfSendTo: (n) => `Send to ${n}`, pdfSent: (n) => `Sent to ${n}`, pdfNoPush: "To send it to a phone, add a notification service for a person in the settings.",
+    pdfStored: "Saved in Home Assistant under Media › Familienkalender. The last 10 sheets are kept.",
+    pdfFail: "Could not create the PDF", sendFail: "Sending failed", printedOn: (d) => `Printed on ${d}`,
+    sheetWeek: (s, e) => s.getFullYear() !== e.getFullYear() ? `${s.getDate()} ${I18N.en.months[s.getMonth()]} ${s.getFullYear()} – ${e.getDate()} ${I18N.en.months[e.getMonth()]} ${e.getFullYear()}`
+      : s.getMonth() !== e.getMonth() ? `${s.getDate()} ${I18N.en.months[s.getMonth()]} – ${e.getDate()} ${I18N.en.months[e.getMonth()]} ${e.getFullYear()}`
+      : `${s.getDate()}–${e.getDate()} ${I18N.en.months[e.getMonth()]} ${e.getFullYear()}`,
+    sheetDay: (d) => `${d.getDate()} ${I18N.en.monthsShort[d.getMonth()]}`,
     errTitle: "Please enter a title.", errPerson: "Please choose at least one person.", errDate: "Please choose a date.", errFile: "Please choose a file.",
     created: "Event created", saved: "Event saved", deleted: "Event deleted", imported: (n) => `${n} event(s) imported`,
     loadFail: "Could not load events", saveFail: "Saving failed", deleteFail: "Deleting failed", importFail: "Import failed", exportFail: "Export failed",
@@ -116,6 +138,8 @@ const I18N = {
       not_setup: "The family calendar is not set up.", ics_invalid: "This is not a valid ICS file.",
       ics_too_big: "The file is too large (max. 3 MB).", ics_too_many: "The file contains too many events.", invalid: "Invalid input.",
       birth_year: "Invalid year of birth.",
+      pdf_invalid: "The PDF is invalid.", pdf_too_big: "The PDF is too large.", pdf_gone: "This sheet no longer exists – please create it again.",
+      no_push: "No push notification is set up for this person.", push_failed: "Sending failed – is the companion app set up?",
     },
   },
   hu: {
@@ -160,6 +184,16 @@ const I18N = {
     importTitle: "Események importálása", importHint: "Válassz egy .ics fájlt (pl. Google, Outlook vagy Apple Naptárból), és add meg, kinek szólnak az események.",
     importBtn: "Importálás", importing: "Importálás…", importMenu: "Események importálása (ICS)", exportMenu: "Események exportálása (ICS)",
     exportTitle: "Események exportálása", exportHint: "Létrehoz egy .ics fájlt, amelyet más naptárakba importálhatsz.", exportFrom: "Kinek az eseményei", download: "Letöltés",
+    printMenu: "Nyomtatás / PDF", printTitle: "Naptárlap nyomtatása", printPeople: "Személyek", printColor: "Szín",
+    printColors: ["Színes", "Fekete-fehér"], printBtn: "Nyomtatás", pdfBtn: "PDF készítése", pdfBusy: "PDF készül …",
+    printLoading: "Előnézet készül …", pdfDone: "PDF elmentve", pdfOpen: "PDF megnyitása", pdfAgain: "Másik lap",
+    pdfSendTo: (n) => `Küldés neki: ${n}`, pdfSent: (n) => `Elküldve neki: ${n}`, pdfNoPush: "Ha telefonra szeretnéd küldeni, a beállításokban adj meg egy értesítési szolgáltatást valamelyik személynél.",
+    pdfStored: "Elmentve a Home Assistantban: Média › Familienkalender. Az utolsó 10 lap megmarad.",
+    pdfFail: "Nem sikerült a PDF-et elkészíteni", sendFail: "A küldés nem sikerült", printedOn: (d) => `Nyomtatva: ${d}`,
+    sheetWeek: (s, e) => s.getFullYear() !== e.getFullYear() ? `${s.getFullYear()}. ${I18N.hu.months[s.getMonth()]} ${s.getDate()}. – ${e.getFullYear()}. ${I18N.hu.months[e.getMonth()]} ${e.getDate()}.`
+      : s.getMonth() !== e.getMonth() ? `${s.getFullYear()}. ${I18N.hu.months[s.getMonth()]} ${s.getDate()}. – ${I18N.hu.months[e.getMonth()]} ${e.getDate()}.`
+      : `${s.getFullYear()}. ${I18N.hu.months[s.getMonth()]} ${s.getDate()}–${e.getDate()}.`,
+    sheetDay: (d) => `${I18N.hu.monthsShort[d.getMonth()]} ${d.getDate()}.`,
     errTitle: "Adj meg egy címet.", errPerson: "Válassz ki legalább egy személyt.", errDate: "Válassz dátumot.", errFile: "Válassz egy fájlt.",
     created: "Esemény létrehozva", saved: "Esemény mentve", deleted: "Esemény törölve", imported: (n) => `${n} esemény importálva`,
     loadFail: "Az eseményeket nem sikerült betölteni", saveFail: "A mentés nem sikerült", deleteFail: "A törlés nem sikerült",
@@ -172,6 +206,8 @@ const I18N = {
       not_setup: "A családi naptár nincs beállítva.", ics_invalid: "Ez nem érvényes ICS fájl.",
       ics_too_big: "A fájl túl nagy (max. 3 MB).", ics_too_many: "A fájl túl sok eseményt tartalmaz.", invalid: "Érvénytelen adat.",
       birth_year: "Érvénytelen születési év.",
+      pdf_invalid: "A PDF érvénytelen.", pdf_too_big: "A PDF túl nagy.", pdf_gone: "Ez a naptárlap már nem létezik – készítsd el újra.",
+      no_push: "Ennél a személynél nincs beállítva push-értesítés.", push_failed: "A küldés nem sikerült – be van állítva a társalkalmazás?",
     },
   },
 };
@@ -647,6 +683,25 @@ button { font:inherit; color:inherit; cursor:pointer; }
 .narrow .chips { padding:4px 10px 10px; }
 .narrow .add-top { display:none; }
 .narrow .tg-head .dn { font-size:17px; width:32px; height:32px; line-height:32px; }
+/* Drucken / PDF */
+.dlg-print { width:min(720px, 100%); }
+.prow { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+.pnav { display:flex; align-items:center; gap:2px; margin-left:auto; }
+.narrow .pnav { margin:0 auto; }
+.pnav span { min-width:150px; text-align:center; font-weight:600; font-size:15px; line-height:1.15; }
+.pnav small { display:block; font-weight:400; font-size:12px; color:var(--secondary-text-color,#777); }
+.ppv { background:var(--fk-bg2, var(--secondary-background-color,#f0f0f0)); border-radius:10px; padding:10px; margin-bottom:12px; display:flex; justify-content:center; }
+.ppv img { width:100%; max-width:620px; aspect-ratio:297/210; display:block; box-shadow:0 1px 6px rgba(0,0,0,.25); background:#fff; }
+.ppv-empty { width:100%; aspect-ratio:297/210; max-height:260px; display:flex; align-items:center; justify-content:center; color:var(--secondary-text-color,#777); font-size:14px; }
+.pseg { display:inline-flex; }
+.dlg-f .btn svg, .pacts .btn svg { width:18px; height:18px; fill:currentColor; vertical-align:-4px; margin-right:6px; }
+.pdone { display:flex; gap:12px; align-items:center; margin:4px 0 14px; }
+.pdone > svg { width:34px; height:34px; padding:7px; border-radius:50%; background:#2e7d32; fill:#fff; flex:none; box-sizing:border-box; }
+.pdone b { display:block; font-size:16px; } .pdone span { color:var(--secondary-text-color,#777); font-size:14px; }
+.pacts { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.pacts .btn { text-decoration:none; text-align:left; display:flex; align-items:center; justify-content:flex-start; }
+.pacts .btn:not(.pri) { border:1px solid var(--fk-line, var(--divider-color,#ddd)); }
+.pacts .btn.ok { color:#2e7d32; border-color:#2e7d32; }
 @media (max-width: 600px) { .ovl { padding:0; align-items:flex-end; } .dlg { border-radius:20px 20px 0 0; max-height:94vh; width:100%; } }
 `;
 
@@ -672,9 +727,327 @@ const ICON = {
   copy: "M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z",
   cake: "M12,6C13.11,6 14,5.1 14,4C14,3.62 13.9,3.27 13.71,2.97L12,0L10.29,2.97C10.1,3.27 10,3.62 10,4A2,2 0 0,0 12,6M16.6,16L15.53,14.92L14.45,16C13.15,17.29 10.87,17.3 9.56,16L8.5,14.92L7.4,16C6.75,16.64 5.88,17 4.96,17C4.23,17 3.56,16.77 3,16.39V21A1,1 0 0,0 4,22H20A1,1 0 0,0 21,21V16.39C20.44,16.77 19.77,17 19.04,17C18.12,17 17.25,16.64 16.6,16M18,9H13V7H11V9H6A3,3 0 0,0 3,12V13.54C3,14.62 3.88,15.5 4.96,15.5C5.5,15.5 6,15.3 6.34,14.93L8.5,12.8L10.61,14.93C11.35,15.67 12.64,15.67 13.38,14.93L15.5,12.8L17.65,14.93C18,15.3 18.5,15.5 19.03,15.5C20.12,15.5 21,14.62 21,13.54V12A3,3 0 0,0 18,9Z",
   lock: "M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z",
+  print: "M18,3H6V7H18M19,12A1,1 0 0,1 18,11A1,1 0 0,1 19,10A1,1 0 0,1 20,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z",
+  send: "M2,21L23,12L2,3V10L17,12L2,14V21Z",
+  pdf: "M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10.92,12.31C10.68,11.54 10.15,9.08 11.55,9.04C12.95,9 12.03,12.16 12.03,12.16C12.42,13.65 14.05,14.72 14.05,14.72C14.55,14.57 17.4,14.24 17,15.72C16.57,17.2 13.5,15.81 13.5,15.81C11.55,15.95 10.09,16.47 10.09,16.47C8.96,18.58 7.64,19.5 7.1,18.61C6.43,17.5 9.23,16.07 9.23,16.07C10.68,13.72 10.9,12.35 10.92,12.31Z",
+  open: "M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z",
   edit: "M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z",
 };
 const svg = (p) => `<svg viewBox="0 0 24 24"><path d="${p}"/></svg>`;
+
+/* ---------- Kalenderblatt (A4 quer) zum Drucken und als PDF ----------
+   Wird komplett selbst gezeichnet (Canvas, Maße in Millimetern). So sieht das Blatt
+   auf jedem Gerät gleich aus, braucht keine Zusatzbibliothek und kein Internet. */
+const FK_FONT = '"Segoe UI", Roboto, "Helvetica Neue", Arial, "DejaVu Sans", sans-serif';
+const FK_PAGE = { w: 297, h: 210 };
+const FK_DPI300 = 300 / 25.4;
+
+const fkSheet = (m) => {
+  const S = m.scale || FK_DPI300;
+  const W = FK_PAGE.w, H = FK_PAGE.h, M = 10;
+  const cv = document.createElement("canvas");
+  cv.width = Math.round(W * S); cv.height = Math.round(H * S);
+  const x = cv.getContext("2d");
+  x.scale(S, S);
+  const bw = !!m.bw;
+  const C = {
+    ink: "#1f2328", sub: "#6b7280", line: "#c9ced6", faint: "#e6e9ee", rule: "#e3e6eb",
+    red: bw ? "#1f2328" : "#d32f2f", we: "#f6f7f9", fer: bw ? "#eeeeee" : "#e2f3e5", ferInk: bw ? "#4b5563" : "#2e7d32",
+    other: "#b6bcc5", barBw: "#e4e4e4",
+  };
+  x.fillStyle = "#fff"; x.fillRect(0, 0, W, H);
+  const font = (sz, w = 400) => { x.font = `${w} ${sz}px ${FK_FONT}`; };
+  const fit = (t, w) => {
+    t = String(t || "");
+    if (w <= 0) return "";
+    if (x.measureText(t).width <= w) return t;
+    let lo = 0, hi = t.length;
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (x.measureText(t.slice(0, mid) + "…").width <= w) lo = mid; else hi = mid - 1; }
+    return lo ? t.slice(0, lo).trimEnd() + "…" : "";
+  };
+  const wrap = (t, w, max) => {
+    const words = String(t || "").split(/\s+/).filter(Boolean), lines = [];
+    let cur = "";
+    for (let i = 0; i < words.length; i++) {
+      const tryL = cur ? cur + " " + words[i] : words[i];
+      if (x.measureText(tryL).width <= w) { cur = tryL; continue; }
+      if (cur) lines.push(cur);
+      cur = words[i];
+      if (lines.length === max - 1) { lines.push(fit(words.slice(i).join(" "), w)); return lines; }
+    }
+    if (cur) lines.push(fit(cur, w));
+    return lines.slice(0, max);
+  };
+  const rr = (X, Y, w, h, r) => { x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, r); else x.rect(X, Y, w, h); };
+  const line = (x1, y1, x2, y2, col, lw = 0.2) => { x.strokeStyle = col; x.lineWidth = lw; x.beginPath(); x.moveTo(x1, y1); x.lineTo(x2, y2); x.stroke(); };
+
+  const sel = new Set(m.users.map((u) => u.id));
+  const uOf = (ev) => (ev.users || []).map((id) => m.users.find((u) => u.id === id)).filter(Boolean);
+  const colsOf = (ev) => { const c = uOf(ev).map((u) => u.color); return c.length ? c : ["#888888"]; };
+  // Kürzel für Schwarz-weiß; gleiche Kürzel (Mama/Max) werden auf drei Buchstaben verlängert
+  const iniMap = new Map();
+  m.users.forEach((u) => {
+    const nm = u.name || T.household, i2 = initials(nm);
+    const dup = m.users.some((v) => v !== u && initials(v.name || T.household) === i2);
+    const ch = Array.from(nm.replace(/\s+/g, ""));
+    iniMap.set(u.id, dup ? (ch[0] || "?").toLocaleUpperCase() + ch.slice(1, 3).join("").toLocaleLowerCase() : i2);
+  });
+  const ini = (ev) => uOf(ev).map((u) => iniMap.get(u.id)).join("·");
+  const evs = m.events.filter((ev) => (ev.users || []).some((id) => sel.has(id)));
+  const isBar = (ev) => ev.all_day || ev._e - ev._s >= 86400000;
+  const title = (ev) => ev.title + (ev.age ? ` (${ev.age})` : "");
+  const holOn = (d) => m.holidays.get(ymd(d)) || null;
+  const ferOn = (d) => { const t = sod(d); return m.ferien.find((f) => f._s <= t && f._e > t) || null; };
+  const red = (d) => d.getDay() === 0 || !!holOn(d);
+
+  // Spuren für ganztägige/mehrtägige Termine (wie in der Karte)
+  const lanesFor = (ws, n) => {
+    const we = addDays(ws, n);
+    const list = evs.filter((ev) => isBar(ev) && ev._s < we && ev._e > ws).map((ev) => {
+      const a = Math.max(0, Math.round((sod(ev._s) - ws) / 86400000));
+      const b = Math.min(n - 1, Math.round((sod(new Date(ev._e.getTime() - 1)) - ws) / 86400000));
+      return { ev, a, b, cl: ev._s < ws, cr: ev._e > we };
+    }).sort((p, q) => p.a - q.a || (q.b - q.a) - (p.b - p.a) || p.ev._s - q.ev._s);
+    const lanes = [];
+    for (const it of list) { let l = lanes.findIndex((e) => e < it.a); if (l < 0) { l = lanes.length; lanes.push(-1); } lanes[l] = it.b; it.lane = l; }
+    return { list, n: lanes.length };
+  };
+  const timedOn = (d) => { const s = sod(d), e = addDays(s, 1); return evs.filter((ev) => !isBar(ev) && ev._s < e && ev._e > s).sort((p, q) => p._s - q._s); };
+
+  const bar = (X, Y, w, h, it, fs) => {
+    const cols = colsOf(it.ev);
+    rr(X, Y, w, h, [it.cl ? 0 : 1, it.cr ? 0 : 1, it.cr ? 0 : 1, it.cl ? 0 : 1]);
+    x.save(); x.clip();
+    if (bw) { x.fillStyle = C.barBw; x.fillRect(X, Y, w, h); }
+    else cols.forEach((c, i) => { x.fillStyle = c; x.fillRect(X + (w * i) / cols.length, Y, w / cols.length + 0.05, h); });
+    x.restore();
+    if (bw) { rr(X, Y, w, h, [it.cl ? 0 : 1, it.cr ? 0 : 1, it.cr ? 0 : 1, it.cl ? 0 : 1]); x.strokeStyle = "#8a8f98"; x.lineWidth = 0.2; x.stroke(); }
+    font(fs, 600);
+    x.fillStyle = bw ? C.ink : (cols.length === 1 ? textOn(cols[0]) : "#fff");
+    if (!bw && cols.length > 1) { x.shadowColor = "rgba(0,0,0,.45)"; x.shadowBlur = 0.6; }
+    const label = (bw ? ini(it.ev) + "  " : "") + title(it.ev);
+    x.fillText(fit(label, w - 2), X + 1, Y + h / 2 + fs * 0.36);
+    x.shadowColor = "transparent"; x.shadowBlur = 0;
+  };
+  const dots = (X, yMid, ev, r) => {
+    const cols = colsOf(ev);
+    cols.forEach((c, i) => { x.fillStyle = c; x.beginPath(); x.arc(X + r + i * (r * 2 + 0.35), yMid, r, 0, Math.PI * 2); x.fill(); });
+    return cols.length * (r * 2 + 0.35) + 0.6;
+  };
+
+  // Kopf: Titel, Personen-Legende
+  font(9, 700); x.fillStyle = C.ink; x.fillText(m.title, M, 18.5);
+  let tx = M + x.measureText(m.title).width;
+  if (m.subtitle) { font(4.2, 500); x.fillStyle = C.sub; x.fillText(m.subtitle, tx + 4, 18.5); }
+  font(3.3, 500);
+  let lx = W - M;
+  [...m.users].reverse().forEach((u) => {
+    const name = u.name || T.household;
+    const tw = x.measureText(name).width;
+    lx -= tw; x.fillStyle = C.ink; x.fillText(name, lx, 17.8);
+    if (bw) {
+      font(2.3, 700); const it = iniMap.get(u.id); const iw = Math.max(4.4, x.measureText(it).width + 1.6);
+      lx -= iw + 1.2; rr(lx, 14.4, iw, 4.4, 2.2); x.strokeStyle = C.ink; x.lineWidth = 0.25; x.stroke();
+      x.fillStyle = C.ink; x.fillText(it, lx + (iw - x.measureText(it).width) / 2, 17.4); font(3.3, 500);
+    } else { lx -= 4.6; x.fillStyle = u.color; x.beginPath(); x.arc(lx + 1.8, 16.6, 1.8, 0, Math.PI * 2); x.fill(); }
+    lx -= 4.5;
+  });
+  // Fuß
+  font(2.6); x.fillStyle = C.sub;
+  x.fillText("Familienkalender", M, H - 4.5);
+  const pr = T.printedOn(new Date().toLocaleDateString(T.locale, { day: "numeric", month: "long", year: "numeric" }));
+  x.fillText(pr, W - M - x.measureText(pr).width, H - 4.5);
+
+  const top = 24, bottom = H - 9;
+  if (m.kind === "month") {
+    const kwW = m.weekNumbers ? 6 : 0;
+    const first = new Date(m.anchor.getFullYear(), m.anchor.getMonth(), 1);
+    const last = new Date(first.getFullYear(), first.getMonth() + 1, 0);
+    const s = sow(first);
+    const weeks = Math.ceil(((last - s) / 86400000 + 1) / 7);
+    const gx = M + kwW, cw = (W - 2 * M - kwW) / 7, hh = 6.5, rh = (bottom - top - hh) / weeks;
+    font(3.2, 600);
+    T.wdLong.forEach((wdn, i) => {
+      x.fillStyle = i === 6 ? C.red : C.sub;
+      x.fillText(fit(wdn.charAt(0).toLocaleUpperCase() + wdn.slice(1), cw - 3), gx + i * cw + 1.8, top + 4.6);
+    });
+    for (let w = 0; w < weeks; w++) {
+      const ws = addDays(s, w * 7), y0 = top + hh + w * rh;
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(ws, i), X = gx + i * cw;
+        const fer = ferOn(d);
+        x.fillStyle = fer ? C.fer : (i >= 5 ? C.we : "#fff");
+        if (d.getMonth() === first.getMonth() || fer) x.fillRect(X, y0, cw, rh);
+      }
+      if (kwW) { font(2.5, 500); x.fillStyle = C.sub; const k = String(isoWeek(ws)); x.fillText(k, M + (kwW - x.measureText(k).width) / 2 - 0.6, y0 + 4.8); }
+      const L = lanesFor(ws, 7), LH = 4.3, BT = 6.6;
+      const space = rh - BT - 1;
+      const maxL = Math.max(0, Math.min(L.n, Math.floor((space - 3.9) / LH), 4));
+      const hiddenBars = Array(7).fill(0);
+      L.list.forEach((it) => { if (it.lane >= maxL) for (let k = it.a; k <= it.b; k++) hiddenBars[k]++; });
+      for (let i = 0; i < 7; i++) {
+        const d = addDays(ws, i), X = gx + i * cw, other = d.getMonth() !== first.getMonth();
+        x.globalAlpha = other ? 0.45 : 1;
+        font(4.2, 700); x.fillStyle = other ? C.other : (red(d) ? C.red : C.ink);
+        const num = String(d.getDate()); x.fillText(num, X + 1.6, y0 + 5);
+        const nw = x.measureText(num).width;
+        const hol = holOn(d), fer = ferOn(d);
+        font(2.45, 600);
+        if (hol) { x.fillStyle = C.red; x.fillText(fit(trName(hol), cw - nw - 4.2), X + 2.9 + nw, y0 + 4.8); }
+        else if (fer && (sameDay(fer._s, d) || i === 0 || d.getDate() === 1)) { x.fillStyle = C.ferInk; x.fillText(fit(trName(fer.name), cw - nw - 4.2), X + 2.9 + nw, y0 + 4.8); }
+        const TL = 3.85, ty0 = y0 + BT + maxL * LH;
+        const room = Math.max(0, Math.floor((y0 + rh - 0.8 - ty0) / TL));
+        const items = timedOn(d), total = items.length + hiddenBars[i];
+        const shown = total <= room ? items : items.slice(0, Math.max(0, room - 1));
+        shown.forEach((ev, k) => {
+          const yy = ty0 + k * TL + 2.9;
+          let cx = X + 1.4;
+          if (bw) { font(2.3, 700); x.fillStyle = C.sub; const t = ini(ev); x.fillText(t, cx, yy); cx += x.measureText(t).width + 0.9; }
+          else cx += dots(cx, yy - 0.95, ev, 0.8);
+          font(2.65, 700); x.fillStyle = C.ink; const t = hm(ev._s); x.fillText(t, cx, yy); cx += x.measureText(t).width + 0.9;
+          font(2.65, 400); x.fillText(fit(title(ev), X + cw - 1 - cx), cx, yy);
+        });
+        if (total > shown.length) { font(2.4, 600); x.fillStyle = C.sub; x.fillText(T.moreN(total - shown.length), X + 1.6, ty0 + shown.length * TL + 2.9); }
+        x.globalAlpha = 1;
+      }
+      L.list.filter((it) => it.lane < maxL).forEach((it) => {
+        const other = addDays(ws, it.a).getMonth() !== first.getMonth() && addDays(ws, it.b).getMonth() !== first.getMonth();
+        x.globalAlpha = other ? 0.45 : 1;
+        bar(gx + it.a * cw + (it.cl ? 0 : 0.7), y0 + BT + it.lane * LH, (it.b - it.a + 1) * cw - (it.cl ? 0 : 0.7) - (it.cr ? 0 : 0.7), LH - 0.7, it, 2.65);
+        x.globalAlpha = 1;
+      });
+    }
+    // Raster
+    for (let w = 0; w <= weeks; w++) line(M, top + hh + w * rh, W - M, top + hh + w * rh, C.line, w === 0 || w === weeks ? 0.35 : 0.2);
+    for (let i = 0; i <= 7; i++) line(gx + i * cw, top + hh, gx + i * cw, bottom, C.line, i === 0 || i === 7 ? 0.35 : 0.2);
+    if (kwW) line(M, top + hh, M, bottom, C.line, 0.35);
+  } else {
+    // Woche: sieben Spalten, ganztägige Termine als Balken, darunter Termine und Linien für Notizen
+    const ws = sow(m.anchor), cw = (W - 2 * M) / 7, hh = 11;
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(ws, i), X = M + i * cw, fer = ferOn(d);
+      if (fer) { x.fillStyle = C.fer; x.fillRect(X, top, cw, bottom - top); }
+      else if (i >= 5) { x.fillStyle = C.we; x.fillRect(X, top, cw, bottom - top); }
+      font(3.6, 700); x.fillStyle = red(d) ? C.red : C.ink;
+      const wd = T.wdLong[i].charAt(0).toLocaleUpperCase() + T.wdLong[i].slice(1);
+      x.fillText(fit(wd, cw - 3), X + 1.8, top + 4.6);
+      font(3.1, 500); x.fillStyle = red(d) ? C.red : C.sub; x.fillText(T.sheetDay(d), X + 1.8, top + 8.6);
+      const dw = x.measureText(T.sheetDay(d)).width, hol = holOn(d);
+      font(2.45, 600);
+      if (hol) { x.fillStyle = C.red; x.fillText(fit(trName(hol), cw - dw - 5.4), X + 3.6 + dw, top + 8.5); }
+      else if (fer) { x.fillStyle = C.ferInk; x.fillText(fit(trName(fer.name), cw - dw - 5.4), X + 3.6 + dw, top + 8.5); }
+    }
+    const L = lanesFor(ws, 7), LH = 5.2, bt = top + hh + 1.2;
+    const maxL = Math.min(L.n, 5);
+    L.list.filter((it) => it.lane < maxL).forEach((it) => bar(M + it.a * cw + (it.cl ? 0 : 0.8), bt + it.lane * LH, (it.b - it.a + 1) * cw - (it.cl ? 0 : 0.8) - (it.cr ? 0 : 0.8), LH - 0.9, it, 2.9));
+    const hiddenBars = Array(7).fill(0);
+    L.list.forEach((it) => { if (it.lane >= maxL) for (let k = it.a; k <= it.b; k++) hiddenBars[k]++; });
+    const listTop = bt + maxL * LH + (maxL ? 1.5 : 0.5);
+    const RULE = 6.5;
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(ws, i), X = M + i * cw, iw = cw - 3.4;
+      let y = listTop;
+      const items = timedOn(d);
+      let k = 0;
+      for (; k < items.length; k++) {
+        const ev = items[k];
+        font(3.15, 600); const tl = wrap(title(ev), iw - 1.6, 2);
+        const h = 3.6 + tl.length * 3.7 + (ev.location ? 3.3 : 0) + 1.2;
+        if (y + h > bottom - 1 - (k < items.length - 1 ? 4 : 0)) break;
+        const cols = colsOf(ev);
+        if (bw) { x.fillStyle = "#9aa0a8"; x.fillRect(X + 1.4, y + 0.3, 0.8, h - 1.4); }
+        else cols.forEach((c, j) => { x.fillStyle = c; x.fillRect(X + 1.4, y + 0.3 + ((h - 1.4) * j) / cols.length, 0.9, (h - 1.4) / cols.length + 0.02); });
+        const tx2 = X + 3.2;
+        font(2.6, 700); x.fillStyle = C.sub;
+        const sameD = sameDay(ev._s, d) && sameDay(new Date(ev._e.getTime() - 1), d);
+        const when = sameD ? `${hm(ev._s)} – ${hm(ev._e)}` : (sameDay(ev._s, d) ? `${hm(ev._s)} →` : `→ ${hm(ev._e)}`);
+        x.fillText(fit(when + (bw ? "  " + ini(ev) : ""), iw - 1.6), tx2, y + 2.6);
+        font(3.15, 600); x.fillStyle = C.ink;
+        tl.forEach((t, j) => x.fillText(t, tx2, y + 6.2 + j * 3.7));
+        if (ev.location) { font(2.5, 400); x.fillStyle = C.sub; x.fillText(fit(ev.location, iw - 1.6), tx2, y + 5.6 + tl.length * 3.7); }
+        y += h + 0.6;
+      }
+      const more = items.length - k + hiddenBars[i];
+      if (more > 0) { font(2.5, 600); x.fillStyle = C.sub; x.fillText(T.moreN(more), X + 3.2, y + 2.6); y += 4; }
+      for (let ry = Math.max(y + 3, listTop + RULE) ; ry < bottom - 1; ry += RULE) line(X + 2, ry, X + cw - 2, ry, C.rule, 0.18);
+    }
+    line(M, top, W - M, top, C.line, 0.35); line(M, top + hh, W - M, top + hh, C.line, 0.25); line(M, bottom, W - M, bottom, C.line, 0.35);
+    for (let i = 0; i <= 7; i++) line(M + i * cw, top, M + i * cw, bottom, C.line, i === 0 || i === 7 ? 0.35 : 0.2);
+  }
+  return cv;
+};
+
+/* PDF (eine Seite A4 quer) aus dem gezeichneten Blatt – verlustfrei, wo der Browser es kann */
+const fkPdf = async (cv, title) => {
+  const w = cv.width, h = cv.height;
+  let img = null, filter = "";
+  if (typeof CompressionStream === "function") {
+    try {
+      const d = cv.getContext("2d").getImageData(0, 0, w, h).data;
+      const rgb = new Uint8Array(w * h * 3);
+      for (let i = 0, j = 0; i < d.length; i += 4) { rgb[j++] = d[i]; rgb[j++] = d[i + 1]; rgb[j++] = d[i + 2]; }
+      img = new Uint8Array(await new Response(new Blob([rgb]).stream().pipeThrough(new CompressionStream("deflate"))).arrayBuffer());
+      filter = "/FlateDecode";
+    } catch (e) { img = null; }
+  }
+  if (!img) {
+    const b = await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.92));
+    img = new Uint8Array(await b.arrayBuffer()); filter = "/DCTDecode";
+  }
+  const enc = new TextEncoder(), parts = [], offs = [];
+  let len = 0;
+  const put = (v) => { const b = typeof v === "string" ? enc.encode(v) : v; parts.push(b); len += b.length; };
+  const obj = (n, fn) => { offs[n] = len; put(`${n} 0 obj\n`); fn(); put("\nendobj\n"); };
+  const u16 = (s) => "<FEFF" + Array.from(String(s)).map((ch) => {
+    const c = ch.codePointAt(0);
+    if (c < 0x10000) return c.toString(16).padStart(4, "0");
+    const v = c - 0x10000;
+    return (0xd800 + (v >> 10)).toString(16) + (0xdc00 + (v & 0x3ff)).toString(16);
+  }).join("").toUpperCase() + ">";
+  const pw = 841.89, ph = 595.28, content = `q ${pw} 0 0 ${ph} 0 0 cm /Im0 Do Q`;
+  const n = new Date(), stamp = `${n.getFullYear()}${pad(n.getMonth() + 1)}${pad(n.getDate())}${pad(n.getHours())}${pad(n.getMinutes())}${pad(n.getSeconds())}`;
+  put("%PDF-1.4\n%âãÏÓ\n");
+  obj(1, () => put("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2, () => put("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"));
+  obj(3, () => put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>`));
+  obj(4, () => put(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
+  obj(5, () => { put(`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter ${filter} /Length ${img.length} >>\nstream\n`); put(img); put("\nendstream"); });
+  obj(6, () => put(`<< /Title ${u16(title)} /Creator (Familienkalender) /Producer (Familienkalender ${FK_CARD_VERSION}) /CreationDate (D:${stamp}) >>`));
+  const xref = len;
+  put(`xref\n0 7\n0000000000 65535 f \n${offs.slice(1).map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`);
+  put(`trailer\n<< /Size 7 /Root 1 0 R /Info 6 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  return new Blob(parts, { type: "application/pdf" });
+};
+
+/* Druckdialog des Browsers mit dem Blatt in einem unsichtbaren Rahmen öffnen */
+const fkPrint = (cv) => new Promise((resolve) => {
+  cv.toBlob((b) => {
+    const url = URL.createObjectURL(b);
+    const f = document.createElement("iframe");
+    f.setAttribute("aria-hidden", "true");
+    f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;pointer-events:none";
+    f.srcdoc = `<!DOCTYPE html><html><head><title>Familienkalender</title><style>@page{size:A4 landscape;margin:0}html,body{margin:0;padding:0}img{display:block;width:297mm;height:209mm;object-fit:contain}</style></head><body><img src="${url}"></body></html>`;
+    f.onload = () => {
+      const img = f.contentDocument && f.contentDocument.querySelector("img");
+      const go = () => {
+        try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { /* ignorieren */ }
+        setTimeout(() => { f.remove(); URL.revokeObjectURL(url); }, 60000);
+        resolve();
+      };
+      if (!img || img.complete) go(); else img.onload = go;
+    };
+    document.body.appendChild(f);
+  }, "image/png");
+});
+
+// In der Companion-App und in Kiosk-Browsern (WebView) öffnet sich kein Druckdialog
+const fkCanPrint = () => typeof window.print === "function" && !/Home ?Assistant\/|; wv\)|Fully ?Kiosk/i.test(navigator.userAgent || "");
+
+const fkB64 = (u8) => {
+  let s = "";
+  for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+  return btoa(s);
+};
 
 class FamilienkalenderCard extends HTMLElement {
   constructor() {
@@ -1397,6 +1770,7 @@ class FamilienkalenderCard extends HTMLElement {
 
   _menuHtml() {
     return `<div class="menu">
+      <button data-a="print">${svg(ICON.print)}${T.printMenu}</button>
       ${this._perm.write ? `<button data-a="import">${svg(ICON.imp)}${T.importMenu}</button>` : ""}
       <button data-a="export">${svg(ICON.exp)}${T.exportMenu}</button>
     </div>`;
@@ -1494,11 +1868,147 @@ class FamilienkalenderCard extends HTMLElement {
         <div class="fld"><span class="lbl2">${T.exportFrom}</span><div class="pills">
         ${this._users.map((u) => { const on = d.users.includes(u.id); return `<button class="pill upill ${on ? "on" : ""}" data-a="i-user" data-id="${esc(u.id)}" style="${on ? `background:${u.color};color:${textOn(u.color)}` : ""}"><i style="background:${on ? textOn(u.color) : u.color}"></i>${esc(this._uname(u))}</button>`; }).join("")}</div></div>`;
       foot = `<span class="sp"></span><button class="btn" data-a="close">${T.cancel}</button><button class="btn pri" data-a="do-export" ${d.users.length ? "" : "disabled"}>${T.download}</button>`;
+    } else if (d.mode === "print") {
+      title = T.printTitle;
+      ({ body, foot } = this._printDlg(d));
     }
-    return `<div class="ovl" data-a="ovl"><div class="dlg" role="dialog">
+    return `<div class="ovl" data-a="ovl"><div class="dlg ${d.mode === "print" ? "dlg-print" : ""}" role="dialog">
       <div class="dlg-h"><h2>${title}</h2>${close}</div>
       <div class="dlg-b">${body}</div>
       <div class="dlg-f">${foot}</div></div></div>`;
+  }
+
+  /* ----- Drucken / PDF ----- */
+  _printOpen() {
+    const base = this._view === "list" ? sod(new Date()) : (this._view === "month" ? this._date : this._sel);
+    const kind = this._view === "week" || this._view === "day" ? "week" : "month";
+    this._dlg = {
+      mode: "print", kind, anchor: kind === "month" ? new Date(base.getFullYear(), base.getMonth(), 1) : sow(base),
+      users: this._users.filter((u) => !this._hidden.has(u.id)).map((u) => u.id), bw: false, cache: {}, sent: {},
+    };
+    if (!this._dlg.users.length) this._dlg.users = this._users.map((u) => u.id);
+    return this._printLoad();
+  }
+
+  _printRange(d) {
+    if (d.kind === "month") { const s = sow(new Date(d.anchor.getFullYear(), d.anchor.getMonth(), 1)); return [s, addDays(s, 42)]; }
+    const s = sow(d.anchor); return [s, addDays(s, 7)];
+  }
+
+  async _printLoad() {
+    const d = this._dlg;
+    if (d.kind === "month") d.anchor = new Date(d.anchor.getFullYear(), d.anchor.getMonth(), 1);
+    const [s, e] = this._printRange(d), key = ymd(s) + ymd(e);
+    d.key = key; d.preview = null;
+    if (!d.cache[key]) {
+      this._render();
+      try {
+        const res = await this._hass.callWS({ type: "familienkalender/events", start: ymd(s), end: ymd(e) });
+        d.cache[key] = {
+          events: res.events.map((ev) => this._norm(ev)),
+          holidays: new Map((res.holidays || []).map((h) => [h.date, h.name])),
+          ferien: (res.school_holidays || []).map((f) => ({ ...f, _s: parseYmd(f.start), _e: addDays(parseYmd(f.end), 1) })),
+        };
+      } catch (err) { this._toast(this._err(err, T.loadFail)); return; }
+      if (this._dlg !== d || d.key !== key) return;
+    }
+    return this._printPreview();
+  }
+
+  _printLabel(d) {
+    if (d.kind === "month") return { title: T.monthTitle(T.months[d.anchor.getMonth()], d.anchor.getFullYear()), sub: "",
+      slug: `${d.anchor.getFullYear()}-${pad(d.anchor.getMonth() + 1)}` };
+    const s = sow(d.anchor), e = addDays(s, 6), th = addDays(s, 3);
+    return { title: T.sheetWeek(s, e), sub: T.kw(isoWeek(s)), slug: `${th.getFullYear()}-KW${pad(isoWeek(s))}` };
+  }
+
+  _printModel(d, scale) {
+    const data = d.cache[d.key], lb = this._printLabel(d);
+    return {
+      kind: d.kind, anchor: d.anchor, scale, bw: d.bw, weekNumbers: this._cfg.week_numbers !== false,
+      title: lb.title, subtitle: lb.sub,
+      users: this._users.filter((u) => d.users.includes(u.id)),
+      events: data.events,
+      holidays: this._showHol ? data.holidays : new Map(),
+      ferien: this._showFer ? data.ferien : [],
+    };
+  }
+
+  _printPreview() {
+    const d = this._dlg;
+    if (!d || !d.cache[d.key]) return this._render();
+    try { d.preview = d.users.length ? fkSheet(this._printModel(d, 2.2)).toDataURL("image/png") : null; } catch (e) { d.preview = null; }
+    return this._render();
+  }
+
+  _printDlg(d) {
+    let body, foot;
+    if (d.res) {
+      const pushers = this._users.filter((u) => u.push && u.active);
+      const href = new URL(d.res.url, location.href).href;
+      body = `<div class="pdone">${svg(ICON.check)}<div><b>${T.pdfDone}</b><span>${esc(d.res.label)}</span></div></div>
+        <div class="pacts">
+          <a class="btn pri" href="${esc(href)}" target="_blank" rel="noopener">${svg(ICON.open)}${T.pdfOpen}</a>
+          ${pushers.map((u) => `<button class="btn ${d.sent[u.id] ? "ok" : ""}" data-a="p-send" data-id="${esc(u.id)}" ${d.sending ? "disabled" : ""}>
+            ${svg(d.sent[u.id] ? ICON.check : ICON.send)}${esc(d.sent[u.id] ? T.pdfSent(this._uname(u)) : T.pdfSendTo(this._uname(u)))}</button>`).join("")}
+        </div>
+        ${pushers.length ? "" : `<p class="hint">${T.pdfNoPush}</p>`}
+        <p class="hint">${T.pdfStored}</p>`;
+      foot = `<button class="btn" data-a="p-again">${T.pdfAgain}</button><span class="sp"></span><button class="btn" data-a="close">${T.close}</button>`;
+      return { body, foot };
+    }
+    const lb = this._printLabel(d);
+    const busy = !!d.busy, ready = !!(d.cache[d.key] && d.users.length);
+    body = `<div class="prow">
+        <div class="seg">${[["month", T.month], ["week", T.week]].map(([k, l]) => `<button data-a="p-kind" data-v="${k}" class="${d.kind === k ? "on" : ""}">${l}</button>`).join("")}</div>
+        <div class="pnav"><button class="icon-btn" data-a="p-prev" title="${T.prev}">${svg(ICON.prev)}</button>
+          <span>${esc(lb.title)}${lb.sub ? `<small>${esc(lb.sub)}</small>` : ""}</span>
+          <button class="icon-btn" data-a="p-next" title="${T.next}">${svg(ICON.next)}</button></div>
+      </div>
+      <div class="ppv">${d.preview ? `<img src="${d.preview}" alt="">` : `<div class="ppv-empty">${d.users.length ? T.printLoading : T.errPerson}</div>`}</div>
+      <div class="fld"><span class="lbl2">${T.printPeople}</span><div class="pills">
+        ${this._users.map((u) => { const on = d.users.includes(u.id); return `<button class="pill upill ${on ? "on" : ""}" data-a="p-user" data-id="${esc(u.id)}" style="${on ? `background:${u.color};color:${textOn(u.color)}` : ""}"><i style="background:${on ? textOn(u.color) : u.color}"></i>${esc(this._uname(u))}</button>`; }).join("")}
+      </div></div>
+      <div class="fld"><span class="lbl2">${T.printColor}</span><div class="seg pseg">
+        ${T.printColors.map((l, i) => `<button data-a="p-bw" data-v="${i}" class="${(d.bw ? 1 : 0) === i ? "on" : ""}">${l}</button>`).join("")}
+      </div></div>`;
+    foot = `<button class="btn" data-a="close">${T.cancel}</button><span class="sp"></span>
+      ${fkCanPrint() ? `<button class="btn" data-a="p-print" ${ready && !busy ? "" : "disabled"}>${svg(ICON.print)}${T.printBtn}</button>` : ""}
+      <button class="btn pri" data-a="p-pdf" ${ready && !busy ? "" : "disabled"}>${svg(ICON.pdf)}${busy ? T.pdfBusy : T.pdfBtn}</button>`;
+    return { body, foot };
+  }
+
+  async _printDo(what) {
+    const d = this._dlg;
+    if (!d || !d.cache[d.key] || !d.users.length || d.busy) return;
+    if (what === "print") { try { await fkPrint(fkSheet(this._printModel(d, FK_DPI300))); } catch (e) { this._toast(T.pdfFail); } return; }
+    d.busy = true; this._render();
+    const lb = this._printLabel(d);
+    const label = lb.sub ? `${lb.sub} · ${lb.title}` : lb.title;
+    try {
+      // Erst in Druckqualität, bei sehr vollen Blättern etwas gröber (Übertragungsgrenze)
+      let blob = null;
+      for (const dpi of [300, 220, 160]) {
+        blob = await fkPdf(fkSheet(this._printModel(d, dpi / 25.4)), `Familienkalender – ${label}`);
+        if (blob.size <= 2.6 * 1024 * 1024) break;
+      }
+      const data = fkB64(new Uint8Array(await blob.arrayBuffer()));
+      const res = await this._hass.callWS({ type: "familienkalender/pdf_save", slug: lb.slug, data });
+      if (this._dlg !== d) return;
+      d.res = { ...res, label }; d.sent = {};
+    } catch (err) { this._toast(this._err(err, T.pdfFail)); }
+    d.busy = false; this._render();
+  }
+
+  async _printSend(id) {
+    const d = this._dlg;
+    if (!d || !d.res || d.sending) return;
+    d.sending = true; this._render();
+    try {
+      await this._hass.callWS({ type: "familienkalender/pdf_send", file: d.res.file, user: id, label: d.res.label });
+      d.sent[id] = true;
+    } catch (err) { this._toast(this._err(err, T.sendFail)); }
+    d.sending = false; this._render();
   }
 
   _newDraft(day, hour) {
@@ -2082,6 +2592,26 @@ class FamilienkalenderCard extends HTMLElement {
       case "i-user": { const id = el.dataset.id; d.users = d.users.includes(id) ? d.users.filter((x) => x !== id) : [...d.users, id]; return this._render(); }
       case "do-import": return this._import();
       case "do-export": return this._export();
+      case "print": this._menu = false; this._jump = null; return this._printOpen();
+      case "p-kind": {
+        if (d.kind === el.dataset.v) return;
+        d.kind = el.dataset.v;
+        const today = sod(new Date());
+        if (d.kind === "week") d.anchor = (today.getFullYear() === d.anchor.getFullYear() && today.getMonth() === d.anchor.getMonth()) ? sow(today) : sow(d.anchor.getDay() === 1 ? d.anchor : addDays(d.anchor, 7 - ((d.anchor.getDay() + 6) % 7)));
+        else { const th = addDays(sow(d.anchor), 3); d.anchor = new Date(th.getFullYear(), th.getMonth(), 1); }
+        return this._printLoad();
+      }
+      case "p-prev": case "p-next": {
+        const k = a === "p-next" ? 1 : -1;
+        d.anchor = d.kind === "month" ? new Date(d.anchor.getFullYear(), d.anchor.getMonth() + k, 1) : addDays(sow(d.anchor), 7 * k);
+        return this._printLoad();
+      }
+      case "p-user": { const id = el.dataset.id; d.users = d.users.includes(id) ? d.users.filter((x) => x !== id) : [...d.users, id]; return this._printPreview(); }
+      case "p-bw": d.bw = el.dataset.v === "1"; return this._printPreview();
+      case "p-print": return this._printDo("print");
+      case "p-pdf": return this._printDo("pdf");
+      case "p-send": return this._printSend(el.dataset.id);
+      case "p-again": d.res = null; d.sent = {}; return this._printPreview();
       case "close": this._dlg = null; return this._render();
       default:
     }

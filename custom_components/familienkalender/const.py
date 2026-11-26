@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 DOMAIN = "familienkalender"
-VERSION = "1.7.2"
+VERSION = "1.8.0"
 MAX_USERS = 10
 
 URL_BASE = "/familienkalender_static"

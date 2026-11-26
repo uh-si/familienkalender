@@ -10,6 +10,7 @@ from homeassistant.components import websocket_api
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.util import dt as dt_util
 
 from .const import (
     DOMAIN,
@@ -34,6 +35,7 @@ from .const import (
 from .holidays_de import holidays_between
 from .ics import IcsError, build_ics, parse_ics
 from .model import EventError, occurrence_payload
+from .pdf import MAX_PDF_B64, PdfError, async_push, decode_pdf, file_exists, pdf_dir, signed_path, write_pdf
 
 MAX_ICS_BYTES = 3 * 1024 * 1024
 MAX_EVENTS_RESPONSE = 3000
@@ -87,7 +89,7 @@ def _guard(handler, need: str | None = None):
                                           "Dafür hast du keine Berechtigung. Bitte wende dich an den Admin.")
                     return
             await handler(hass, connection, msg, entry, rt)
-        except (EventError, IcsError) as err:
+        except (EventError, IcsError, PdfError) as err:
             # Code wird von der Karte in die Gerätesprache übersetzt
             connection.send_error(msg["id"], f"fk_{getattr(err, 'code', 'invalid')}", str(err))
     return wrapper
@@ -95,7 +97,8 @@ def _guard(handler, need: str | None = None):
 
 @callback
 def async_register(hass: HomeAssistant) -> None:
-    for cmd in (ws_config, ws_events, ws_create, ws_update, ws_delete, ws_restore, ws_import, ws_export, ws_subscribe):
+    for cmd in (ws_config, ws_events, ws_create, ws_update, ws_delete, ws_restore, ws_import, ws_export, ws_subscribe,
+                ws_pdf_save, ws_pdf_send):
         websocket_api.async_register_command(hass, cmd)
 
 
@@ -107,7 +110,8 @@ async def ws_config(hass, connection, msg):
         o = entry.options
         kiosk_on = bool(connection.user and (o.get(OPT_KIOSK) or {}).get(connection.user.id))
         connection.send_result(msg["id"], {
-            "users": [{k: u[k] for k in ("id", "name", "color", "active", "household")} for u in rt.data.users],
+            "users": [{**{k: u[k] for k in ("id", "name", "color", "active", "household")}, "push": bool(u.get("notify"))}
+                      for u in rt.data.users],
             "kiosk": {"enabled": kiosk_on, "timeout": int(o.get(OPT_KIOSK_TIMEOUT, 5)),
                       "night": bool(o.get(OPT_KIOSK_NIGHT, True)), "night_start": o.get(OPT_KIOSK_NIGHT_START, "22:00"),
                       "night_end": o.get(OPT_KIOSK_NIGHT_END, "06:00"), "solid": bool(o.get(OPT_KIOSK_SOLID, False))},
@@ -244,3 +248,43 @@ def ws_subscribe(hass, connection, msg):
 
     connection.subscriptions[msg["id"]] = async_dispatcher_connect(hass, SIGNAL_CHANGED, forward)
     connection.send_result(msg["id"])
+
+
+@websocket_api.websocket_command({
+    vol.Required("type"): "familienkalender/pdf_save",
+    vol.Required("slug"): vol.All(str, vol.Length(min=1, max=40)),
+    vol.Required("data"): vol.All(str, vol.Length(max=MAX_PDF_B64)),
+})
+@websocket_api.async_response
+async def ws_pdf_save(hass, connection, msg):
+    """Kalenderblatt (PDF aus der Karte) im Medien-Ordner ablegen."""
+    async def run(hass, connection, msg, entry, rt):
+        raw = decode_pdf(msg["data"])
+        name = await hass.async_add_executor_job(write_pdf, pdf_dir(hass), msg["slug"], raw, dt_util.now())
+        connection.send_result(msg["id"], {
+            "file": name, "url": signed_path(hass, name, getattr(connection, "refresh_token_id", None)),
+        })
+    await _guard(run)(hass, connection, msg)
+
+
+@websocket_api.websocket_command({
+    vol.Required("type"): "familienkalender/pdf_send",
+    vol.Required("file"): vol.All(str, vol.Length(max=120)),
+    vol.Required("user"): vol.All(str, vol.Length(max=10)),
+    vol.Optional("label", default=""): vol.All(str, vol.Length(max=80)),
+})
+@websocket_api.async_response
+async def ws_pdf_send(hass, connection, msg):
+    """Link zum Kalenderblatt per Push an eine Person schicken."""
+    async def run(hass, connection, msg, entry, rt):
+        if not await hass.async_add_executor_job(file_exists, pdf_dir(hass), msg["file"]):
+            raise PdfError("Das Kalenderblatt gibt es nicht mehr.", "pdf_gone")
+        user = next((u for u in rt.data.users if u["id"] == msg["user"] and u["active"]), None)
+        if not user or not user.get("notify"):
+            raise PdfError("Für diese Person ist keine Push-Benachrichtigung eingerichtet.", "no_push")
+        path = signed_path(hass, msg["file"], getattr(connection, "refresh_token_id", None))
+        sent = await async_push(hass, user["notify"], user.get("lang", "de"), msg["label"] or msg["file"], path)
+        if not sent:
+            raise PdfError("Senden fehlgeschlagen.", "push_failed")
+        connection.send_result(msg["id"], {"sent": sent})
+    await _guard(run)(hass, connection, msg)

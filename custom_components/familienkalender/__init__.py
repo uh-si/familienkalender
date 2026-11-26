@@ -20,6 +20,7 @@ from homeassistant.helpers.typing import ConfigType
 from .backup import IcsBackup
 from .const import CARD_FILE, DOMAIN, OPT_BACKUP, OPT_BACKUP_KEEP, OPT_SHOW_SCHOOL, OPT_STATE, SIGNAL_CHANGED, URL_BASE, VERSION
 from .data import CalendarData
+from .pdf import PdfView
 from .reminders import ReminderService
 from .school import SchoolHolidays
 from .websocket import async_register
@@ -44,6 +45,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     ])
     add_extra_js_url(hass, f"{URL_BASE}/{CARD_FILE}?v={VERSION}")
     async_register(hass)
+    hass.http.register_view(PdfView(hass))
     return True
 
 

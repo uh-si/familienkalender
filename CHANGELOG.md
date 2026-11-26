@@ -1,5 +1,13 @@
 # Changelog / Änderungsprotokoll
 
+## 1.8.0 – 26.11.2026
+
+### Neu
+- Kalenderblatt drucken oder als PDF (Menü ⋮ → „Drucken / PDF“): Monat oder Woche auf A4 quer, mit Personen-Legende, Feiertagen, Ferien, mehrtägigen Terminen als Balken und in der Wochenansicht Linien für Notizen. Personen wählbar, farbig oder schwarz-weiß (dann mit Kürzeln), Vorschau im Dialog.
+- „Drucken“ öffnet im Browser am PC/Mac/iPad den Druckdialog mit den Netzwerkdruckern.
+- „PDF erstellen“ funktioniert auch in der Handy-App und am Wandtablet: Das PDF wird in Home Assistant unter Medien › Familienkalender gespeichert (die letzten 10 bleiben), lässt sich öffnen oder per Push aufs Handy schicken (Link 24 Stunden gültig).
+- Alles auf Deutsch, Ungarisch und Englisch; die Blätter entstehen ohne Internet.
+
 ## 1.7.2 – 24.11.2026
 
 ### Geändert

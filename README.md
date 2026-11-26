@@ -20,6 +20,7 @@
 - **Permissions per Home Assistant user:** read only, write, or write and delete.
 - **Wall tablet mode** per user: clock and date in the header, dims at night, returns to today after inactivity.
 - **Light and dark mode** – follows your Home Assistant theme.
+- **Print or PDF:** a month or week as an A4 calendar sheet (colour or black & white). Print from the browser, or create a PDF on any device – it is stored under *Media › Familienkalender* and can be sent to a phone as a push notification.
 - **ICS import and export**, automatic weekly ICS backup.
 - **Languages:** German, Hungarian and English – chosen automatically per device.
 
@@ -90,6 +91,7 @@ This is a community project. It is not made, tested or supported by the Home Ass
 - **Rechte pro Benutzer:** nur lesen, schreiben oder auch löschen.
 - **Wandtablet-Modus** mit Uhr, Nachtabdunklung und automatischer Rückkehr zu heute.
 - **Hell- und Dunkelmodus** passend zum Theme.
+- **Drucken oder PDF:** Monat oder Woche als A4-Kalenderblatt (farbig oder schwarz-weiß). Drucken im Browser oder auf jedem Gerät ein PDF erstellen – es liegt unter *Medien › Familienkalender* und lässt sich per Push aufs Handy schicken.
 - **ICS-Import/-Export** und wöchentliche Sicherung.
 - Sprachen: **Deutsch, Ungarisch, Englisch** – automatisch je Gerät.
 
