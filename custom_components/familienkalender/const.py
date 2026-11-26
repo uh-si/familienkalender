@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 DOMAIN = "familienkalender"
-VERSION = "1.8.0"
+VERSION = "2.0.0"
 MAX_USERS = 10
 
 URL_BASE = "/familienkalender_static"
@@ -36,6 +36,9 @@ OPT_QUIET_START = "quiet_start"      # Ruhezeit: keine Sprachansagen
 OPT_QUIET_END = "quiet_end"
 OPT_BACKUP = "ics_backup"            # wöchentliche ICS-Sicherung
 OPT_BACKUP_KEEP = "ics_backup_keep"
+OPT_TT = "timetable"                 # Stundenplan-Funktion anzeigen
+OPT_TT_BLOCKS = "timetable_blocks"   # Schulzeit in Wochen-/Tagesansicht zeigen
+OPT_TT_REMIND = "timetable_remind_time"  # Uhrzeit der Erinnerung am Vorabend
 
 HOUSEHOLD_ID = "hh"
 HOUSEHOLD_COLOR = "#78909c"

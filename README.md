@@ -1,10 +1,10 @@
-# Familienkalender
+# Familienkalender & Stundenplan
 
-**A shared family calendar for Home Assistant – for the wall tablet, the phone and the PC. Your events stay in Home Assistant – no cloud account needed.**
+**A shared family calendar and school timetable for Home Assistant – for the wall tablet, the phone and the PC. Your events stay in Home Assistant – no cloud account needed.**
 
 **[➜ Open in your Home Assistant Marketplace](https://my.home-assistant.io/redirect/marketplace_repository/?owner=uh-si&repository=familienkalender&category=integration)**
 
-![Familienkalender on tablet and phone](https://raw.githubusercontent.com/uh-si/familienkalender/main/images/overview.png)
+![Familienkalender & Stundenplan on tablet and phone](https://raw.githubusercontent.com/uh-si/familienkalender/main/images/overview.png)
 
 *Deutsche Beschreibung weiter unten.*
 
@@ -24,6 +24,19 @@
 - **ICS import and export**, automatic weekly ICS backup.
 - **Languages:** German, Hungarian and English – chosen automatically per device.
 
+### Timetable (new in 2.0)
+
+- **One timetable per child** – set up entirely in the card (🎓 icon): own bell schedule (times and number of periods, or copy a sibling's), optional **A/B weeks** and Saturday lessons.
+- **Subjects** with colour, short name, room, teacher and a note such as *"Bring PE kit"*. A list of common subjects in your language is created for the first timetable.
+- **Cancelled lessons and substitutes** for a single day, without changing the timetable.
+- **School and public holidays** are recognised automatically.
+- **School hours in the calendar:** a subtle block per child in week and day view.
+- **Evening reminder** by push notification: school hours, cancellations and the subjects' notes for the next day.
+- **Print or PDF** – A/B weeks side by side on one A4 sheet, several children in one PDF.
+- Card options `initial_view: timetable` and `timetable_person: <name>` for a dedicated timetable dashboard.
+
+![Timetable](https://raw.githubusercontent.com/uh-si/familienkalender/main/images/timetable.png)
+
 ![Features](https://raw.githubusercontent.com/uh-si/familienkalender/main/images/features.png)
 
 ![Wall tablet mode](https://raw.githubusercontent.com/uh-si/familienkalender/main/images/wall-tablet.png)
@@ -33,10 +46,10 @@
 Requires Home Assistant 2025.1 or newer. On Home Assistant 2026.11 and newer the Marketplace is built in.
 
 1. Use the link at the top, or open **Settings → Marketplace**, choose **Add from link** and enter `https://github.com/uh-si/familienkalender`. Then select **Install**.
-2. Go to **Settings → Devices & services → Add integration** and choose **Familienkalender**. Select your state and enter the names of your family members.
-3. Edit a dashboard, select **Add card** and search for **Familienkalender**. The card registers itself as a dashboard resource – nothing else to configure.
+2. Go to **Settings → Devices & services → Add integration** and choose **Familienkalender & Stundenplan**. Select your state and enter the names of your family members.
+3. Edit a dashboard, select **Add card** and search for **Familienkalender**. Timetables are created in the card itself (🎓 icon). The card registers itself as a dashboard resource – nothing else to configure.
 
-All settings (people, permissions, wall tablet mode, holidays, reminders, voice announcements, backup) are under **Settings → Devices & services → Familienkalender → Configure**.
+All settings (people, permissions, timetable, wall tablet mode, holidays, reminders, voice announcements, backup) are under **Settings → Devices & services → Familienkalender → Configure**.
 
 A detailed user guide (German) is in [`docs/Familienkalender-Anleitung.pdf`](docs/Familienkalender-Anleitung.pdf).
 
@@ -44,7 +57,8 @@ A detailed user guide (German) is in [`docs/Familienkalender-Anleitung.pdf`](doc
 
 ```yaml
 type: custom:familienkalender-card
-initial_view: month   # month | week | day
+initial_view: month   # month | week | day | timetable
+timetable_person: Lena  # with initial_view: timetable – show this person's timetable first
 first_hour: 7         # first hour shown in week/day view
 week_numbers: true
 language: de          # de | hu | en (default: device language)
@@ -62,7 +76,7 @@ The calendar uses the internet for **one thing only: school holidays**. When *Sh
 
 ## Updates and your data
 
-Updates are offered under **Settings → Updates**. Your events are stored in Home Assistant (`.storage/familienkalender.termine`) and are kept on every update. Weekly ICS backups are written to `/config/familienkalender_backup/`.
+Updates are offered under **Settings → Updates**. Your events and timetables are stored in Home Assistant (`.storage/familienkalender.termine`, `.storage/familienkalender.stundenplan`) and are kept on every update. Weekly ICS backups are written to `/config/familienkalender_backup/`.
 
 ## Uninstall
 
@@ -79,7 +93,7 @@ This is a community project. It is not made, tested or supported by the Home Ass
 
 ## Deutsch
 
-**Ein gemeinsamer Familienkalender für Home Assistant – fürs Wandtablet, Smartphone und den PC. Deine Termine bleiben in Home Assistant – kein Cloud-Konto nötig.**
+**Ein gemeinsamer Familienkalender mit Stundenplan für Home Assistant – fürs Wandtablet, Smartphone und den PC. Deine Termine bleiben in Home Assistant – kein Cloud-Konto nötig.**
 
 - Bis zu **10 Personen** mit eigener Farbe, dazu **Haushalt** für Termine ohne bestimmte Person.
 - Neuer Termin in Sekunden: **+** → **Für wen?** → fertig. Gemeinsame Termine erscheinen mehrfarbig.
@@ -95,11 +109,21 @@ This is a community project. It is not made, tested or supported by the Home Ass
 - **ICS-Import/-Export** und wöchentliche Sicherung.
 - Sprachen: **Deutsch, Ungarisch, Englisch** – automatisch je Gerät.
 
+### Stundenplan (neu in 2.0)
+
+- **Für jedes Kind ein eigener Stundenplan** – komplett in der Karte einrichtbar (Symbol 🎓): eigenes Stundenraster (Uhrzeiten, Anzahl der Stunden oder „wie bei …“), auf Wunsch **A/B-Wochen** und Samstag.
+- **Fächer** mit Farbe, Kürzel, Raum, Lehrkraft und Hinweis wie *„Sportsachen einpacken“*; beim ersten Plan wird eine Liste üblicher Fächer angelegt.
+- **Ausfall und Vertretung** für einzelne Tage, ohne den Plan zu ändern.
+- **Ferien und Feiertage** erkennt der Plan automatisch.
+- **Schulzeit im Kalender** als dezenter Block in Wochen- und Tagesansicht.
+- **Erinnerung am Vorabend** per Push mit Unterrichtszeit, Ausfällen und Hinweisen.
+- **Drucken oder PDF** – A/B-Wochen nebeneinander auf einem A4-Blatt, mehrere Kinder in einem PDF.
+
 ### Installation
 
 1. Den Link oben verwenden oder **Einstellungen → Marketplace → Über Link hinzufügen** wählen und `https://github.com/uh-si/familienkalender` eingeben, dann **Installieren**.
-2. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Familienkalender**: Bundesland wählen und die Namen der Familienmitglieder eintragen.
-3. Dashboard bearbeiten → **Karte hinzufügen** → **Familienkalender**.
+2. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Familienkalender & Stundenplan**: Bundesland wählen und die Namen der Familienmitglieder eintragen.
+3. Dashboard bearbeiten → **Karte hinzufügen** → **Familienkalender**. Stundenpläne legst du direkt in der Karte an (Symbol 🎓).
 
 ### Datenschutz & Internetzugriff
 

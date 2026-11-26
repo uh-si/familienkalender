@@ -1,6 +1,6 @@
 {
   "domain": "familienkalender",
-  "name": "Familienkalender",
+  "name": "Familienkalender & Stundenplan",
   "after_dependencies": [
     "lovelace",
     "notify"
@@ -23,5 +23,5 @@
   "issue_tracker": "https://github.com/uh-si/familienkalender/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "1.8.0"
+  "version": "2.0.0"
 }

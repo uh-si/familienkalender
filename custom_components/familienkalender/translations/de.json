@@ -1,5 +1,5 @@
 {
-  "title": "Familienkalender",
+  "title": "Familienkalender & Stundenplan",
   "config": {
     "step": {
       "user": {
@@ -38,10 +38,11 @@
   "options": {
     "step": {
       "init": {
-        "title": "Familienkalender",
+        "title": "Familienkalender & Stundenplan",
         "menu_options": {
           "personen": "Personen (Name, Farbe, aktiv, Push-Benachrichtigung, Sprache)",
           "berechtigungen": "Berechtigungen (wer darf lesen, schreiben, löschen)",
+          "stundenplan": "Stundenplan",
           "feiertage": "Feiertage & Schulferien",
           "erinnerungen": "Erinnerungen",
           "wandtablet": "Wandtablet-Modus (pro Konto)",
@@ -126,6 +127,20 @@
           "quiet_start": "Ruhezeit ab",
           "quiet_end": "Ruhezeit bis",
           "test": "Nach dem Speichern eine Testansage abspielen"
+        }
+      },
+      "stundenplan": {
+        "title": "Stundenplan",
+        "description": "Stundenpläne legst du direkt in der Kalender-Karte an (Symbol 🎓 oben). Hier stellst du ein, ob und wie die Funktion erscheint.",
+        "data": {
+          "timetable": "Stundenplan-Funktion anzeigen",
+          "timetable_blocks": "Schulzeit in Wochen- und Tagesansicht zeigen",
+          "timetable_remind_time": "Uhrzeit der Erinnerung am Vorabend"
+        },
+        "data_description": {
+          "timetable": "Blendet den Stundenplan in der Karte ein. Ausgeschaltet bleiben gespeicherte Pläne erhalten.",
+          "timetable_blocks": "Zeigt die Unterrichtszeit jedes Kindes als dezenten Block im Kalender – an Ferien- und Feiertagen nicht.",
+          "timetable_remind_time": "Wer die Erinnerung bekommt, wählst du im jeweiligen Stundenplan. Sie kommt nur, wenn am nächsten Tag Unterricht ist."
         }
       }
     },

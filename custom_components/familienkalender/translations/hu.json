@@ -1,5 +1,5 @@
 {
-  "title": "Családi naptár",
+  "title": "Családi naptár és órarend",
   "config": {
     "step": {
       "user": {
@@ -38,10 +38,11 @@
   "options": {
     "step": {
       "init": {
-        "title": "Családi naptár",
+        "title": "Családi naptár és órarend",
         "menu_options": {
           "personen": "Személyek (név, szín, aktív, push-értesítés, nyelv)",
           "berechtigungen": "Jogosultságok (ki olvashat, írhat, törölhet)",
+          "stundenplan": "Órarend",
           "feiertage": "Ünnepnapok és iskolai szünetek",
           "erinnerungen": "Emlékeztetők",
           "wandtablet": "Fali tablet mód (fiókonként)",
@@ -126,6 +127,20 @@
           "quiet_start": "Csendes időszak kezdete",
           "quiet_end": "Csendes időszak vége",
           "test": "Mentés után próbabejelentés lejátszása"
+        }
+      },
+      "stundenplan": {
+        "title": "Órarend",
+        "description": "Az órarendeket közvetlenül a naptárkártyán hozod létre (🎓 ikon fent). Itt állíthatod be, hogy megjelenjen-e és hogyan.",
+        "data": {
+          "timetable": "Órarend funkció megjelenítése",
+          "timetable_blocks": "Iskolaidő megjelenítése a heti és napi nézetben",
+          "timetable_remind_time": "Az előző esti emlékeztető időpontja"
+        },
+        "data_description": {
+          "timetable": "Megjeleníti az órarendet a kártyán. Kikapcsolva a mentett órarendek megmaradnak.",
+          "timetable_blocks": "Minden gyerek tanítási idejét halvány blokként mutatja a naptárban – szünidőben és ünnepnapokon nem.",
+          "timetable_remind_time": "Azt, hogy ki kapja az emlékeztetőt, az adott órarendben választod ki. Csak akkor érkezik, ha másnap van tanítás."
         }
       }
     },

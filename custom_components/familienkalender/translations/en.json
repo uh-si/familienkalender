@@ -1,5 +1,5 @@
 {
-  "title": "Family calendar",
+  "title": "Family calendar & timetable",
   "config": {
     "step": {
       "user": {
@@ -38,10 +38,11 @@
   "options": {
     "step": {
       "init": {
-        "title": "Family calendar",
+        "title": "Family calendar & timetable",
         "menu_options": {
           "personen": "People (name, colour, active, push notification, language)",
           "berechtigungen": "Permissions (who may read, write, delete)",
+          "stundenplan": "Timetable",
           "feiertage": "Public & school holidays",
           "erinnerungen": "Reminders",
           "wandtablet": "Wall tablet mode (per account)",
@@ -126,6 +127,20 @@
           "quiet_start": "Quiet hours from",
           "quiet_end": "Quiet hours until",
           "test": "Play a test announcement after saving"
+        }
+      },
+      "stundenplan": {
+        "title": "Timetable",
+        "description": "You create timetables directly in the calendar card (🎓 icon at the top). Here you choose whether and how the feature is shown.",
+        "data": {
+          "timetable": "Show the timetable feature",
+          "timetable_blocks": "Show school hours in week and day view",
+          "timetable_remind_time": "Time of the evening reminder"
+        },
+        "data_description": {
+          "timetable": "Shows the timetable in the card. When switched off, saved timetables are kept.",
+          "timetable_blocks": "Shows each child's school hours as a subtle block in the calendar – not on school or public holidays.",
+          "timetable_remind_time": "Who gets the reminder is chosen in each timetable. It is only sent if there are lessons the next day."
         }
       }
     },

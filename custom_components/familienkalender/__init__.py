@@ -18,11 +18,16 @@ from homeassistant.helpers.start import async_at_started
 from homeassistant.helpers.typing import ConfigType
 
 from .backup import IcsBackup
-from .const import CARD_FILE, DOMAIN, OPT_BACKUP, OPT_BACKUP_KEEP, OPT_SHOW_SCHOOL, OPT_STATE, SIGNAL_CHANGED, URL_BASE, VERSION
+from .const import (
+    CARD_FILE, DOMAIN, OPT_ASSUMPTION_BY, OPT_BACKUP, OPT_BACKUP_KEEP, OPT_SHOW_SCHOOL, OPT_STATE, OPT_TT, OPT_TT_REMIND,
+    SIGNAL_CHANGED, URL_BASE, VERSION,
+)
+from .holidays_de import holidays_between
 from .data import CalendarData
 from .pdf import PdfView
 from .reminders import ReminderService
 from .school import SchoolHolidays
+from .timetable import Timetable
 from .websocket import async_register
 
 _LOGGER = logging.getLogger(__name__)
@@ -36,6 +41,7 @@ class Runtime:
     school: SchoolHolidays
     reminders: ReminderService
     backup: IcsBackup
+    timetable: Timetable | None = None
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -112,11 +118,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     reminders = ReminderService(hass, data)
     backup = IcsBackup(hass, data, entry.options.get(OPT_BACKUP_KEEP, 8))
-    entry.runtime_data = Runtime(data, school, reminders, backup)
+    timetable = Timetable(hass)
+    await timetable.async_load()
+    entry.runtime_data = Runtime(data, school, reminders, backup, timetable)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     reminders.start()
     entry.async_on_unload(reminders.stop)
+    if entry.options.get(OPT_TT, True):
+        state, assume = entry.options.get(OPT_STATE, "BY"), entry.options.get(OPT_ASSUMPTION_BY, True)
+
+        def _free(day) -> bool:
+            # Kein Unterricht: Feiertag oder Schulferien
+            nxt = day + timedelta(days=1)
+            return bool(holidays_between(day, nxt, state, assume)) or bool(school.between(day, nxt))
+
+        timetable.start(entry.options.get(OPT_TT_REMIND, "19:00"), _free, lambda: data.users)
+        entry.async_on_unload(timetable.stop)
     if entry.options.get(OPT_BACKUP, True):
         backup.start()
         entry.async_on_unload(backup.stop)

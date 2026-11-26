@@ -27,6 +27,8 @@ from .const import (
     OPT_SHOW_HOLIDAYS,
     OPT_SHOW_SCHOOL,
     OPT_STATE,
+    OPT_TT,
+    OPT_TT_BLOCKS,
     PERM_FULL,
     PERM_READ,
     PERM_WRITE,
@@ -35,6 +37,7 @@ from .const import (
 from .holidays_de import holidays_between
 from .ics import IcsError, build_ics, parse_ics
 from .model import EventError, occurrence_payload
+from .timetable import TimetableError
 from .pdf import MAX_PDF_B64, PdfError, async_push, decode_pdf, file_exists, pdf_dir, signed_path, write_pdf
 
 MAX_ICS_BYTES = 3 * 1024 * 1024
@@ -89,7 +92,7 @@ def _guard(handler, need: str | None = None):
                                           "Dafür hast du keine Berechtigung. Bitte wende dich an den Admin.")
                     return
             await handler(hass, connection, msg, entry, rt)
-        except (EventError, IcsError, PdfError) as err:
+        except (EventError, IcsError, PdfError, TimetableError) as err:
             # Code wird von der Karte in die Gerätesprache übersetzt
             connection.send_error(msg["id"], f"fk_{getattr(err, 'code', 'invalid')}", str(err))
     return wrapper
@@ -98,7 +101,8 @@ def _guard(handler, need: str | None = None):
 @callback
 def async_register(hass: HomeAssistant) -> None:
     for cmd in (ws_config, ws_events, ws_create, ws_update, ws_delete, ws_restore, ws_import, ws_export, ws_subscribe,
-                ws_pdf_save, ws_pdf_send):
+                ws_pdf_save, ws_pdf_send, ws_tt_get, ws_tt_plan_save, ws_tt_plan_delete,
+                ws_tt_subjects_save, ws_tt_change):
         websocket_api.async_register_command(hass, cmd)
 
 
@@ -119,6 +123,7 @@ async def ws_config(hass, connection, msg):
             "permissions": {"write": level in (PERM_WRITE, PERM_FULL), "delete": level == PERM_FULL,
                             "admin": bool(connection.user and connection.user.is_admin)},
             "state": entry.options.get(OPT_STATE),
+            "timetable": {"enabled": bool(o.get(OPT_TT, True)), "blocks": bool(o.get(OPT_TT_BLOCKS, True))},
         })
     await _guard(run)(hass, connection, msg)
 
@@ -288,3 +293,64 @@ async def ws_pdf_send(hass, connection, msg):
             raise PdfError("Senden fehlgeschlagen.", "push_failed")
         connection.send_result(msg["id"], {"sent": sent})
     await _guard(run)(hass, connection, msg)
+
+
+# ---------------------------------------------------------------- Stundenplan
+def _tt(rt):
+    if rt.timetable is None:
+        raise EventError("Der Familienkalender ist nicht eingerichtet.", "not_setup")
+    return rt.timetable
+
+
+@websocket_api.websocket_command({vol.Required("type"): "familienkalender/tt_get"})
+@websocket_api.async_response
+async def ws_tt_get(hass, connection, msg):
+    async def run(hass, connection, msg, entry, rt):
+        connection.send_result(msg["id"], _tt(rt).payload())
+    await _guard(run)(hass, connection, msg)
+
+
+@websocket_api.websocket_command({vol.Required("type"): "familienkalender/tt_plan_save", vol.Required("plan"): dict})
+@websocket_api.async_response
+async def ws_tt_plan_save(hass, connection, msg):
+    async def run(hass, connection, msg, entry, rt):
+        users = {u["id"] for u in rt.data.users}
+        connection.send_result(msg["id"], {"plan": _tt(rt).save_plan(msg["plan"], users)})
+    await _guard(run, PERM_WRITE)(hass, connection, msg)
+
+
+@websocket_api.websocket_command({
+    vol.Required("type"): "familienkalender/tt_plan_delete", vol.Required("id"): vol.All(str, vol.Length(max=16)),
+})
+@websocket_api.async_response
+async def ws_tt_plan_delete(hass, connection, msg):
+    async def run(hass, connection, msg, entry, rt):
+        _tt(rt).delete_plan(msg["id"])
+        connection.send_result(msg["id"], {})
+    await _guard(run, PERM_FULL)(hass, connection, msg)
+
+
+@websocket_api.websocket_command({
+    vol.Required("type"): "familienkalender/tt_subjects_save", vol.Required("subjects"): vol.All(list, vol.Length(max=80)),
+})
+@websocket_api.async_response
+async def ws_tt_subjects_save(hass, connection, msg):
+    async def run(hass, connection, msg, entry, rt):
+        connection.send_result(msg["id"], {"subjects": _tt(rt).save_subjects(msg["subjects"])})
+    await _guard(run, PERM_WRITE)(hass, connection, msg)
+
+
+@websocket_api.websocket_command({
+    vol.Required("type"): "familienkalender/tt_change",
+    vol.Required("plan"): vol.All(str, vol.Length(max=16)),
+    vol.Required("date"): vol.All(str, vol.Length(max=10)),
+    vol.Required("p"): vol.All(int, vol.Range(min=0, max=20)),
+    vol.Optional("change"): vol.Any(None, dict),
+})
+@websocket_api.async_response
+async def ws_tt_change(hass, connection, msg):
+    """Ausfall oder Vertretung für einen Tag setzen (change = None hebt sie auf)."""
+    async def run(hass, connection, msg, entry, rt):
+        _tt(rt).set_change(msg["plan"], msg["date"], msg["p"], msg.get("change"))
+        connection.send_result(msg["id"], {})
+    await _guard(run, PERM_WRITE)(hass, connection, msg)

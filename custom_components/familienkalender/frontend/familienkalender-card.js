@@ -3,7 +3,7 @@
  * Eigenständig, keine externen Abhängigkeiten.
  */
 (() => {
-const FK_CARD_VERSION = "1.8.0";
+const FK_CARD_VERSION = "2.0.0";
 
 /* ---------- Sprachen: Deutsch (Standard), Ungarisch, Englisch ---------- */
 const I18N = {
@@ -59,6 +59,25 @@ const I18N = {
       : s.getMonth() !== e.getMonth() ? `${s.getDate()}. ${I18N.de.months[s.getMonth()]} – ${e.getDate()}. ${I18N.de.months[e.getMonth()]} ${e.getFullYear()}`
       : `${s.getDate()}.–${e.getDate()}. ${I18N.de.months[e.getMonth()]} ${e.getFullYear()}`,
     sheetDay: (d) => `${d.getDate()}.${d.getMonth() + 1}.`,
+    tt: "Stundenplan", ttEmpty: "Noch kein Stundenplan angelegt.", ttEmptyHint: "Lege für jedes Kind einen eigenen Stundenplan an – mit eigenem Stundenraster und auf Wunsch mit A/B-Wochen. Ferien und Feiertage erkennt der Plan automatisch.",
+    ttCreate: "Stundenplan anlegen", ttEdit: "Bearbeiten", ttDone: "Fertig", ttSettings: "Raster & Einstellungen", ttSubjects: "Fächer",
+    ttEditHint: "Tippe auf eine Stunde, um sie zu ändern.", ttWeekN: (k) => `${k}-Woche`, ttBreak: (m) => `Pause · ${m} Min.`, ttFree: "unterrichtsfrei",
+    ttCancel: "entfällt", ttSub: "Vertretung", ttSchoolLbl: "Schule", ttNewTitle: "Neuer Stundenplan", ttFor: "Für wen?",
+    ttLabel: "Bezeichnung (optional)", ttLabelPh: "z. B. Klasse 7b · Goethe-Gymnasium", ttGrid: "Stundenraster",
+    ttGridStd: "Übliches Raster (ab 8:00 Uhr, 45 Minuten)", ttGridCopy: (n) => `Wie bei ${n}`, ttGridHint: "Uhrzeiten und Anzahl der Stunden kannst du danach unter „Raster & Einstellungen“ anpassen.",
+    ttAB: "A/B-Wochen (Unterricht wechselt wöchentlich)", ttSat: "Unterricht auch samstags",
+    ttCellTitle: (wd, n, w) => `${wd}, ${n}. Stunde${w ? ` · ${w}` : ""}`, ttSubjName: "Fach", ttNone: "Kein Unterricht",
+    ttEditSubjects: "Fächer bearbeiten", ttRoom: "Raum", ttTeacher: "Lehrkraft", ttBoth: "In A- und B-Woche gleich", ttPeriod: (n) => `${n}. Stunde`,
+    ttAsPlanned: "Wie geplant", ttSetCancel: "Fällt aus", ttSetSub: "Vertretung / anderes Fach", ttChangeHint: "Gilt nur für diesen einen Tag – der Stundenplan selbst bleibt unverändert.",
+    ttSubjHint: "Farbe, Name, Kürzel und ein Hinweis für die Erinnerung am Vorabend (z. B. „Sportsachen einpacken“).", ttColor: "Farbe",
+    ttSubjShort: "Kürzel", ttSubjNotePh: "Hinweis (optional)", ttAddSubj: "Fach hinzufügen", ttAddPeriod: "Stunde hinzufügen", ttThisWeek: "Diese Woche ist eine",
+    ttRemind: "Erinnerung am Vorabend an", ttRemindHint: "Push-Nachricht am Abend vor jedem Schultag mit Unterrichtszeit, Ausfällen und den Hinweisen der Fächer. Die Uhrzeit stellst du unter Konfigurieren → Stundenplan ein.",
+    ttDelete: "Stundenplan löschen", ttDeleteQ: "Wirklich löschen? Nochmal tippen", ttSaveFail: "Speichern fehlgeschlagen", ttCreated: "Stundenplan angelegt – jetzt die Stunden eintragen",
+    ttDeleted: "Stundenplan gelöscht", ttSheetTitle: (n) => `Stundenplan ${n}`, ttSlug: "Stundenplan", ttMoreSheets: (n) => `+ ${n} weiteres Blatt`, ttPrintWho: "Stundenpläne",
+    ttDefaultSubjects: [["Deutsch", "D", "#e53935"], ["Mathematik", "M", "#1e88e5"], ["Englisch", "E", "#8e24aa"], ["Sport", "Sp", "#43a047", "Sportsachen einpacken"],
+      ["Kunst", "Ku", "#fb8c00"], ["Musik", "Mu", "#f06292"], ["Sachunterricht", "SU", "#00897b"], ["Biologie", "Bio", "#7cb342"], ["Geschichte", "G", "#8d6e63"],
+      ["Erdkunde", "Ek", "#26a69a"], ["Religion / Ethik", "Rel", "#5c6bc0"], ["Physik", "Ph", "#00acc1"], ["Chemie", "Ch", "#f9a825"], ["Französisch", "F", "#3949ab"],
+      ["Latein", "L", "#6d4c41"], ["Informatik", "Inf", "#546e7a"]],
     errTitle: "Bitte einen Titel eingeben.", errPerson: "Bitte mindestens eine Person wählen.", errDate: "Bitte ein Datum wählen.", errFile: "Bitte eine Datei wählen.",
     created: "Termin erstellt", saved: "Termin gespeichert", deleted: "Termin gelöscht", imported: (n) => `${n} Termin(e) importiert`,
     loadFail: "Termine konnten nicht geladen werden", saveFail: "Speichern fehlgeschlagen", deleteFail: "Löschen fehlgeschlagen",
@@ -71,6 +90,7 @@ const I18N = {
       not_setup: "Der Familienkalender ist nicht eingerichtet.", ics_invalid: "Das ist keine gültige ICS-Datei.",
       ics_too_big: "Die Datei ist zu groß (max. 3 MB).", ics_too_many: "Die Datei enthält zu viele Termine.", invalid: "Ungültige Eingabe.",
       birth_year: "Ungültiges Geburtsjahr.",
+      tt_invalid: "Ungültige Eingabe im Stundenplan.", tt_time: "Bitte das Stundenraster prüfen: Jede Stunde braucht Beginn und Ende, ohne Überschneidung.", tt_exists: "Für diese Person gibt es schon einen Stundenplan.",
       pdf_invalid: "Das PDF ist ungültig.", pdf_too_big: "Das PDF ist zu groß.", pdf_gone: "Das Kalenderblatt gibt es nicht mehr – bitte neu erstellen.",
       no_push: "Für diese Person ist keine Push-Benachrichtigung eingerichtet.", push_failed: "Senden fehlgeschlagen – ist die Companion-App eingerichtet?",
     },
@@ -127,6 +147,25 @@ const I18N = {
       : s.getMonth() !== e.getMonth() ? `${s.getDate()} ${I18N.en.months[s.getMonth()]} – ${e.getDate()} ${I18N.en.months[e.getMonth()]} ${e.getFullYear()}`
       : `${s.getDate()}–${e.getDate()} ${I18N.en.months[e.getMonth()]} ${e.getFullYear()}`,
     sheetDay: (d) => `${d.getDate()} ${I18N.en.monthsShort[d.getMonth()]}`,
+    tt: "Timetable", ttEmpty: "No timetable yet.", ttEmptyHint: "Create a timetable for each child – with its own bell schedule and, if needed, A/B weeks. School and public holidays are recognised automatically.",
+    ttCreate: "Create timetable", ttEdit: "Edit", ttDone: "Done", ttSettings: "Schedule & settings", ttSubjects: "Subjects",
+    ttEditHint: "Tap a period to change it.", ttWeekN: (k) => `Week ${k}`, ttBreak: (m) => `Break · ${m} min`, ttFree: "no school",
+    ttCancel: "cancelled", ttSub: "Substitute", ttSchoolLbl: "school", ttNewTitle: "New timetable", ttFor: "For whom?",
+    ttLabel: "Label (optional)", ttLabelPh: "e.g. Year 7 · Hillside School", ttGrid: "Bell schedule",
+    ttGridStd: "Typical schedule (from 8:00, 45 minutes)", ttGridCopy: (n) => `Same as ${n}`, ttGridHint: "You can adjust times and number of periods later under “Schedule & settings”.",
+    ttAB: "A/B weeks (lessons alternate weekly)", ttSat: "Lessons on Saturdays too",
+    ttCellTitle: (wd, n, w) => `${wd}, period ${n}${w ? ` · ${w}` : ""}`, ttSubjName: "Subject", ttNone: "No lesson",
+    ttEditSubjects: "Edit subjects", ttRoom: "Room", ttTeacher: "Teacher", ttBoth: "Same in week A and B", ttPeriod: (n) => `Period ${n}`,
+    ttAsPlanned: "As planned", ttSetCancel: "Cancelled", ttSetSub: "Substitute / other subject", ttChangeHint: "Applies to this one day only – the timetable itself stays the same.",
+    ttSubjHint: "Colour, name, short name and a note for the evening reminder (e.g. “Bring PE kit”).", ttColor: "Colour",
+    ttSubjShort: "Short", ttSubjNotePh: "Note (optional)", ttAddSubj: "Add subject", ttAddPeriod: "Add period", ttThisWeek: "This week is",
+    ttRemind: "Evening reminder to", ttRemindHint: "Push notification the evening before each school day with school hours, cancellations and the subjects' notes. Set the time under Configure → Timetable.",
+    ttDelete: "Delete timetable", ttDeleteQ: "Really delete? Tap again", ttSaveFail: "Saving failed", ttCreated: "Timetable created – now add the lessons",
+    ttDeleted: "Timetable deleted", ttSheetTitle: (n) => `Timetable ${n}`, ttSlug: "Timetable", ttMoreSheets: (n) => `+ ${n} more sheet${n > 1 ? "s" : ""}`, ttPrintWho: "Timetables",
+    ttDefaultSubjects: [["English", "En", "#e53935"], ["Maths", "Ma", "#1e88e5"], ["Science", "Sc", "#7cb342"], ["PE", "PE", "#43a047", "Bring PE kit"],
+      ["Art", "Ar", "#fb8c00"], ["Music", "Mu", "#f06292"], ["History", "Hi", "#8d6e63"], ["Geography", "Gg", "#26a69a"], ["Religious Education", "RE", "#5c6bc0"],
+      ["Computing", "Co", "#546e7a"], ["French", "Fr", "#3949ab"], ["Spanish", "Sp", "#f9a825"], ["German", "Ge", "#8e24aa"], ["Biology", "Bi", "#00897b"],
+      ["Chemistry", "Ch", "#00acc1"], ["Physics", "Ph", "#6d4c41"]],
     errTitle: "Please enter a title.", errPerson: "Please choose at least one person.", errDate: "Please choose a date.", errFile: "Please choose a file.",
     created: "Event created", saved: "Event saved", deleted: "Event deleted", imported: (n) => `${n} event(s) imported`,
     loadFail: "Could not load events", saveFail: "Saving failed", deleteFail: "Deleting failed", importFail: "Import failed", exportFail: "Export failed",
@@ -138,6 +177,7 @@ const I18N = {
       not_setup: "The family calendar is not set up.", ics_invalid: "This is not a valid ICS file.",
       ics_too_big: "The file is too large (max. 3 MB).", ics_too_many: "The file contains too many events.", invalid: "Invalid input.",
       birth_year: "Invalid year of birth.",
+      tt_invalid: "Invalid timetable input.", tt_time: "Please check the bell schedule: every period needs a start and an end, without overlaps.", tt_exists: "This person already has a timetable.",
       pdf_invalid: "The PDF is invalid.", pdf_too_big: "The PDF is too large.", pdf_gone: "This sheet no longer exists – please create it again.",
       no_push: "No push notification is set up for this person.", push_failed: "Sending failed – is the companion app set up?",
     },
@@ -194,6 +234,25 @@ const I18N = {
       : s.getMonth() !== e.getMonth() ? `${s.getFullYear()}. ${I18N.hu.months[s.getMonth()]} ${s.getDate()}. – ${I18N.hu.months[e.getMonth()]} ${e.getDate()}.`
       : `${s.getFullYear()}. ${I18N.hu.months[s.getMonth()]} ${s.getDate()}–${e.getDate()}.`,
     sheetDay: (d) => `${I18N.hu.monthsShort[d.getMonth()]} ${d.getDate()}.`,
+    tt: "Órarend", ttEmpty: "Még nincs órarend.", ttEmptyHint: "Hozz létre minden gyereknek saját órarendet – saját csengetési renddel, igény szerint A/B hetekkel. A szüneteket és ünnepnapokat az órarend magától felismeri.",
+    ttCreate: "Órarend létrehozása", ttEdit: "Szerkesztés", ttDone: "Kész", ttSettings: "Csengetési rend és beállítások", ttSubjects: "Tantárgyak",
+    ttEditHint: "Koppints egy órára a módosításhoz.", ttWeekN: (k) => `${k}-hét`, ttBreak: (m) => `Szünet · ${m} perc`, ttFree: "tanítási szünet",
+    ttCancel: "elmarad", ttSub: "Helyettesítés", ttSchoolLbl: "iskola", ttNewTitle: "Új órarend", ttFor: "Kinek?",
+    ttLabel: "Megnevezés (nem kötelező)", ttLabelPh: "pl. 7.b · Petőfi Gimnázium", ttGrid: "Csengetési rend",
+    ttGridStd: "Szokásos rend (8:00-tól, 45 perc)", ttGridCopy: (n) => `Mint ${n} órarendje`, ttGridHint: "Az időpontokat és az órák számát később a „Csengetési rend és beállítások” alatt módosíthatod.",
+    ttAB: "A/B hetek (hetente váltakozó órák)", ttSat: "Szombaton is van tanítás",
+    ttCellTitle: (wd, n, w) => `${wd}, ${n}. óra${w ? ` · ${w}` : ""}`, ttSubjName: "Tantárgy", ttNone: "Nincs óra",
+    ttEditSubjects: "Tantárgyak szerkesztése", ttRoom: "Terem", ttTeacher: "Tanár", ttBoth: "A és B héten ugyanaz", ttPeriod: (n) => `${n}. óra`,
+    ttAsPlanned: "A terv szerint", ttSetCancel: "Elmarad", ttSetSub: "Helyettesítés / más tantárgy", ttChangeHint: "Csak erre az egy napra vonatkozik – maga az órarend nem változik.",
+    ttSubjHint: "Szín, név, rövidítés és egy megjegyzés az előző esti emlékeztetőhöz (pl. „Tornafelszerelés bepakolása”).", ttColor: "Szín",
+    ttSubjShort: "Rövidítés", ttSubjNotePh: "Megjegyzés (nem kötelező)", ttAddSubj: "Tantárgy hozzáadása", ttAddPeriod: "Óra hozzáadása", ttThisWeek: "Ez a hét:",
+    ttRemind: "Előző esti emlékeztető címzettjei", ttRemindHint: "Push-értesítés minden tanítási nap előtti estén a tanítási idővel, elmaradó órákkal és a tantárgyak megjegyzéseivel. Az időpontot a Konfigurálás → Órarend alatt állíthatod be.",
+    ttDelete: "Órarend törlése", ttDeleteQ: "Biztosan törlöd? Koppints újra", ttSaveFail: "A mentés nem sikerült", ttCreated: "Órarend létrehozva – most add meg az órákat",
+    ttDeleted: "Órarend törölve", ttSheetTitle: (n) => `${n} órarendje`, ttSlug: "Orarend", ttMoreSheets: (n) => `+ ${n} további lap`, ttPrintWho: "Órarendek",
+    ttDefaultSubjects: [["Magyar nyelv és irodalom", "Magyar", "#e53935"], ["Matematika", "Mat", "#1e88e5"], ["Angol", "Ang", "#8e24aa"], ["Testnevelés", "Tesi", "#43a047", "Tornafelszerelés bepakolása"],
+      ["Rajz és vizuális kultúra", "Rajz", "#fb8c00"], ["Ének-zene", "Ének", "#f06292"], ["Környezetismeret", "Körny", "#00897b"], ["Biológia", "Bio", "#7cb342"], ["Történelem", "Tört", "#8d6e63"],
+      ["Földrajz", "Föld", "#26a69a"], ["Hit- és erkölcstan / Etika", "Etika", "#5c6bc0"], ["Fizika", "Fiz", "#00acc1"], ["Kémia", "Kém", "#f9a825"], ["Német", "Német", "#3949ab"],
+      ["Digitális kultúra", "Digi", "#546e7a"], ["Technika", "Tech", "#6d4c41"]],
     errTitle: "Adj meg egy címet.", errPerson: "Válassz ki legalább egy személyt.", errDate: "Válassz dátumot.", errFile: "Válassz egy fájlt.",
     created: "Esemény létrehozva", saved: "Esemény mentve", deleted: "Esemény törölve", imported: (n) => `${n} esemény importálva`,
     loadFail: "Az eseményeket nem sikerült betölteni", saveFail: "A mentés nem sikerült", deleteFail: "A törlés nem sikerült",
@@ -206,6 +265,7 @@ const I18N = {
       not_setup: "A családi naptár nincs beállítva.", ics_invalid: "Ez nem érvényes ICS fájl.",
       ics_too_big: "A fájl túl nagy (max. 3 MB).", ics_too_many: "A fájl túl sok eseményt tartalmaz.", invalid: "Érvénytelen adat.",
       birth_year: "Érvénytelen születési év.",
+      tt_invalid: "Érvénytelen adat az órarendben.", tt_time: "Ellenőrizd a csengetési rendet: minden órának legyen kezdete és vége, átfedés nélkül.", tt_exists: "Ennek a személynek már van órarendje.",
       pdf_invalid: "A PDF érvénytelen.", pdf_too_big: "A PDF túl nagy.", pdf_gone: "Ez a naptárlap már nem létezik – készítsd el újra.",
       no_push: "Ennél a személynél nincs beállítva push-értesítés.", push_failed: "A küldés nem sikerült – be van állítva a társalkalmazás?",
     },
@@ -522,6 +582,8 @@ button { font:inherit; color:inherit; cursor:pointer; }
 .narrow .tl, .narrow .tr { display:contents; }
 /* Schmalere Tablets: Datum ausblenden, Knopf nur mit „+“ */
 .card { container-type:inline-size; }
+@container (max-width: 1100px) { .wide .top:not(.kiosk) [data-a=school]:not(.on) { display:none; } }
+@container (max-width: 1450px) { .top.kiosk [data-a=school]:not(.on) { display:none; } }
 .clockbox .kd-s { display:none; }
 @container (max-width: 1500px) { .top.kiosk .clockbox .kd-l { display:none; } .top.kiosk .clockbox .kd-s { display:inline; } }
 @container (max-width: 1150px) { .top.kiosk .clockbox .kd-s { display:none; } }
@@ -702,6 +764,81 @@ button { font:inherit; color:inherit; cursor:pointer; }
 .pacts .btn { text-decoration:none; text-align:left; display:flex; align-items:center; justify-content:flex-start; }
 .pacts .btn:not(.pri) { border:1px solid var(--fk-line, var(--divider-color,#ddd)); }
 .pacts .btn.ok { color:#2e7d32; border-color:#2e7d32; }
+/* Stundenplan */
+.tt { padding:0 16px 16px; }
+.narrow .tt { padding:0 10px 12px; }
+.ttbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:2px 0 12px; }
+.tt-kids { display:flex; gap:6px; flex-wrap:wrap; }
+.chip.tt-kid.on { border-color:var(--c); box-shadow:inset 0 0 0 1px var(--c); font-weight:600; }
+.chip.tt-kid:not(.on) { opacity:.7; }
+.chip.tt-add { padding:5px 8px; } .chip.tt-add svg { width:18px; height:18px; fill:currentColor; }
+.tt-meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; color:var(--secondary-text-color,#777); font-size:14px; }
+.abtag { background:var(--primary-color,#03a9f4); color:var(--text-primary-color,#fff); border-radius:10px; padding:2px 9px; font-size:12.5px; font-weight:600; }
+.edtag { font-size:13px; font-style:italic; }
+.tt-tools { display:flex; gap:6px; align-items:center; margin-left:auto; flex-wrap:wrap; }
+.tt-tb { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--fk-line, var(--divider-color,#ddd)); padding:7px 14px; }
+.tt-tb.pri { border-color:transparent; }
+.tt-tb svg { width:18px; height:18px; fill:currentColor; }
+.tt-ew button { padding:6px 12px; font-size:13px; }
+.tt-grid { display:grid; gap:4px; position:relative; }
+.tt-h { text-align:center; font-size:13px; font-weight:600; padding:6px 2px; border-radius:8px; color:var(--secondary-text-color,#666); }
+.tt-h span { display:block; text-transform:capitalize; } .tt-h small { display:block; font-weight:400; font-size:12px; }
+.tt-h.today { background:var(--primary-color,#03a9f4); color:var(--text-primary-color,#fff); }
+.tt-t { grid-column:1; display:flex; flex-direction:column; justify-content:center; padding:0 4px 0 6px; font-size:11.5px; white-space:nowrap; color:var(--secondary-text-color,#777); line-height:1.25; }
+.tt-t b { font-size:15px; color:var(--primary-text-color,#222); }
+.tt-pause { grid-column:1 / -1; font-size:11.5px; color:var(--secondary-text-color,#888); text-align:left; padding:1px 6px; white-space:nowrap; border-top:1px dashed var(--fk-line, var(--divider-color,#ddd)); }
+.tt-cw { min-width:0; }
+.tt-c { height:100%; min-height:50px; box-sizing:border-box; border-radius:8px; padding:6px 8px 6px 11px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center; gap:1px; }
+.tt-c.has::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--c); }
+.tt-c b { font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tt-c small { font-size:12px; color:var(--secondary-text-color,#777); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tt-c.empty { border:1px dashed transparent; }
+.tt-c[data-a] { cursor:pointer; }
+.tt-c.empty.ed { border-color:var(--fk-line, var(--divider-color,#ddd)); align-items:center; }
+.tt-c.empty.ed svg { width:18px; height:18px; fill:var(--secondary-text-color,#aaa); }
+.tt-c.cancel b { text-decoration:line-through; opacity:.6; }
+.tt-tag { font-style:normal; font-size:11px; font-weight:700; border-radius:6px; padding:1px 6px; align-self:flex-start; margin-top:2px; }
+.tt-tag.x { background:var(--fk-red,#d32f2f); color:#fff; } .tt-tag.s { background:#ef6c00; color:#fff; }
+.tt-free { z-index:1; border-radius:10px; background:linear-gradient(var(--fk-ferien), var(--fk-ferien)), var(--fk-bg, var(--card-background-color,#fff)); color:var(--fk-ferien-strong); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:4px; padding:8px; font-weight:600; font-size:14px; }
+.tt-free span { display:flex; flex-direction:column; align-items:center; gap:6px; } .tt-free svg { width:28px; height:28px; fill:currentColor; opacity:.7; }
+.tt-free small { font-weight:400; font-size:12px; opacity:.85; }
+.tt-tabs { display:flex; gap:4px; margin-bottom:8px; }
+.tt-tabs button { flex:1; border:none; background:transparent; border-radius:10px; padding:6px 0; display:flex; flex-direction:column; align-items:center; font-size:13px; color:var(--secondary-text-color,#777); }
+.tt-tabs button small { font-size:12px; }
+.tt-tabs button.today { color:var(--primary-color,#03a9f4); font-weight:600; }
+.tt-tabs button.free { color:var(--fk-ferien-strong); }
+.tt-tabs button.on { background:var(--primary-color,#03a9f4); color:var(--text-primary-color,#fff); }
+.tt-lr { display:grid; grid-template-columns:62px minmax(0,1fr); gap:6px; margin-bottom:5px; }
+.tt-lr .tt-c { min-height:46px; }
+.tt-lp { font-size:11.5px; color:var(--secondary-text-color,#888); text-align:center; margin:2px 0 6px; border-top:1px dashed var(--fk-line, var(--divider-color,#ddd)); }
+.tt-freebox { border-radius:12px; background:var(--fk-ferien); color:var(--fk-ferien-strong); padding:28px 12px; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.tt-freebox svg { width:34px; height:34px; fill:currentColor; opacity:.7; }
+.tt-empty { text-align:center; padding:28px 20px 34px; color:var(--secondary-text-color,#666); }
+.tt-empty > svg { width:56px; height:56px; fill:var(--primary-color,#03a9f4); opacity:.85; }
+.tt-empty h3 { color:var(--primary-text-color,#222); margin:8px 0 6px; font-size:19px; }
+.tt-empty p { max-width:460px; margin:0 auto 16px; line-height:1.45; }
+.tt-empty .btn svg { width:18px; height:18px; fill:currentColor; vertical-align:-4px; margin-right:6px; }
+.ttblk { position:absolute; pointer-events:none; border-left:3px solid; border-radius:4px; box-sizing:border-box; }
+.ttblk span { position:absolute; top:3px; left:5px; right:4px; font-size:10.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.9; }
+.dlg-wide { width:min(680px, 100%); }
+.tt-link { padding:8px 4px; display:inline-flex; align-items:center; gap:6px; margin-top:4px; }
+.tt-link svg { width:18px; height:18px; fill:currentColor; }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.tt-kinds { display:grid; gap:8px; margin:8px 0 12px; }
+.tt-kinds .btn { display:flex; align-items:center; gap:10px; }
+.tt-kinds .btn svg { width:18px; height:18px; fill:currentColor; }
+.tt-kinds .btn.on { border-color:var(--primary-color,#03a9f4); box-shadow:inset 0 0 0 1px var(--primary-color,#03a9f4); color:var(--primary-color,#03a9f4); font-weight:600; }
+.tt-subjs { display:flex; flex-direction:column; gap:6px; max-height:46vh; overflow:auto; padding:2px; }
+.tt-srow { display:grid; grid-template-columns:40px minmax(0,1.4fr) 70px minmax(0,1.6fr) 36px; gap:6px; align-items:center; }
+.tt-srow input[type=color] { width:38px; height:38px; border:none; padding:0; background:none; cursor:pointer; }
+.tt-srow .inp { padding:8px 10px; font-size:14px; }
+.tt-pers { display:flex; flex-direction:column; gap:6px; }
+.tt-prow { display:flex; align-items:center; gap:8px; } .tt-prow b { width:24px; text-align:right; } .tt-prow .inp.tm { width:auto; flex:1; max-width:150px; padding:8px 10px; }
+.pill svg { width:16px; height:16px; fill:currentColor; }
+.ppv { position:relative; } .ppv-more { position:absolute; right:18px; bottom:16px; background:rgba(0,0,0,.65); color:#fff; border-radius:10px; padding:3px 10px; font-size:12.5px; }
+.del svg { width:18px; height:18px; fill:currentColor; vertical-align:-4px; margin-right:6px; }
+.narrow .top [data-a=school] { order:2; margin-left:-6px; }
+@media (max-width: 600px) { .tt-srow { grid-template-columns:36px minmax(0,1fr) 58px 34px; } .tt-srow .sh { grid-column:2 / 4; grid-row:2; } .row2 { grid-template-columns:1fr; } }
 @media (max-width: 600px) { .ovl { padding:0; align-items:flex-end; } .dlg { border-radius:20px 20px 0 0; max-height:94vh; width:100%; } }
 `;
 
@@ -727,6 +864,7 @@ const ICON = {
   copy: "M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z",
   cake: "M12,6C13.11,6 14,5.1 14,4C14,3.62 13.9,3.27 13.71,2.97L12,0L10.29,2.97C10.1,3.27 10,3.62 10,4A2,2 0 0,0 12,6M16.6,16L15.53,14.92L14.45,16C13.15,17.29 10.87,17.3 9.56,16L8.5,14.92L7.4,16C6.75,16.64 5.88,17 4.96,17C4.23,17 3.56,16.77 3,16.39V21A1,1 0 0,0 4,22H20A1,1 0 0,0 21,21V16.39C20.44,16.77 19.77,17 19.04,17C18.12,17 17.25,16.64 16.6,16M18,9H13V7H11V9H6A3,3 0 0,0 3,12V13.54C3,14.62 3.88,15.5 4.96,15.5C5.5,15.5 6,15.3 6.34,14.93L8.5,12.8L10.61,14.93C11.35,15.67 12.64,15.67 13.38,14.93L15.5,12.8L17.65,14.93C18,15.3 18.5,15.5 19.03,15.5C20.12,15.5 21,14.62 21,13.54V12A3,3 0 0,0 18,9Z",
   lock: "M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z",
+  school: "M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z",
   print: "M18,3H6V7H18M19,12A1,1 0 0,1 18,11A1,1 0 0,1 19,10A1,1 0 0,1 20,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z",
   send: "M2,21L23,12L2,3V10L17,12L2,14V21Z",
   pdf: "M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10.92,12.31C10.68,11.54 10.15,9.08 11.55,9.04C12.95,9 12.03,12.16 12.03,12.16C12.42,13.65 14.05,14.72 14.05,14.72C14.55,14.57 17.4,14.24 17,15.72C16.57,17.2 13.5,15.81 13.5,15.81C11.55,15.95 10.09,16.47 10.09,16.47C8.96,18.58 7.64,19.5 7.1,18.61C6.43,17.5 9.23,16.07 9.23,16.07C10.68,13.72 10.9,12.35 10.92,12.31Z",
@@ -978,21 +1116,26 @@ const fkSheet = (m) => {
 };
 
 /* PDF (eine Seite A4 quer) aus dem gezeichneten Blatt – verlustfrei, wo der Browser es kann */
-const fkPdf = async (cv, title) => {
-  const w = cv.width, h = cv.height;
-  let img = null, filter = "";
-  if (typeof CompressionStream === "function") {
-    try {
-      const d = cv.getContext("2d").getImageData(0, 0, w, h).data;
-      const rgb = new Uint8Array(w * h * 3);
-      for (let i = 0, j = 0; i < d.length; i += 4) { rgb[j++] = d[i]; rgb[j++] = d[i + 1]; rgb[j++] = d[i + 2]; }
-      img = new Uint8Array(await new Response(new Blob([rgb]).stream().pipeThrough(new CompressionStream("deflate"))).arrayBuffer());
-      filter = "/FlateDecode";
-    } catch (e) { img = null; }
-  }
-  if (!img) {
-    const b = await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.92));
-    img = new Uint8Array(await b.arrayBuffer()); filter = "/DCTDecode";
+const fkPdf = async (cvs, title) => {
+  const pages = Array.isArray(cvs) ? cvs : [cvs];
+  const imgs = [];
+  for (const cv of pages) {
+    const w = cv.width, h = cv.height;
+    let img = null, filter = "";
+    if (typeof CompressionStream === "function") {
+      try {
+        const d = cv.getContext("2d").getImageData(0, 0, w, h).data;
+        const rgb = new Uint8Array(w * h * 3);
+        for (let i = 0, j = 0; i < d.length; i += 4) { rgb[j++] = d[i]; rgb[j++] = d[i + 1]; rgb[j++] = d[i + 2]; }
+        img = new Uint8Array(await new Response(new Blob([rgb]).stream().pipeThrough(new CompressionStream("deflate"))).arrayBuffer());
+        filter = "/FlateDecode";
+      } catch (e) { img = null; }
+    }
+    if (!img) {
+      const b = await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.92));
+      img = new Uint8Array(await b.arrayBuffer()); filter = "/DCTDecode";
+    }
+    imgs.push({ w, h, img, filter });
   }
   const enc = new TextEncoder(), parts = [], offs = [];
   let len = 0;
@@ -1006,39 +1149,44 @@ const fkPdf = async (cv, title) => {
   }).join("").toUpperCase() + ">";
   const pw = 841.89, ph = 595.28, content = `q ${pw} 0 0 ${ph} 0 0 cm /Im0 Do Q`;
   const n = new Date(), stamp = `${n.getFullYear()}${pad(n.getMonth() + 1)}${pad(n.getDate())}${pad(n.getHours())}${pad(n.getMinutes())}${pad(n.getSeconds())}`;
+  // 1 Katalog, 2 Seiten, je Seite 3 Objekte (Seite, Inhalt, Bild), zuletzt Info
+  const pageNo = (k) => 3 + k * 3, info = 3 + imgs.length * 3;
   put("%PDF-1.4\n%âãÏÓ\n");
   obj(1, () => put("<< /Type /Catalog /Pages 2 0 R >>"));
-  obj(2, () => put("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"));
-  obj(3, () => put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>`));
-  obj(4, () => put(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
-  obj(5, () => { put(`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter ${filter} /Length ${img.length} >>\nstream\n`); put(img); put("\nendstream"); });
-  obj(6, () => put(`<< /Title ${u16(title)} /Creator (Familienkalender) /Producer (Familienkalender ${FK_CARD_VERSION}) /CreationDate (D:${stamp}) >>`));
+  obj(2, () => put(`<< /Type /Pages /Kids [${imgs.map((_, k) => `${pageNo(k)} 0 R`).join(" ")}] /Count ${imgs.length} >>`));
+  imgs.forEach((im, k) => {
+    const pg = pageNo(k);
+    obj(pg, () => put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 ${pg + 2} 0 R >> >> /Contents ${pg + 1} 0 R >>`));
+    obj(pg + 1, () => put(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
+    obj(pg + 2, () => { put(`<< /Type /XObject /Subtype /Image /Width ${im.w} /Height ${im.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter ${im.filter} /Length ${im.img.length} >>\nstream\n`); put(im.img); put("\nendstream"); });
+  });
+  obj(info, () => put(`<< /Title ${u16(title)} /Creator (Familienkalender) /Producer (Familienkalender ${FK_CARD_VERSION}) /CreationDate (D:${stamp}) >>`));
   const xref = len;
-  put(`xref\n0 7\n0000000000 65535 f \n${offs.slice(1).map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`);
-  put(`trailer\n<< /Size 7 /Root 1 0 R /Info 6 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  put(`xref\n0 ${info + 1}\n0000000000 65535 f \n${offs.slice(1).map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`);
+  put(`trailer\n<< /Size ${info + 1} /Root 1 0 R /Info ${info} 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
   return new Blob(parts, { type: "application/pdf" });
 };
 
 /* Druckdialog des Browsers mit dem Blatt in einem unsichtbaren Rahmen öffnen */
-const fkPrint = (cv) => new Promise((resolve) => {
-  cv.toBlob((b) => {
-    const url = URL.createObjectURL(b);
+const fkPrint = async (cvs) => {
+  const pages = Array.isArray(cvs) ? cvs : [cvs];
+  const urls = await Promise.all(pages.map((cv) => new Promise((r) => cv.toBlob((b) => r(URL.createObjectURL(b)), "image/png"))));
+  return new Promise((resolve) => {
     const f = document.createElement("iframe");
     f.setAttribute("aria-hidden", "true");
     f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;pointer-events:none";
-    f.srcdoc = `<!DOCTYPE html><html><head><title>Familienkalender</title><style>@page{size:A4 landscape;margin:0}html,body{margin:0;padding:0}img{display:block;width:297mm;height:209mm;object-fit:contain}</style></head><body><img src="${url}"></body></html>`;
+    f.srcdoc = `<!DOCTYPE html><html><head><title>Familienkalender</title><style>@page{size:A4 landscape;margin:0}html,body{margin:0;padding:0}img{display:block;width:297mm;height:209mm;object-fit:contain;break-after:page;page-break-after:always}img:last-child{break-after:auto;page-break-after:auto}</style></head><body>${urls.map((u) => `<img src="${u}">`).join("")}</body></html>`;
     f.onload = () => {
-      const img = f.contentDocument && f.contentDocument.querySelector("img");
-      const go = () => {
+      const imgs = f.contentDocument ? [...f.contentDocument.querySelectorAll("img")] : [];
+      Promise.all(imgs.map((i) => i.complete ? null : new Promise((r) => { i.onload = r; i.onerror = r; }))).then(() => {
         try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { /* ignorieren */ }
-        setTimeout(() => { f.remove(); URL.revokeObjectURL(url); }, 60000);
+        setTimeout(() => { f.remove(); urls.forEach((u) => URL.revokeObjectURL(u)); }, 60000);
         resolve();
-      };
-      if (!img || img.complete) go(); else img.onload = go;
+      });
     };
     document.body.appendChild(f);
-  }, "image/png");
-});
+  });
+};
 
 // In der Companion-App und in Kiosk-Browsern (WebView) öffnet sich kein Druckdialog
 const fkCanPrint = () => typeof window.print === "function" && !/Home ?Assistant\/|; wv\)|Fully ?Kiosk/i.test(navigator.userAgent || "");
@@ -1047,6 +1195,124 @@ const fkB64 = (u8) => {
   let s = "";
   for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
   return btoa(s);
+};
+
+/* ---------- Stundenplan: Hilfen und Druckblatt ---------- */
+// A- oder B-Woche: Wochen seit dem Referenz-Montag (A-Woche) zählen
+const ttWeekType = (plan, day) => {
+  if (!plan || !plan.ab || !plan.ab_ref) return "A";
+  const diff = Math.round((sow(day) - parseYmd(plan.ab_ref)) / 604800000);
+  return ((diff % 2) + 2) % 2 === 0 ? "A" : "B";
+};
+const TT_DEFAULT_PERIODS = [["08:00", "08:45"], ["08:50", "09:35"], ["09:55", "10:40"], ["10:45", "11:30"],
+  ["11:45", "12:30"], ["12:35", "13:20"], ["13:30", "14:15"], ["14:15", "15:00"]].map(([start, end]) => ({ start, end }));
+const ttMin = (t) => { const [h, m] = String(t || "0:0").split(":").map(Number); return h * 60 + m; };
+const ttHm = (m) => `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`;
+const TT_COLORS = ["#e53935", "#1e88e5", "#8e24aa", "#43a047", "#fb8c00", "#f06292", "#7cb342", "#8d6e63", "#26a69a", "#5c6bc0", "#00acc1", "#f9a825", "#3949ab", "#6d4c41", "#546e7a", "#00897b"];
+
+const fkTtSheet = (m) => {
+  const S = m.scale || FK_DPI300;
+  const W = FK_PAGE.w, H = FK_PAGE.h, M = 10;
+  const cv = document.createElement("canvas");
+  cv.width = Math.round(W * S); cv.height = Math.round(H * S);
+  const x = cv.getContext("2d");
+  x.scale(S, S);
+  const bw = !!m.bw, plan = m.plan;
+  const C = { ink: "#1f2328", sub: "#6b7280", line: "#c9ced6", head: "#f3f4f6" };
+  x.fillStyle = "#fff"; x.fillRect(0, 0, W, H);
+  const font = (sz, w = 400) => { x.font = `${w} ${sz}px ${FK_FONT}`; };
+  const fit = (t, w) => {
+    t = String(t || ""); if (w <= 0) return "";
+    if (x.measureText(t).width <= w) return t;
+    let lo = 0, hi = t.length;
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (x.measureText(t.slice(0, mid) + "…").width <= w) lo = mid; else hi = mid - 1; }
+    return lo ? t.slice(0, lo).trimEnd() + "…" : "";
+  };
+  const rr = (X, Y, w, h, r) => { x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, r); else x.rect(X, Y, w, h); };
+  const line = (x1, y1, x2, y2, col, lw = 0.2) => { x.strokeStyle = col; x.lineWidth = lw; x.beginPath(); x.moveTo(x1, y1); x.lineTo(x2, y2); x.stroke(); };
+  const subj = new Map((m.subjects || []).map((s) => [s.id, s]));
+
+  // Kopf
+  const name = m.user ? (m.user.name || T.household) : "?";
+  const title = T.ttSheetTitle(name);
+  font(9, 700); x.fillStyle = C.ink; x.fillText(title, M, 18.5);
+  if (plan.label) { const tw = x.measureText(title).width; font(4.2, 500); x.fillStyle = C.sub; x.fillText(fit(plan.label, W - 2 * M - tw - 6), M + tw + 4, 18.5); }
+  if (!bw && m.user) { x.fillStyle = m.user.color; rr(M, 21.2, 22, 1.2, 0.6); x.fill(); }
+  font(2.6); x.fillStyle = C.sub;
+  x.fillText("Familienkalender", M, H - 4.5);
+  const pr = T.printedOn(new Date().toLocaleDateString(T.locale, { day: "numeric", month: "long", year: "numeric" }));
+  x.fillText(pr, W - M - x.measureText(pr).width, H - 4.5);
+
+  const weeks = plan.ab ? ["A", "B"] : ["A"];
+  const gap = 8, top = 27, bottom = H - 9;
+  const tw = (W - 2 * M - gap * (weeks.length - 1)) / weeks.length;
+  // Zeilen: Stunden und (ab 10 Minuten) Pausen
+  const rows = [];
+  plan.periods.forEach((p, i) => {
+    if (i) { const g = ttMin(p.start) - ttMin(plan.periods[i - 1].end); if (g >= 10) rows.push({ pause: g }); }
+    rows.push({ p: i, ...p });
+  });
+  weeks.forEach((wk, wi) => {
+    const X0 = M + wi * (tw + gap);
+    let y0 = top;
+    if (plan.ab) { font(4, 700); x.fillStyle = C.ink; x.fillText(T.ttWeekN(wk), X0, top + 3.6); y0 = top + 6.5; }
+    const timeW = plan.ab ? 15 : 19, hh = 7, PH = 3.4;
+    const dw = (tw - timeW) / plan.days;
+    const nP = rows.filter((r) => !r.pause).length, nB = rows.length - nP;
+    const ph = Math.min(22, (bottom - y0 - hh - nB * PH) / nP);
+    // Kopfzeile
+    x.fillStyle = bw ? "#fff" : C.head; x.fillRect(X0, y0, tw, hh);
+    for (let d = 0; d < plan.days; d++) {
+      const label = T.wdLong[d].charAt(0).toLocaleUpperCase() + T.wdLong[d].slice(1);
+      font(3.3, 700); x.fillStyle = C.ink;
+      let t = label; if (x.measureText(t).width > dw - 2.4) t = T.wd[d];
+      x.fillText(t, X0 + timeW + d * dw + (dw - x.measureText(t).width) / 2, y0 + 4.8);
+    }
+    // Eine Schriftgröße für alle Fächer des Blatts (lange Namen → kleiner, sonst Kürzel)
+    const tw2 = dw - 1.6 - (bw ? 2.8 : 4);
+    const base = Math.min(3.6, Math.max(2.6, (ph - 1.6) * 0.32));
+    let fsU = base;
+    Object.values(plan.lessons[wk] || {}).forEach((c) => { const s = subj.get(c.s); if (!s) return; font(base, 700); const wN = x.measureText(s.name).width; const f = base * tw2 / wN; if (wN > tw2 && f >= 2.9) fsU = Math.min(fsU, f); });
+    let y = y0 + hh;
+    rows.forEach((r) => {
+      if (r.pause) {
+        font(2.4, 500); x.fillStyle = C.sub;
+        const t = T.ttBreak(r.pause);
+        x.fillText(t, X0 + timeW + (tw - timeW - x.measureText(t).width) / 2, y + PH / 2 + 0.85);
+        line(X0, y, X0 + tw, y, C.line, 0.2);
+        y += PH; return;
+      }
+      line(X0, y, X0 + tw, y, C.line, 0.2);
+      font(3.5, 700); x.fillStyle = C.ink; x.fillText(`${r.p + 1}.`, X0 + 1.8, y + Math.min(ph / 2, 5.2));
+      font(2.45, 400); x.fillStyle = C.sub;
+      if (ph >= 9) { x.fillText(r.start, X0 + 1.8, y + Math.min(ph / 2, 5.2) + 3.2); x.fillText(`– ${r.end}`, X0 + 1.8, y + Math.min(ph / 2, 5.2) + 6); }
+      else x.fillText(`${r.start}–${r.end}`, X0 + 6.5, y + Math.min(ph / 2, 5.2));
+      for (let d = 0; d < plan.days; d++) {
+        const cell = (plan.lessons[wk] || {})[`${d}-${r.p}`];
+        const s = cell && subj.get(cell.s);
+        if (!s) continue;
+        const cx = X0 + timeW + d * dw + 0.8, cy = y + 0.8, cw = dw - 1.6, ch = ph - 1.6;
+        rr(cx, cy, cw, ch, 1.2);
+        if (bw) { x.strokeStyle = "#9aa0a8"; x.lineWidth = 0.25; x.stroke(); }
+        else { x.fillStyle = mixOn(s.color, 0.2, "rgb(255,255,255)"); x.fill(); x.fillStyle = s.color; rr(cx, cy, 1.4, ch, [1.2, 0, 0, 1.2]); x.fill(); }
+        const fs = fsU;
+        const tx = cx + (bw ? 1.6 : 2.8);
+        const extra = [cell.r, cell.t].filter(Boolean).join(" · ");
+        const ty = extra && ch >= 7.5 ? cy + ch / 2 - 0.3 : cy + ch / 2 + fs * 0.36;
+        font(fs, 700); x.fillStyle = C.ink;
+        const nm = x.measureText(s.name).width <= tw2 + 0.05 ? s.name : (s.short || s.name);
+        x.fillText(fit(nm, tw2), tx, ty);
+        if (extra && ch >= 7.5) { font(Math.min(2.6, fs * 0.8), 400); x.fillStyle = C.sub; x.fillText(fit(extra, tw2), tx, ty + fs * 0.95 + 0.2); }
+      }
+      y += ph;
+    });
+    // Rahmen und Spalten
+    line(X0, y, X0 + tw, y, C.line, 0.35);
+    x.strokeStyle = C.line; x.lineWidth = 0.35; x.strokeRect(X0, y0, tw, y - y0);
+    line(X0, y0 + hh, X0 + tw, y0 + hh, C.line, 0.3);
+    for (let d = 0; d <= plan.days; d++) line(X0 + timeW + d * dw, y0, X0 + timeW + d * dw, y, C.line, d === 0 ? 0.3 : 0.2);
+  });
+  return cv;
 };
 
 class FamilienkalenderCard extends HTMLElement {
@@ -1070,12 +1336,17 @@ class FamilienkalenderCard extends HTMLElement {
     this._loading = false;
     this._loaded = false;
     this._perm = { write: false, delete: false };
+    this._tt = null;
+    this._ttCfg = null;
+    try { this._ttKid = localStorage.getItem("familienkalender-tt") || null; } catch (e) { this._ttKid = null; }
   }
 
   static getStubConfig() { return { initial_view: "month" }; }
   setConfig(config) {
     this._cfg = { initial_view: "month", first_hour: 7, week_numbers: true, ...config };
     this._view = ["month", "week", "day"].includes(this._cfg.initial_view) ? this._cfg.initial_view : "month";
+    if (this._cfg.initial_view === "timetable") { this._view = "school"; this._date = this._ttStartDate(); }
+    if (this._cfg.timetable_person) this._ttKidCfg = this._cfg.timetable_person;
     try {
       const st = JSON.parse(localStorage.getItem("familienkalender-filter") || "{}");
       this._hidden = new Set(st.hidden || []);
@@ -1124,6 +1395,8 @@ class FamilienkalenderCard extends HTMLElement {
       this._defaults = cfg.defaults || {};
       this._perm = cfg.permissions || { write: true, delete: true };
       this._kiosk = cfg.kiosk || null;
+      this._ttCfg = cfg.timetable || { enabled: true, blocks: true };
+      if (this._view === "school" && this._ttCfg.enabled === false) this._view = "month";
       this._kioskSetup();
     } catch (e) {
       this._error = "notSetup";
@@ -1131,6 +1404,7 @@ class FamilienkalenderCard extends HTMLElement {
       return;
     }
     this._loaded = true;
+    this._ttLoad();
     this._subscribe();
     await this._load();
   }
@@ -1139,8 +1413,9 @@ class FamilienkalenderCard extends HTMLElement {
     try {
       this._unsub = this._hass.connection.subscribeMessage((msg) => {
         if (msg && msg.config_changed) {
-          this._hass.callWS({ type: "familienkalender/config" }).then((cfg) => { this._users = cfg.users.filter((u) => u.active); this._defaults = cfg.defaults || {}; this._perm = cfg.permissions || this._perm; this._kiosk = cfg.kiosk || null; this._kioskStop(); this._kioskSetup(); this._load(); });
-        } else this._load();
+          this._hass.callWS({ type: "familienkalender/config" }).then((cfg) => { this._users = cfg.users.filter((u) => u.active); this._defaults = cfg.defaults || {}; this._perm = cfg.permissions || this._perm; this._kiosk = cfg.kiosk || null; this._ttCfg = cfg.timetable || this._ttCfg; this._kioskStop(); this._kioskSetup(); this._load(); this._ttLoad(); });
+        } else if (msg && msg.tt) this._ttLoad();
+        else this._load();
       }, { type: "familienkalender/subscribe" });
     } catch (e) { this._unsub = null; }
   }
@@ -1151,7 +1426,7 @@ class FamilienkalenderCard extends HTMLElement {
       const s = sow(first);
       return [s, addDays(s, 42)];
     }
-    if (this._view === "week") { const s = sow(this._date); return [s, addDays(s, 7)]; }
+    if (this._view === "week" || this._view === "school") { const s = sow(this._date); return [s, addDays(s, 7)]; }
     if (this._view === "list") {
       const s = sod(this._date);
       const e = new Date(s.getFullYear(), s.getMonth() + this._listMonths(), s.getDate());
@@ -1232,6 +1507,7 @@ class FamilienkalenderCard extends HTMLElement {
   _render() {
     if (this.isConnected) this._flattenTheme();
     this._sync(); // Eingaben im offenen Formular nicht verlieren
+    this._ttDlgSync();
     const root = this.shadowRoot;
     const scroller = root.querySelector(".tg-scroll");
     const keepScroll = scroller ? scroller.scrollTop : null;
@@ -1240,6 +1516,7 @@ class FamilienkalenderCard extends HTMLElement {
     else if (this._view === "month") body = this._narrow ? this._monthNarrow() : this._monthWide();
     else if (this._view === "week") body = this._narrow ? this._agenda(sow(this._date), 7) : this._timeGrid(sow(this._date), 7);
     else if (this._view === "list") body = this._listView();
+    else if (this._view === "school") body = this._ttView();
     else body = this._timeGrid(sod(this._date), 1);
     if (this._search && this._search.q.trim().length >= 1) body = `<div class="sres">${this._searchHtml()}</div>`;
 
@@ -1248,11 +1525,11 @@ class FamilienkalenderCard extends HTMLElement {
         ${this._loading ? '<div class="loading"></div>' : ""}
         <div class="nightveil"></div>
         ${this._header()}
-        ${this._chips()}
+        ${this._view === "school" ? "" : this._chips()}
         ${body}
         ${this._menu ? this._menuHtml() : ""}
         ${this._jump ? this._jumpHtml() : ""}
-        ${this._loaded && this._perm.write ? `<div class="fab-wrap"><button class="fab" data-a="add" title="${T.newEvent}">${svg(ICON.plus)}</button></div>` : ""}
+        ${this._loaded && this._perm.write && this._view !== "school" ? `<div class="fab-wrap"><button class="fab" data-a="add" title="${T.newEvent}">${svg(ICON.plus)}</button></div>` : ""}
       </div>`;
     if (this._dlg || this._toastMsg || this._portalHost) {
       const pr = this._pr();
@@ -1293,6 +1570,9 @@ class FamilienkalenderCard extends HTMLElement {
       const f = (x) => fs(x, yr(x));
       if (this._narrow) { title = `<span class="ovt"><span>${fs(ls, false)} –</span> <span>${fs(last, last.getFullYear() !== new Date().getFullYear())}</span></span>`; }
       else title = `<span class="ovt"><span>${f(ls)} –</span> <span>${f(last)}</span></span>`;
+    } else if (this._view === "school") {
+      const s = sow(d), e = addDays(s, 4);
+      title = `${T.tt}<small>${this._narrow ? T.kw(isoWeek(s)) : `${T.kw(isoWeek(s))} · ${T.sheetDay(s)} – ${T.sheetDay(e)}`}</small>`;
     } else title = this._narrow ? T.dayTitle(d.getDate(), T.months[d.getMonth()]) : longDate(d);
     const kiosk = this._kiosk && this._kiosk.enabled && !this._narrow; // Smartphone: keine Uhr
     return `<div class="top ${kiosk ? "kiosk" : ""}">
@@ -1310,6 +1590,7 @@ class FamilienkalenderCard extends HTMLElement {
         ${[["month", T.month], ["week", T.week], ["day", T.day], ["list", T.list]].map(([k, l]) => `<button data-a="view" data-v="${k}" class="${this._view === k ? "on" : ""}">${l}</button>`).join("")}
       </div>
       ${this._perm.write ? `<button class="add-top" data-a="add">${svg(ICON.plus)}${T.event}</button>` : `<span class="ro" title="${T.readOnlyTip}">${svg(ICON.lock)}<span>${T.readOnly}</span></span>`}
+      ${this._ttOn() ? `<button class="icon-btn ${this._view === "school" ? "on" : ""}" data-a="school" title="${T.tt}" aria-label="${T.tt}">${svg(ICON.school)}</button>` : ""}
       <button class="icon-btn ${this._search ? "on" : ""}" data-a="search" title="${T.search}" aria-label="${T.search}">${svg(ICON.search)}</button>
       <button class="icon-btn" data-a="menu" title="${T.more}">${svg(ICON.dots)}</button>
       </div>
@@ -1700,7 +1981,7 @@ class FamilienkalenderCard extends HTMLElement {
         </div>`;
       }).join("");
       const now = sameDay(day, today) ? `<div class="now" style="top:${((Date.now() - ds) / 3600000) * H}px"></div>` : "";
-      body += `<div class="tg-col ${fer ? "ferien" : ""} ${wd >= 5 ? "we" : ""}" data-a="slot" data-d="${ymd(day)}" style="height:${24 * H}px;${this._perm.write ? "" : "cursor:default"}">${blocks}${now}</div>`;
+      body += `<div class="tg-col ${fer ? "ferien" : ""} ${wd >= 5 ? "we" : ""}" data-a="slot" data-d="${ymd(day)}" style="height:${24 * H}px;${this._perm.write ? "" : "cursor:default"}">${this._ttBlocks(day)}${blocks}${now}</div>`;
     }
     const ab = this._weekBars(start, days, 6);
     all = all.replace('<div class="tg-all" style="', `<div class="tg-all" style="min-height:${Math.max(28, ab.lanes * 22 + 8)}px;`);
@@ -1770,6 +2051,7 @@ class FamilienkalenderCard extends HTMLElement {
 
   _menuHtml() {
     return `<div class="menu">
+      ${this._ttOn() ? `<button data-a="school">${svg(ICON.school)}${T.tt}</button>` : ""}
       <button data-a="print">${svg(ICON.print)}${T.printMenu}</button>
       ${this._perm.write ? `<button data-a="import">${svg(ICON.imp)}${T.importMenu}</button>` : ""}
       <button data-a="export">${svg(ICON.exp)}${T.exportMenu}</button>
@@ -1871,20 +2153,419 @@ class FamilienkalenderCard extends HTMLElement {
     } else if (d.mode === "print") {
       title = T.printTitle;
       ({ body, foot } = this._printDlg(d));
+    } else if (String(d.mode).startsWith("tt-")) {
+      ({ title, body, foot } = this._ttDlg(d));
     }
-    return `<div class="ovl" data-a="ovl"><div class="dlg ${d.mode === "print" ? "dlg-print" : ""}" role="dialog">
+    return `<div class="ovl" data-a="ovl"><div class="dlg ${d.mode === "print" ? "dlg-print" : ""} ${d.mode === "tt-subjects" || d.mode === "tt-settings" ? "dlg-wide" : ""}" role="dialog">
       <div class="dlg-h"><h2>${title}</h2>${close}</div>
       <div class="dlg-b">${body}</div>
       <div class="dlg-f">${foot}</div></div></div>`;
   }
 
+  /* ----- Stundenplan ----- */
+  _ttOn() { return !!(this._loaded && this._ttCfg && this._ttCfg.enabled !== false); }
+
+  async _ttLoad() {
+    if (!this._ttOn()) return;
+    try {
+      this._tt = await this._hass.callWS({ type: "familienkalender/tt_get" });
+      if (this._ttKidCfg) {
+        const want = String(this._ttKidCfg).toLowerCase();
+        const u = this._users.find((x) => x.id === this._ttKidCfg || String(x.name || "").toLowerCase() === want);
+        if (u) this._ttKid = u.id;
+        this._ttKidCfg = null;
+      }
+    } catch (err) { this._tt = this._tt || { plans: [], subjects: [], changes: [] }; }
+    this._render();
+  }
+
+  _ttSubj() { return new Map(((this._tt && this._tt.subjects) || []).map((s) => [s.id, s])); }
+  _ttPlans() {
+    const plans = (this._tt && this._tt.plans) || [];
+    return this._users.filter((u) => u.active).map((u) => plans.find((p) => p.user === u.id)).filter(Boolean);
+  }
+  _ttPlan() { const ps = this._ttPlans(); return ps.find((p) => p.user === this._ttKid) || ps[0] || null; }
+  _ttStartDate() { const t = sod(new Date()), wd = (t.getDay() + 6) % 7; return wd >= 5 ? addDays(sow(t), 7) : t; }
+  _ttFree(day) {
+    const h = this._holidays.get(ymd(day));
+    if (h) return trName(h);
+    const t = sod(day), f = this._ferien.find((x) => x._s <= t && x._e > t);
+    return f ? trName(f.name) : null;
+  }
+
+  /* Stunden eines Tages – mit Ausfall/Vertretung; mit `week` die reinen Plan-Einträge */
+  _ttLessons(plan, day, week) {
+    const wd = (day.getDay() + 6) % 7;
+    if (!plan || wd >= plan.days) return [];
+    const subj = this._ttSubj(), cells = plan.lessons[week || ttWeekType(plan, day)] || {}, key = ymd(day), ch = {};
+    if (!week) ((this._tt && this._tt.changes) || []).forEach((c) => { if (c.plan === plan.id && c.date === key) ch[c.p] = c; });
+    return plan.periods.map((per, i) => {
+      const cell = cells[`${wd}-${i}`], c = ch[i], sub = c && c.kind === "sub";
+      if (!cell && !sub) return null;
+      return { p: i, start: per.start, end: per.end, subject: subj.get(sub && c.s ? c.s : cell && cell.s) || null,
+        room: (sub && c.r) || (cell && cell.r) || "", teacher: (cell && cell.t) || "", kind: c ? c.kind : null,
+        orig: cell ? subj.get(cell.s) || null : null, change: c || null, text: c ? c.text || "" : "" };
+    }).filter(Boolean);
+  }
+
+  _ttRows(plan) {
+    const rows = [];
+    plan.periods.forEach((p, i) => {
+      if (i) { const g = ttMin(p.start) - ttMin(plan.periods[i - 1].end); if (g >= 10) rows.push({ pause: g }); }
+      rows.push({ p: i, ...p });
+    });
+    return rows;
+  }
+
+  _ttCellHtml(plan, l, d, i, edit) {
+    const w = this._perm.write;
+    const act = edit ? `data-a="tt-cell" data-d="${d}" data-p="${i}"` : (w ? `data-a="tt-day" data-d="${d}" data-p="${i}"` : "");
+    if (!l || !l.subject) return `<div class="tt-c empty ${edit ? "ed" : ""}" ${act}>${edit ? svg(ICON.plus) : ""}</div>`;
+    const s = l.subject, kind = l.kind;
+    const meta = [l.room, l.teacher].filter(Boolean).map(esc).join(" · ");
+    const tag = kind === "cancel" ? `<em class="tt-tag x">${T.ttCancel}</em>` : (kind === "sub" ? `<em class="tt-tag s">${T.ttSub}</em>` : "");
+    const name = kind === "cancel" ? (l.orig || s).name : s.name;
+    return `<div class="tt-c has ${kind || ""}" ${act} style="--c:${s.color};background:${this._bg ? mixOn(s.color, 0.18, this._bg) : rgba(s.color, 0.18)}" title="${esc(name)}">
+      <b>${esc(name)}</b>${meta ? `<small>${meta}</small>` : ""}${tag}</div>`;
+  }
+
+  _ttView() {
+    if (!this._tt) return `<div class="empty" style="padding:24px">${T.printLoading}</div>`;
+    const plans = this._ttPlans(), plan = this._ttPlan(), w = this._perm.write;
+    if (!plans.length) {
+      return `<div class="tt-empty">${svg(ICON.school)}<h3>${T.ttEmpty}</h3><p>${T.ttEmptyHint}</p>
+        ${w ? `<button class="btn pri" data-a="tt-new">${svg(ICON.plus)}${T.ttCreate}</button>` : ""}</div>`;
+    }
+    this._ttKid = plan.user;
+    const edit = this._ttEdit && w;
+    const ws = sow(this._date), wk = edit ? (this._ttEW || "A") : ttWeekType(plan, ws);
+    const free = this._persons().filter((u) => !plans.some((p) => p.user === u.id));
+    const kids = plans.map((p) => {
+      const u = this._user(p.user);
+      return `<button class="chip tt-kid ${p === plan ? "on" : ""}" data-a="tt-kid" data-id="${esc(p.user)}" style="--c:${u.color}">
+        <span class="dot" style="background:${u.color};color:${textOn(u.color)}">${this._avatar(u, 13)}</span>${esc(this._uname(u))}</button>`;
+    }).join("");
+    const tools = edit
+      ? `${plan.ab ? `<div class="seg tt-ew">${["A", "B"].map((k) => `<button data-a="tt-ew" data-v="${k}" class="${wk === k ? "on" : ""}">${T.ttWeekN(k)}</button>`).join("")}</div>` : ""}
+         <button class="btn tt-tb" data-a="tt-settings">${svg(ICON.clock)}<span>${T.ttSettings}</span></button>
+         <button class="btn tt-tb" data-a="tt-subjects">${svg(ICON.note)}<span>${T.ttSubjects}</span></button>
+         <button class="btn pri tt-tb" data-a="tt-done">${svg(ICON.check)}<span>${T.ttDone}</span></button>`
+      : `${w ? `<button class="btn tt-tb" data-a="tt-edit">${svg(ICON.edit)}<span>${T.ttEdit}</span></button>` : ""}
+         <button class="icon-btn" data-a="tt-print" title="${T.printBtn}" aria-label="${T.printBtn}">${svg(ICON.print)}</button>`;
+    const bar = `<div class="ttbar"><div class="tt-kids">${kids}${w && free.length && !edit ? `<button class="chip tt-add" data-a="tt-new" title="${T.ttCreate}">${svg(ICON.plus)}</button>` : ""}</div>
+      <div class="tt-meta">${plan.label ? `<span>${esc(plan.label)}</span>` : ""}${plan.ab ? `<span class="abtag">${T.ttWeekN(wk)}</span>` : ""}${edit ? `<span class="edtag">${T.ttEditHint}</span>` : ""}</div>
+      <div class="tt-tools">${tools}</div></div>`;
+    return `<div class="tt">${bar}${this._narrow ? this._ttList(plan, ws, edit, wk) : this._ttGrid(plan, ws, edit, wk)}</div>`;
+  }
+
+  _ttGrid(plan, ws, edit, wk) {
+    const today = sod(new Date()), rows = this._ttRows(plan);
+    let h = `<div class="tt-grid" style="grid-template-columns:78px repeat(${plan.days}, minmax(0,1fr))"><div class="tt-h"></div>`;
+    const dayLs = [];
+    for (let d = 0; d < plan.days; d++) {
+      const day = addDays(ws, d), isToday = !edit && sameDay(day, today);
+      h += `<div class="tt-h ${isToday ? "today" : ""}"><span>${T.wdLong[d]}</span>${edit ? "" : `<small>${T.sheetDay(day)}</small>`}</div>`;
+      dayLs.push(edit ? this._ttLessons(plan, day, wk) : this._ttLessons(plan, day));
+    }
+    let r = 2;
+    rows.forEach((row) => {
+      if (row.pause) { h += `<div class="tt-pause" style="grid-row:${r}">${T.ttBreak(row.pause)}</div>`; r++; return; }
+      h += `<div class="tt-t" style="grid-row:${r}"><b>${row.p + 1}.</b><span>${row.start}–${row.end}</span></div>`;
+      for (let d = 0; d < plan.days; d++) {
+        const l = dayLs[d].find((x) => x.p === row.p);
+        h += `<div class="tt-cw" style="grid-row:${r};grid-column:${d + 2}">${this._ttCellHtml(plan, l, d, row.p, edit)}</div>`;
+      }
+      r++;
+    });
+    if (!edit) {
+      for (let d = 0; d < plan.days; d++) {
+        const lbl = this._ttFree(addDays(ws, d));
+        if (lbl) h += `<div class="tt-free" style="grid-column:${d + 2};grid-row:2 / ${r}"><span>${svg(ICON.school)}${esc(lbl)}</span><small>${T.ttFree}</small></div>`;
+      }
+    }
+    return h + `</div>`;
+  }
+
+  _ttList(plan, ws, edit, wk) {
+    const today = sod(new Date());
+    let sel = this._ttDay;
+    if (sel === undefined || sel >= plan.days) { const t = (today.getDay() + 6) % 7; sel = sow(today).getTime() === ws.getTime() && t < plan.days ? t : 0; }
+    const tabs = Array.from({ length: plan.days }, (_, d) => {
+      const day = addDays(ws, d);
+      return `<button class="${d === sel ? "on" : ""} ${!edit && sameDay(day, today) ? "today" : ""} ${!edit && this._ttFree(day) ? "free" : ""}" data-a="tt-dsel" data-i="${d}"><span>${T.wd[d]}</span>${edit ? "" : `<small>${day.getDate()}.</small>`}</button>`;
+    }).join("");
+    const day = addDays(ws, sel), lbl = edit ? null : this._ttFree(day);
+    let list;
+    if (lbl) list = `<div class="tt-freebox">${svg(ICON.school)}<b>${esc(lbl)}</b><span>${T.ttFree}</span></div>`;
+    else {
+      const ls = edit ? this._ttLessons(plan, day, wk) : this._ttLessons(plan, day);
+      list = this._ttRows(plan).map((row) => row.pause ? `<div class="tt-lp">${T.ttBreak(row.pause)}</div>`
+        : `<div class="tt-lr"><div class="tt-t"><b>${row.p + 1}.</b><span>${row.start}<br>${row.end}</span></div>${this._ttCellHtml(plan, ls.find((x) => x.p === row.p), sel, row.p, edit)}</div>`).join("");
+    }
+    return `<div class="tt-tabs">${tabs}</div><div class="tt-list">${list}</div>`;
+  }
+
+  /* Schulzeit als dezenter Block in Wochen-/Tagesansicht */
+  _ttBlocks(day) {
+    if (!this._ttOn() || !this._ttCfg.blocks || !this._tt || this._ttFree(day)) return "";
+    const H = this._hourPx();
+    const spans = this._ttPlans().filter((p) => !this._hidden.has(p.user)).map((p) => {
+      const ls = this._ttLessons(p, day).filter((l) => l.kind !== "cancel");
+      return ls.length ? { u: this._user(p.user), a: ttMin(ls[0].start), b: ttMin(ls[ls.length - 1].end) } : null;
+    }).filter(Boolean);
+    return spans.map((s, i) => `<div class="ttblk" style="top:${(s.a / 60) * H}px;height:${((s.b - s.a) / 60) * H}px;left:${(i / spans.length) * 100}%;width:${100 / spans.length}%;border-color:${s.u.color};background:repeating-linear-gradient(135deg, ${rgba(s.u.color, 0.08)} 0 7px, ${rgba(s.u.color, 0.03)} 7px 14px)">
+      <span style="color:${s.u.color}">${esc(this._uname(s.u))} · ${T.ttSchoolLbl} ${ttHm(s.a)}–${ttHm(s.b)}</span></div>`).join("");
+  }
+
+  _ttEnter() {
+    this._prevView = this._view === "school" ? this._prevView : this._view;
+    this._view = "school"; this._menu = false; this._jump = null; this._search = null; this._ttEdit = false;
+    this._date = this._ttStartDate(); this._ttDay = undefined;
+    if (!this._tt) this._ttLoad();
+    return this._load();
+  }
+
+  async _ttSavePlan(plan) {
+    try {
+      const r = await this._hass.callWS({ type: "familienkalender/tt_plan_save", plan });
+      const ps = this._tt.plans, i = ps.findIndex((p) => p.id === r.plan.id);
+      if (i >= 0) ps[i] = r.plan; else ps.push(r.plan);
+      return r.plan;
+    } catch (err) { this._toast(this._err(err, T.ttSaveFail)); return null; }
+  }
+
+  _ttDlgSync() {
+    const d = this._dlg, r = this._portalRoot;
+    if (!d || !r || !String(d.mode).startsWith("tt-")) return;
+    const v = (id) => r.getElementById(id);
+    if (d.mode === "tt-new" && v("tt-label")) d.label = v("tt-label").value;
+    if (d.mode === "tt-cell") { if (v("tt-room")) d.r = v("tt-room").value; if (v("tt-teacher")) d.t = v("tt-teacher").value; }
+    if (d.mode === "tt-day") { if (v("tt-room")) d.r = v("tt-room").value; if (v("tt-text")) d.text = v("tt-text").value; }
+    if (d.mode === "tt-subjects") d.list.forEach((s, i) => {
+      if (v(`ts-n${i}`)) s.name = v(`ts-n${i}`).value;
+      if (v(`ts-k${i}`)) s.short = v(`ts-k${i}`).value;
+      if (v(`ts-c${i}`)) s.color = v(`ts-c${i}`).value;
+      if (v(`ts-h${i}`)) s.note = v(`ts-h${i}`).value;
+    });
+    if (d.mode === "tt-settings") {
+      if (v("tt-label")) d.plan.label = v("tt-label").value;
+      d.plan.periods.forEach((p, i) => { if (v(`tp-s${i}`)) p.start = v(`tp-s${i}`).value; if (v(`tp-e${i}`)) p.end = v(`tp-e${i}`).value; });
+    }
+  }
+
+  _ttPills(list, sel, act, single) {
+    return `<div class="pills">${list.map((u) => { const on = single ? sel === u.id : sel.includes(u.id); return `<button class="pill upill ${on ? "on" : ""}" data-a="${act}" data-id="${esc(u.id)}" style="${on ? `background:${u.color};color:${textOn(u.color)}` : ""}"><i style="background:${on ? textOn(u.color) : u.color}"></i>${esc(this._uname(u))}</button>`; }).join("")}</div>`;
+  }
+
+  _ttSubjPills(sel, act, noneLabel) {
+    const subj = (this._tt && this._tt.subjects) || [];
+    return `<div class="pills tt-sp">${noneLabel ? `<button class="pill ${!sel ? "on" : ""}" data-a="${act}" data-id="">${noneLabel}</button>` : ""}
+      ${subj.map((s) => { const on = sel === s.id; return `<button class="pill ${on ? "on" : ""}" data-a="${act}" data-id="${esc(s.id)}" style="${on ? `background:${s.color};color:${textOn(s.color)}` : ""}"><i style="background:${on ? textOn(s.color) : s.color}"></i>${esc(s.name)}</button>`; }).join("")}</div>`;
+  }
+
+  _ttDlg(d) {
+    let title = "", body = "", foot = "";
+    const cancel = `<button class="btn" data-a="close">${T.cancel}</button>`;
+    const plan = (this._tt && this._tt.plans || []).find((p) => p.id === d.plan) || null;
+    if (d.mode === "tt-new") {
+      title = T.ttNewTitle;
+      const free = this._persons().filter((u) => !this._ttPlans().some((p) => p.user === u.id));
+      const others = this._ttPlans();
+      body = `<div class="fld"><span class="lbl2">${T.ttFor}</span>${this._ttPills(free, d.user, "tt-n-user", true)}</div>
+        <div class="fld"><label>${T.ttLabel}</label><input class="inp" id="tt-label" value="${esc(d.label)}" placeholder="${T.ttLabelPh}"></div>
+        <div class="fld"><span class="lbl2">${T.ttGrid}</span><div class="pills">
+          <button class="pill ${d.src === "std" ? "on" : ""}" data-a="tt-n-src" data-id="std">${T.ttGridStd}</button>
+          ${others.map((p) => `<button class="pill ${d.src === p.id ? "on" : ""}" data-a="tt-n-src" data-id="${esc(p.id)}">${T.ttGridCopy(esc(this._uname(this._user(p.user))))}</button>`).join("")}
+        </div><div class="hint" style="margin-top:6px">${T.ttGridHint}</div></div>
+        <div class="sw"><span>${T.ttAB}</span><button class="toggle ${d.ab ? "on" : ""}" data-a="tt-n-ab"></button></div>
+        <div class="sw"><span>${T.ttSat}</span><button class="toggle ${d.sat ? "on" : ""}" data-a="tt-n-sat"></button></div>`;
+      foot = `${d.err ? `<span class="err">${esc(d.err)}</span>` : '<span class="sp"></span>'}${cancel}<button class="btn pri" data-a="tt-n-save" ${d.user && !d.busy ? "" : "disabled"}>${T.ttCreate}</button>`;
+    } else if (d.mode === "tt-cell") {
+      title = T.ttCellTitle(T.wdLong[d.day], d.p + 1, plan && plan.ab ? T.ttWeekN(d.week) : "");
+      const per = plan.periods[d.p];
+      body = `<p class="hint">${per.start} – ${per.end}${T.uhr}</p>
+        <div class="fld"><span class="lbl2">${T.ttSubjName}</span>${this._ttSubjPills(d.s, "tt-c-s", T.ttNone)}
+          <button class="btn tt-link" data-a="tt-subjects">${svg(ICON.edit)}${T.ttEditSubjects}</button></div>
+        <div class="row2"><div class="fld"><label>${T.ttRoom}</label><input class="inp" id="tt-room" value="${esc(d.r)}" placeholder="${T.optional}"></div>
+        <div class="fld"><label>${T.ttTeacher}</label><input class="inp" id="tt-teacher" value="${esc(d.t)}" placeholder="${T.optional}"></div></div>
+        ${plan.ab ? `<div class="sw"><span>${T.ttBoth}</span><button class="toggle ${d.both ? "on" : ""}" data-a="tt-c-both"></button></div>` : ""}`;
+      foot = `<span class="sp"></span>${cancel}<button class="btn pri" data-a="tt-c-save">${T.save}</button>`;
+    } else if (d.mode === "tt-day") {
+      const day = parseYmd(d.date), per = plan.periods[d.p];
+      title = `${longDate(day)}`;
+      const l = this._ttLessons(plan, day).find((x) => x.p === d.p);
+      const base = this._ttLessons(plan, day, ttWeekType(plan, day)).find((x) => x.p === d.p);
+      body = `<p class="hint">${T.ttPeriod(d.p + 1)} · ${per.start} – ${per.end}${T.uhr}${base && base.subject ? ` · <b>${esc(base.subject.name)}</b>` : ""}${base && base.room ? ` · ${esc(base.room)}` : ""}</p>
+        <div class="scope tt-kinds">
+          <button class="btn ${!d.kind ? "on" : ""}" data-a="tt-d-kind" data-v="">${svg(ICON.check)}${T.ttAsPlanned}</button>
+          ${base && base.subject ? `<button class="btn ${d.kind === "cancel" ? "on" : ""}" data-a="tt-d-kind" data-v="cancel">${svg(ICON.close)}${T.ttSetCancel}</button>` : ""}
+          <button class="btn ${d.kind === "sub" ? "on" : ""}" data-a="tt-d-kind" data-v="sub">${svg(ICON.repeat)}${T.ttSetSub}</button>
+        </div>
+        ${d.kind === "sub" ? `<div class="fld"><span class="lbl2">${T.ttSubjName}</span>${this._ttSubjPills(d.s, "tt-d-s")}</div>
+          <div class="fld"><label>${T.ttRoom}</label><input class="inp" id="tt-room" value="${esc(d.r)}" placeholder="${T.optional}"></div>` : ""}
+        ${d.kind ? `<div class="fld"><label>${T.notes}</label><input class="inp" id="tt-text" value="${esc(d.text)}" placeholder="${T.optional}"></div>` : ""}
+        <p class="hint">${T.ttChangeHint}</p>${l && l.change && !d.kind ? "" : ""}`;
+      foot = `<span class="sp"></span>${cancel}<button class="btn pri" data-a="tt-d-save" ${d.kind === "sub" && !d.s ? "disabled" : ""}>${T.save}</button>`;
+    } else if (d.mode === "tt-subjects") {
+      title = T.ttSubjects;
+      body = `<p class="hint">${T.ttSubjHint}</p><div class="tt-subjs">
+        ${d.list.map((s, i) => `<div class="tt-srow">
+          <input type="color" id="ts-c${i}" value="${esc(s.color)}" title="${T.ttColor}">
+          <input class="inp" id="ts-n${i}" value="${esc(s.name)}" placeholder="${T.ttSubjName}">
+          <input class="inp sk" id="ts-k${i}" value="${esc(s.short)}" placeholder="${T.ttSubjShort}" maxlength="6">
+          <input class="inp sh" id="ts-h${i}" value="${esc(s.note)}" placeholder="${T.ttSubjNotePh}">
+          <button class="icon-btn" data-a="ts-del" data-i="${i}" title="${T.del}">${svg(ICON.trash)}</button></div>`).join("")}
+        </div><button class="btn tt-link" data-a="ts-add">${svg(ICON.plus)}${T.ttAddSubj}</button>`;
+      foot = `${d.err ? `<span class="err">${esc(d.err)}</span>` : '<span class="sp"></span>'}${cancel}<button class="btn pri" data-a="ts-save" ${d.busy ? "disabled" : ""}>${T.save}</button>`;
+    } else if (d.mode === "tt-settings") {
+      const p = d.plan, u = this._user(p.user);
+      title = `${T.ttSettings} · ${esc(this._uname(u))}`;
+      const pushers = this._users.filter((x) => x.active && x.push);
+      const others = this._ttPlans().filter((x) => x.id !== p.id);
+      body = `<div class="fld"><label>${T.ttLabel}</label><input class="inp" id="tt-label" value="${esc(p.label)}" placeholder="${T.ttLabelPh}"></div>
+        <div class="fld"><span class="lbl2">${T.ttGrid}</span><div class="tt-pers">
+          ${p.periods.map((x, i) => `<div class="tt-prow"><b>${i + 1}.</b><input class="inp tm" type="time" id="tp-s${i}" value="${x.start}"><span>–</span><input class="inp tm" type="time" id="tp-e${i}" value="${x.end}">
+            <button class="icon-btn" data-a="tp-del" data-i="${i}" title="${T.del}" ${p.periods.length < 2 ? "disabled" : ""}>${svg(ICON.close)}</button></div>`).join("")}
+          </div><div class="pills" style="margin-top:6px"><button class="pill" data-a="tp-add">${svg(ICON.plus)}${T.ttAddPeriod}</button>
+          ${others.map((o) => `<button class="pill" data-a="tp-copy" data-id="${esc(o.id)}">${T.ttGridCopy(esc(this._uname(this._user(o.user))))}</button>`).join("")}</div></div>
+        <div class="sw"><span>${T.ttSat}</span><button class="toggle ${p.days === 6 ? "on" : ""}" data-a="tt-s-sat"></button></div>
+        <div class="sw"><span>${T.ttAB}</span><button class="toggle ${p.ab ? "on" : ""}" data-a="tt-s-ab"></button></div>
+        ${p.ab ? `<div class="fld"><span class="lbl2">${T.ttThisWeek}</span><div class="seg">${["A", "B"].map((k) => `<button data-a="tt-s-now" data-v="${k}" class="${d.now === k ? "on" : ""}">${T.ttWeekN(k)}</button>`).join("")}</div></div>` : ""}
+        <div class="fld"><span class="lbl2">${T.ttRemind}</span>${pushers.length ? this._ttPills(pushers, p.notify || [], "tt-s-notify") : `<p class="hint">${T.pdfNoPush}</p>`}
+          <div class="hint" style="margin-top:6px">${T.ttRemindHint}</div></div>
+        ${this._perm.delete ? `<button class="btn del" data-a="tt-s-del">${svg(ICON.trash)}${d.confirmDel ? T.ttDeleteQ : T.ttDelete}</button>` : ""}`;
+      foot = `${d.err ? `<span class="err">${esc(d.err)}</span>` : '<span class="sp"></span>'}${cancel}<button class="btn pri" data-a="tt-s-save" ${d.busy ? "disabled" : ""}>${T.save}</button>`;
+    }
+    return { title, body, foot };
+  }
+
+  async _ttClick(a, el) {
+    const d = this._dlg;
+    const plan = d && d.plan && typeof d.plan === "string" ? (this._tt.plans || []).find((p) => p.id === d.plan) : null;
+    this._ttDlgSync();
+    switch (a) {
+      case "school": if (this._view === "school") { this._view = this._prevView || "month"; this._date = sod(new Date()); return this._load(); } return this._ttEnter();
+      case "tt-kid": this._ttKid = el.dataset.id; this._ttEdit = false; try { localStorage.setItem("familienkalender-tt", el.dataset.id); } catch (e) { /* egal */ } return this._render();
+      case "tt-dsel": this._ttDay = +el.dataset.i; return this._render();
+      case "tt-edit": this._ttEdit = true; this._ttEW = ttWeekType(this._ttPlan(), sow(this._date)); return this._render();
+      case "tt-done": this._ttEdit = false; return this._render();
+      case "tt-ew": this._ttEW = el.dataset.v; return this._render();
+      case "tt-print": this._printOpen(); return;
+      case "tt-new": {
+        const free = this._persons().filter((u) => !this._ttPlans().some((p) => p.user === u.id));
+        this._dlg = { mode: "tt-new", user: free[0] ? free[0].id : null, label: "", src: "std", ab: false, sat: false }; return this._render();
+      }
+      case "tt-n-user": d.user = el.dataset.id; return this._render();
+      case "tt-n-src": d.src = el.dataset.id; { const o = this._tt.plans.find((p) => p.id === d.src); if (o) { d.ab = o.ab; d.sat = o.days === 6; } } return this._render();
+      case "tt-n-ab": d.ab = !d.ab; return this._render();
+      case "tt-n-sat": d.sat = !d.sat; return this._render();
+      case "tt-n-save": {
+        if (!d.user) return;
+        d.busy = true; this._render();
+        if (!this._tt.subjects.length) {
+          try { this._tt.subjects = (await this._hass.callWS({ type: "familienkalender/tt_subjects_save", subjects: T.ttDefaultSubjects.map(([name, short, color, note]) => ({ name, short, color, note: note || "" })) })).subjects; } catch (err) { /* weiter ohne */ }
+        }
+        const src = this._tt.plans.find((p) => p.id === d.src);
+        const monday = sow(new Date());
+        const res = await this._ttSavePlan({ user: d.user, label: d.label, days: d.sat ? 6 : 5, ab: d.ab,
+          ab_ref: src && src.ab ? src.ab_ref : ymd(monday), periods: (src ? src.periods : TT_DEFAULT_PERIODS).map((p) => ({ ...p })), lessons: {}, notify: [] });
+        d.busy = false;
+        if (!res) return this._render();
+        this._ttKid = res.user; this._ttEdit = true; this._ttEW = "A"; this._dlg = null; this._toast(T.ttCreated);
+        return;
+      }
+      case "tt-cell": {
+        const p = this._ttPlan(), wk = this._ttEW || "A", day = +el.dataset.d, i = +el.dataset.p, key = `${day}-${i}`;
+        const cell = (p.lessons[wk] || {})[key] || null, other = p.ab ? (p.lessons[wk === "A" ? "B" : "A"] || {})[key] || null : null;
+        const same = !other || (cell && other.s === cell.s && (other.r || "") === (cell.r || ""));
+        this._dlg = { mode: "tt-cell", plan: p.id, day, p: i, week: wk, s: cell ? cell.s : "", r: cell ? cell.r || "" : "", t: cell ? cell.t || "" : "", both: same };
+        return this._render();
+      }
+      case "tt-c-s": d.s = el.dataset.id; return this._render();
+      case "tt-c-both": d.both = !d.both; return this._render();
+      case "tt-c-save": {
+        const p = JSON.parse(JSON.stringify(plan)), key = `${d.day}-${d.p}`;
+        const weeks = p.ab && d.both ? ["A", "B"] : [d.week];
+        weeks.forEach((wk) => { p.lessons[wk] = p.lessons[wk] || {}; if (d.s) p.lessons[wk][key] = { s: d.s, r: d.r.trim(), t: d.t.trim() }; else delete p.lessons[wk][key]; });
+        this._dlg = null; this._render();
+        await this._ttSavePlan(p); return this._render();
+      }
+      case "tt-day": {
+        const p = this._ttPlan(), day = addDays(sow(this._date), +el.dataset.d), i = +el.dataset.p;
+        if (this._ttFree(day)) return;
+        const c = (this._tt.changes || []).find((x) => x.plan === p.id && x.date === ymd(day) && x.p === i);
+        this._dlg = { mode: "tt-day", plan: p.id, date: ymd(day), p: i, kind: c ? c.kind : "", s: c && c.s ? c.s : "", r: c && c.r ? c.r : "", text: c ? c.text || "" : "" };
+        return this._render();
+      }
+      case "tt-d-kind": d.kind = el.dataset.v; return this._render();
+      case "tt-d-s": d.s = el.dataset.id; return this._render();
+      case "tt-d-save": {
+        const change = d.kind ? { kind: d.kind, s: d.s, r: (d.r || "").trim(), text: (d.text || "").trim() } : null;
+        this._dlg = null; this._render();
+        try { await this._hass.callWS({ type: "familienkalender/tt_change", plan: d.plan, date: d.date, p: d.p, change }); await this._ttLoad(); }
+        catch (err) { this._toast(this._err(err, T.ttSaveFail)); }
+        return;
+      }
+      case "tt-subjects": this._dlg = { mode: "tt-subjects", list: JSON.parse(JSON.stringify(this._tt.subjects || [])) }; return this._render();
+      case "ts-add": d.list.push({ name: "", short: "", color: TT_COLORS[d.list.length % TT_COLORS.length], note: "" }); this._focusTs = d.list.length - 1; return this._render();
+      case "ts-del": d.list.splice(+el.dataset.i, 1); return this._render();
+      case "ts-save": {
+        const list = d.list.filter((s) => s.name.trim());
+        d.busy = true; d.err = null; this._render();
+        try {
+          const r = await this._hass.callWS({ type: "familienkalender/tt_subjects_save", subjects: list });
+          this._tt.subjects = r.subjects; this._dlg = null; await this._ttLoad();
+        } catch (err) { d.busy = false; d.err = this._err(err, T.ttSaveFail); this._render(); }
+        return;
+      }
+      case "tt-settings": {
+        const p = this._ttPlan();
+        this._dlg = { mode: "tt-settings", plan: JSON.parse(JSON.stringify(p)), now: ttWeekType(p, sow(new Date())) };
+        return this._render();
+      }
+      case "tp-add": {
+        const ps = d.plan.periods, last = ps[ps.length - 1];
+        const s = last ? ttMin(last.end) + 5 : 480;
+        if (ps.length < 14 && s + 45 < 24 * 60) ps.push({ start: ttHm(s), end: ttHm(s + 45) });
+        return this._render();
+      }
+      case "tp-del": if (d.plan.periods.length > 1) d.plan.periods.splice(+el.dataset.i, 1); return this._render();
+      case "tp-copy": { const o = this._tt.plans.find((p) => p.id === el.dataset.id); if (o) d.plan.periods = o.periods.map((p) => ({ ...p })); return this._render(); }
+      case "tt-s-sat": d.plan.days = d.plan.days === 6 ? 5 : 6; return this._render();
+      case "tt-s-ab": d.plan.ab = !d.plan.ab; if (d.plan.ab) d.now = d.now || "A"; return this._render();
+      case "tt-s-now": d.now = el.dataset.v; return this._render();
+      case "tt-s-notify": { const id = el.dataset.id, n = d.plan.notify || []; d.plan.notify = n.includes(id) ? n.filter((x) => x !== id) : [...n, id]; return this._render(); }
+      case "tt-s-del": {
+        if (!d.confirmDel) { d.confirmDel = true; return this._render(); }
+        try { await this._hass.callWS({ type: "familienkalender/tt_plan_delete", id: d.plan.id }); this._dlg = null; this._ttEdit = false; this._toast(T.ttDeleted); await this._ttLoad(); }
+        catch (err) { d.err = this._err(err, T.deleteFail); this._render(); }
+        return;
+      }
+      case "tt-s-save": {
+        const p = d.plan;
+        const bad = p.periods.some((x, i) => !x.start || !x.end || x.end <= x.start || (i && x.start < p.periods[i - 1].end));
+        if (bad) { d.err = T.srv.tt_time; return this._render(); }
+        if (p.ab) { const m = sow(new Date()); p.ab_ref = ymd(d.now === "B" ? addDays(m, -7) : m); }
+        d.busy = true; d.err = null; this._render();
+        const r = await this._ttSavePlan(p);
+        d.busy = false;
+        if (r) { this._dlg = null; if (r.ab) this._ttEW = this._ttEW || "A"; }
+        return this._render();
+      }
+      default:
+    }
+  }
+
   /* ----- Drucken / PDF ----- */
   _printOpen() {
     const base = this._view === "list" ? sod(new Date()) : (this._view === "month" ? this._date : this._sel);
-    const kind = this._view === "week" || this._view === "day" ? "week" : "month";
+    const plans = this._ttOn() ? this._ttPlans() : [];
+    const kind = this._view === "school" && plans.length ? "school" : (this._view === "week" || this._view === "day" ? "week" : "month");
+    const b = this._view === "school" ? sod(new Date()) : base;
     this._dlg = {
-      mode: "print", kind, anchor: kind === "month" ? new Date(base.getFullYear(), base.getMonth(), 1) : sow(base),
+      mode: "print", kind, anchor: kind === "week" ? sow(b) : new Date(b.getFullYear(), b.getMonth(), 1),
       users: this._users.filter((u) => !this._hidden.has(u.id)).map((u) => u.id), bw: false, cache: {}, sent: {},
+      tt: this._view === "school" && this._ttPlan() ? [this._ttPlan().user] : plans.map((p) => p.user),
     };
     if (!this._dlg.users.length) this._dlg.users = this._users.map((u) => u.id);
     return this._printLoad();
@@ -1897,6 +2578,7 @@ class FamilienkalenderCard extends HTMLElement {
 
   async _printLoad() {
     const d = this._dlg;
+    if (d.kind === "school") { d.key = "school"; d.cache.school = {}; return this._printPreview(); }
     if (d.kind === "month") d.anchor = new Date(d.anchor.getFullYear(), d.anchor.getMonth(), 1);
     const [s, e] = this._printRange(d), key = ymd(s) + ymd(e);
     d.key = key; d.preview = null;
@@ -1916,6 +2598,10 @@ class FamilienkalenderCard extends HTMLElement {
   }
 
   _printLabel(d) {
+    if (d.kind === "school") {
+      const names = d.tt.map((id) => this._uname(this._user(id))).join(", ");
+      return { title: T.ttSheetTitle(names), sub: "", slug: T.ttSlug };
+    }
     if (d.kind === "month") return { title: T.monthTitle(T.months[d.anchor.getMonth()], d.anchor.getFullYear()), sub: "",
       slug: `${d.anchor.getFullYear()}-${pad(d.anchor.getMonth() + 1)}` };
     const s = sow(d.anchor), e = addDays(s, 6), th = addDays(s, 3);
@@ -1934,10 +2620,22 @@ class FamilienkalenderCard extends HTMLElement {
     };
   }
 
+  _printSheets(d, scale) {
+    if (d.kind === "school") {
+      const plans = this._ttPlans();
+      return d.tt.map((id) => plans.find((p) => p.user === id)).filter(Boolean)
+        .map((plan) => fkTtSheet({ plan, user: this._user(plan.user), subjects: this._tt.subjects, bw: d.bw, scale }));
+    }
+    return [fkSheet(this._printModel(d, scale))];
+  }
+
+  _printReady(d) { return !!(d.cache[d.key] && (d.kind === "school" ? d.tt.length : d.users.length)); }
+
   _printPreview() {
     const d = this._dlg;
     if (!d || !d.cache[d.key]) return this._render();
-    try { d.preview = d.users.length ? fkSheet(this._printModel(d, 2.2)).toDataURL("image/png") : null; } catch (e) { d.preview = null; }
+    try { const cv = this._printReady(d) ? this._printSheets(d, 2.2) : []; d.preview = cv.length ? cv[0].toDataURL("image/png") : null; d.more = Math.max(0, cv.length - 1); }
+    catch (e) { d.preview = null; }
     return this._render();
   }
 
@@ -1958,17 +2656,19 @@ class FamilienkalenderCard extends HTMLElement {
       return { body, foot };
     }
     const lb = this._printLabel(d);
-    const busy = !!d.busy, ready = !!(d.cache[d.key] && d.users.length);
+    const busy = !!d.busy, ready = this._printReady(d), school = d.kind === "school";
+    const plans = this._ttOn() ? this._ttPlans() : [];
     body = `<div class="prow">
-        <div class="seg">${[["month", T.month], ["week", T.week]].map(([k, l]) => `<button data-a="p-kind" data-v="${k}" class="${d.kind === k ? "on" : ""}">${l}</button>`).join("")}</div>
-        <div class="pnav"><button class="icon-btn" data-a="p-prev" title="${T.prev}">${svg(ICON.prev)}</button>
+        <div class="seg">${[["month", T.month], ["week", T.week], ...(plans.length ? [["school", T.tt]] : [])].map(([k, l]) => `<button data-a="p-kind" data-v="${k}" class="${d.kind === k ? "on" : ""}">${l}</button>`).join("")}</div>
+        ${school ? "" : `<div class="pnav"><button class="icon-btn" data-a="p-prev" title="${T.prev}">${svg(ICON.prev)}</button>
           <span>${esc(lb.title)}${lb.sub ? `<small>${esc(lb.sub)}</small>` : ""}</span>
-          <button class="icon-btn" data-a="p-next" title="${T.next}">${svg(ICON.next)}</button></div>
+          <button class="icon-btn" data-a="p-next" title="${T.next}">${svg(ICON.next)}</button></div>`}
       </div>
-      <div class="ppv">${d.preview ? `<img src="${d.preview}" alt="">` : `<div class="ppv-empty">${d.users.length ? T.printLoading : T.errPerson}</div>`}</div>
-      <div class="fld"><span class="lbl2">${T.printPeople}</span><div class="pills">
+      <div class="ppv">${d.preview ? `<img src="${d.preview}" alt="">${d.more ? `<span class="ppv-more">${T.ttMoreSheets(d.more)}</span>` : ""}` : `<div class="ppv-empty">${(school ? d.tt.length : d.users.length) ? T.printLoading : T.errPerson}</div>`}</div>
+      <div class="fld"><span class="lbl2">${school ? T.ttPrintWho : T.printPeople}</span>
+        ${school ? this._ttPills(plans.map((p) => this._user(p.user)), d.tt, "p-tt") : `<div class="pills">
         ${this._users.map((u) => { const on = d.users.includes(u.id); return `<button class="pill upill ${on ? "on" : ""}" data-a="p-user" data-id="${esc(u.id)}" style="${on ? `background:${u.color};color:${textOn(u.color)}` : ""}"><i style="background:${on ? textOn(u.color) : u.color}"></i>${esc(this._uname(u))}</button>`; }).join("")}
-      </div></div>
+      </div>`}</div>
       <div class="fld"><span class="lbl2">${T.printColor}</span><div class="seg pseg">
         ${T.printColors.map((l, i) => `<button data-a="p-bw" data-v="${i}" class="${(d.bw ? 1 : 0) === i ? "on" : ""}">${l}</button>`).join("")}
       </div></div>`;
@@ -1980,16 +2680,16 @@ class FamilienkalenderCard extends HTMLElement {
 
   async _printDo(what) {
     const d = this._dlg;
-    if (!d || !d.cache[d.key] || !d.users.length || d.busy) return;
-    if (what === "print") { try { await fkPrint(fkSheet(this._printModel(d, FK_DPI300))); } catch (e) { this._toast(T.pdfFail); } return; }
+    if (!d || !this._printReady(d) || d.busy) return;
+    if (what === "print") { try { await fkPrint(this._printSheets(d, FK_DPI300)); } catch (e) { this._toast(T.pdfFail); } return; }
     d.busy = true; this._render();
     const lb = this._printLabel(d);
     const label = lb.sub ? `${lb.sub} · ${lb.title}` : lb.title;
     try {
       // Erst in Druckqualität, bei sehr vollen Blättern etwas gröber (Übertragungsgrenze)
       let blob = null;
-      for (const dpi of [300, 220, 160]) {
-        blob = await fkPdf(fkSheet(this._printModel(d, dpi / 25.4)), `Familienkalender – ${label}`);
+      for (const dpi of [300, 220, 160, 120]) {
+        blob = await fkPdf(this._printSheets(d, dpi / 25.4), `Familienkalender – ${label}`);
         if (blob.size <= 2.6 * 1024 * 1024) break;
       }
       const data = fkB64(new Uint8Array(await blob.arrayBuffer()));
@@ -2458,7 +3158,7 @@ class FamilienkalenderCard extends HTMLElement {
     const d = this._date;
     if (this._view === "month") { this._date = new Date(d.getFullYear(), d.getMonth() + dir, 1); this._sel = sameDay(new Date(this._date.getFullYear(), this._date.getMonth(), 1), new Date(new Date().getFullYear(), new Date().getMonth(), 1)) ? sod(new Date()) : this._date; }
     else if (this._view === "list") this._date = new Date(d.getFullYear(), d.getMonth() + dir * this._listMonths(), d.getDate());
-    else this._date = addDays(d, dir * (this._view === "week" ? 7 : 1));
+    else this._date = addDays(d, dir * (this._view === "week" || this._view === "school" ? 7 : 1));
     this._load();
   }
 
@@ -2502,13 +3202,14 @@ class FamilienkalenderCard extends HTMLElement {
     e.stopPropagation();
     const d = this._dlg;
     if (this._suppressClick && (a === "open" || a === "slot")) return; // Klick direkt nach dem Ziehen ignorieren
+    if (a === "school" || /^(tt|ts|tp)-/.test(a)) { this._ttClick(a, el); return; }
     const W = ["add", "add-on", "slot", "save", "edit", "dup", "scope-one", "scope-all", "import", "do-import", "pick", "pick-all", "who-next"];
     if (W.includes(a) && !this._perm.write) return;
     if (["del", "del-one", "del-all", "ov-del"].includes(a) && !this._perm.delete) { if (a === "ov-del") e.stopPropagation(); return; }
     switch (a) {
       case "prev": return this._move(-1);
       case "next": return this._move(1);
-      case "today": this._date = sod(new Date()); this._sel = sod(new Date()); this._resetScroll = true; return this._load();
+      case "today": this._date = this._view === "school" ? this._ttStartDate() : sod(new Date()); this._sel = sod(new Date()); this._resetScroll = true; return this._load();
       case "jump-open":
         this._menu = false;
         this._jump = this._jump ? null : { month: new Date((this._view === "month" ? this._sel : this._date).getFullYear(), (this._view === "month" ? this._sel : this._date).getMonth(), 1) };
@@ -2519,7 +3220,7 @@ class FamilienkalenderCard extends HTMLElement {
       case "jump-today": return this._jumpTo(sod(new Date()));
       case "jump-day": return this._jumpTo(parseYmd(el.dataset.d));
       case "view":
-        this._view = el.dataset.v;
+        this._view = el.dataset.v; this._ttEdit = false;
         if (this._view === "list") this._date = sod(new Date()); // Übersicht beginnt heute
         else if (this._view !== "month") this._date = sod(this._sel);
         else this._date = new Date(this._sel.getFullYear(), this._sel.getMonth(), 1);
@@ -2595,7 +3296,10 @@ class FamilienkalenderCard extends HTMLElement {
       case "print": this._menu = false; this._jump = null; return this._printOpen();
       case "p-kind": {
         if (d.kind === el.dataset.v) return;
+        const was = d.kind;
         d.kind = el.dataset.v;
+        if (d.kind === "school") return this._printLoad();
+        if (was === "school") { d.anchor = d.kind === "week" ? sow(new Date()) : new Date(new Date().getFullYear(), new Date().getMonth(), 1); return this._printLoad(); }
         const today = sod(new Date());
         if (d.kind === "week") d.anchor = (today.getFullYear() === d.anchor.getFullYear() && today.getMonth() === d.anchor.getMonth()) ? sow(today) : sow(d.anchor.getDay() === 1 ? d.anchor : addDays(d.anchor, 7 - ((d.anchor.getDay() + 6) % 7)));
         else { const th = addDays(sow(d.anchor), 3); d.anchor = new Date(th.getFullYear(), th.getMonth(), 1); }
@@ -2606,6 +3310,7 @@ class FamilienkalenderCard extends HTMLElement {
         d.anchor = d.kind === "month" ? new Date(d.anchor.getFullYear(), d.anchor.getMonth() + k, 1) : addDays(sow(d.anchor), 7 * k);
         return this._printLoad();
       }
+      case "p-tt": { const id = el.dataset.id; d.tt = d.tt.includes(id) ? d.tt.filter((x) => x !== id) : this._ttPlans().map((p) => p.user).filter((x) => x === id || d.tt.includes(x)); return this._printPreview(); }
       case "p-user": { const id = el.dataset.id; d.users = d.users.includes(id) ? d.users.filter((x) => x !== id) : [...d.users, id]; return this._printPreview(); }
       case "p-bw": d.bw = el.dataset.v === "1"; return this._printPreview();
       case "p-print": return this._printDo("print");
@@ -2673,7 +3378,7 @@ window.addEventListener("popstate", fkHealSoon);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) fkHealSoon(); });
 window.customCards = window.customCards || [];
 if (!window.customCards.some((c) => c.type === "familienkalender-card")) {
-  window.customCards.push({ type: "familienkalender-card", name: { de: "Familienkalender", hu: "Családi naptár", en: "Family calendar" }[pickLang(null, null)], description: { de: "Gemeinsamer Kalender für die ganze Familie", hu: "Közös naptár az egész családnak", en: "Shared calendar for the whole family" }[pickLang(null, null)], preview: false });
+  window.customCards.push({ type: "familienkalender-card", name: { de: "Familienkalender & Stundenplan", hu: "Családi naptár és órarend", en: "Family calendar & timetable" }[pickLang(null, null)], description: { de: "Gemeinsamer Kalender für die ganze Familie – mit Stundenplänen für die Kinder", hu: "Közös naptár az egész családnak – órarendekkel a gyerekeknek", en: "Shared calendar for the whole family – with timetables for the kids" }[pickLang(null, null)], preview: false });
   console.info(`%c FAMILIENKALENDER %c ${FK_CARD_VERSION} `, "background:#03a9f4;color:#fff;border-radius:3px 0 0 3px", "background:#555;color:#fff;border-radius:0 3px 3px 0");
 }
 })();

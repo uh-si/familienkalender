@@ -1,5 +1,23 @@
 # Changelog / Änderungsprotokoll
 
+## 2.0.0 – 26.11.2026 – Kalender und Stundenplan in einem
+
+### Neu: Stundenplan
+- Für jedes Kind (jede Person) ein eigener Stundenplan – frei einrichtbar direkt in der Karte (Symbol 🎓 bzw. Menü ⋮ → Stundenplan): Bezeichnung, eigenes Stundenraster (Uhrzeiten, Anzahl der Stunden, „Wie bei …“ für Geschwister), A/B-Wochen, Samstag.
+- Fächer mit Farbe, Kürzel und Hinweis (z. B. „Sportsachen einpacken“); beim ersten Plan wird eine Liste üblicher Fächer in der eigenen Sprache angelegt.
+- Stunden mit Raum und Lehrkraft; Pausen erscheinen automatisch.
+- Ausfall und Vertretung für einzelne Tage, ohne den Plan zu ändern.
+- Ferien und Feiertage erkennt der Plan selbst („unterrichtsfrei“).
+- Schulzeit der Kinder als dezenter Block in der Wochen- und Tagesansicht (abschaltbar).
+- Erinnerung am Vorabend per Push: Unterrichtszeit, Ausfälle, Hinweise der Fächer – Empfänger je Plan, Uhrzeit unter Konfigurieren → Stundenplan.
+- Stundenplan drucken oder als PDF (bei A/B-Wochen beide Wochen auf einem Blatt, mehrere Kinder = mehrseitiges PDF).
+- Neue Kartenoptionen `initial_view: timetable` und `timetable_person` für ein eigenes Stundenplan-Dashboard.
+- Neuer Bereich „Stundenplan“ unter Konfigurieren. Alles auf Deutsch, Ungarisch, Englisch.
+
+### Geändert
+- Neuer Name: „Familienkalender & Stundenplan“. Bestehende Termine, Entitäten und Einstellungen bleiben unverändert.
+- PDF-Dateien können jetzt mehrere Seiten haben.
+
 ## 1.8.0 – 26.11.2026
 
 ### Neu

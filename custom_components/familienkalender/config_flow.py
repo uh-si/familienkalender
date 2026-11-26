@@ -33,6 +33,9 @@ from .const import (
     OPT_SHOW_HOLIDAYS,
     OPT_SHOW_SCHOOL,
     OPT_STATE,
+    OPT_TT,
+    OPT_TT_BLOCKS,
+    OPT_TT_REMIND,
     OPT_USERS,
     PERM_WRITE,
     PERMISSION_LABELS,
@@ -128,7 +131,8 @@ class FamilienkalenderOptionsFlow(OptionsFlow):
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         return self.async_show_menu(step_id="init",
-                                    menu_options=["personen", "berechtigungen", "wandtablet", "feiertage", "erinnerungen", "sprachansage", "sicherung"])
+                                    menu_options=["personen", "berechtigungen", "stundenplan", "wandtablet", "feiertage", "erinnerungen",
+                                                  "sprachansage", "sicherung"])
 
     # ----------------------------------------------------- Personen
     async def async_step_personen(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
@@ -308,4 +312,20 @@ class FamilienkalenderOptionsFlow(OptionsFlow):
             vol.Optional(OPT_DEFAULT_REMINDERS, default=[str(x) for x in o.get(OPT_DEFAULT_REMINDERS, [30])]):
                 _reminder_selector(),
             vol.Required(OPT_ALLDAY_TIME, default=(o.get(OPT_ALLDAY_TIME, "08:00") + ":00")[:8]): sel.TimeSelector(),
+        }))
+
+    # ----------------------------------------------------- Stundenplan
+    async def async_step_stundenplan(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        o = self._o
+        if user_input is not None:
+            return self.async_create_entry(data={
+                **o,
+                OPT_TT: bool(user_input.get(OPT_TT)),
+                OPT_TT_BLOCKS: bool(user_input.get(OPT_TT_BLOCKS)),
+                OPT_TT_REMIND: str(user_input.get(OPT_TT_REMIND) or "19:00")[:5],
+            })
+        return self.async_show_form(step_id="stundenplan", data_schema=vol.Schema({
+            vol.Required(OPT_TT, default=bool(o.get(OPT_TT, True))): sel.BooleanSelector(),
+            vol.Required(OPT_TT_BLOCKS, default=bool(o.get(OPT_TT_BLOCKS, True))): sel.BooleanSelector(),
+            vol.Required(OPT_TT_REMIND, default=(o.get(OPT_TT_REMIND, "19:00") + ":00")[:8]): sel.TimeSelector(),
         }))
