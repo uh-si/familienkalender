@@ -3,7 +3,7 @@
  * Eigenständig, keine externen Abhängigkeiten.
  */
 (() => {
-const FK_CARD_VERSION = "2.0.0";
+const FK_CARD_VERSION = "2.0.1";
 
 /* ---------- Sprachen: Deutsch (Standard), Ungarisch, Englisch ---------- */
 const I18N = {
@@ -582,8 +582,22 @@ button { font:inherit; color:inherit; cursor:pointer; }
 .narrow .tl, .narrow .tr { display:contents; }
 /* Schmalere Tablets: Datum ausblenden, Knopf nur mit „+“ */
 .card { container-type:inline-size; }
-@container (max-width: 1100px) { .wide .top:not(.kiosk) [data-a=school]:not(.on) { display:none; } }
-@container (max-width: 1450px) { .top.kiosk [data-a=school]:not(.on) { display:none; } }
+/* Kopfzeile eng: Symbole dichter, damit auch der Stundenplan-Knopf Platz hat */
+@container (max-width: 1450px) {
+  .top.kiosk .icon-btn { width:34px; }
+  .top.kiosk [data-a=search], .top.kiosk [data-a=menu] { margin-left:-6px; }
+  .top.kiosk .today-btn { padding:6px 10px; }
+  .top.kiosk .title small { display:none; }
+}
+@container (max-width: 1120px) {
+  .wide .top:not(.kiosk) .icon-btn { width:34px; }
+  .wide .top:not(.kiosk) [data-a=search], .wide .top:not(.kiosk) [data-a=menu] { margin-left:-8px; }
+  .wide .top:not(.kiosk) .today-btn { padding:6px 10px; }
+}
+@container (max-width: 900px) {
+  .top.kiosk .icon-btn, .wide .top:not(.kiosk) .icon-btn { width:30px; }
+  .top.kiosk [data-a=search], .top.kiosk [data-a=menu] { margin-left:-4px; }
+}
 .clockbox .kd-s { display:none; }
 @container (max-width: 1500px) { .top.kiosk .clockbox .kd-l { display:none; } .top.kiosk .clockbox .kd-s { display:inline; } }
 @container (max-width: 1150px) { .top.kiosk .clockbox .kd-s { display:none; } }

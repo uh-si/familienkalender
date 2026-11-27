@@ -1,5 +1,10 @@
 # Changelog / Änderungsprotokoll
 
+## 2.0.1 – 27.11.2026
+
+### Behoben
+- Das Stundenplan-Symbol 🎓 fehlte im Wandtablet-Modus und bei aufgeklappter Seitenleiste. Es wird jetzt immer angezeigt; dafür rücken die Symbole in der Kopfzeile bei wenig Platz etwas zusammen.
+
 ## 2.0.0 – 26.11.2026 – Kalender und Stundenplan in einem
 
 ### Neu: Stundenplan
