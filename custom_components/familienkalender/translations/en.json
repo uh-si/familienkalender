@@ -199,7 +199,9 @@
     "slot": {
       "options": {
         "hh_on": "🏠 Household ✓",
-        "hh_off": "🏠 Household ✗"
+        "hh_off": "🏠 Household ✗",
+        "fe_on": "🎂 Birthdays & occasions ✓",
+        "fe_off": "🎂 Birthdays & occasions ✗"
       }
     }
   },
@@ -213,6 +215,9 @@
       },
       "household": {
         "name": "Household"
+      },
+      "celebrations": {
+        "name": "Birthdays & occasions"
       }
     }
   },

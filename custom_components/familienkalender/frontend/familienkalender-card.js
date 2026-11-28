@@ -3,7 +3,7 @@
  * Eigenständig, keine externen Abhängigkeiten.
  */
 (() => {
-const FK_CARD_VERSION = "2.0.1";
+const FK_CARD_VERSION = "2.1.0";
 
 /* ---------- Sprachen: Deutsch (Standard), Ungarisch, Englisch ---------- */
 const I18N = {
@@ -25,7 +25,7 @@ const I18N = {
     upcoming: "Kommende Termine", past: "Vergangene Termine", noHits: "Keine Treffer.", searching: "Suche …",
     rangeN: (n) => n === 1 ? "1 Tag markiert" : `${n} Tage markiert`, rangeClear: "Markierung aufheben",
     uhr: " Uhr", locale: "de-DE", q: (t) => `„${t}“`,
-    household: "Haushalt", editQ: "Was möchtest du ändern?", editOnly: "Nur diesen Termin", editSeries: "Ganze Serie",
+    household: "Haushalt", celebration: "Geburts- & Festtage", editQ: "Was möchtest du ändern?", editOnly: "Nur diesen Termin", editSeries: "Ganze Serie",
     occNote: "Nur dieser eine Termin wird geändert – die übrige Serie bleibt unverändert.", duplicate: "Duplizieren",
     undo: "Rückgängig", restored: "Wiederhergestellt", moved: "Termin verschoben", moveQ: "Wiederkehrenden Termin verschieben?",
     birthYear: "Geburtsjahr (optional – zeigt das Alter an)", turns: (n) => `wird ${n}`, dragHint: "Zum Verschieben gedrückt halten und ziehen",
@@ -40,6 +40,9 @@ const I18N = {
     forWho: "Für", allDay: "Ganztägig", start: "Beginn", end: "Ende", repeat: "Wiederholung",
     untilTip: "Endet am (leer = unbegrenzt)", untilHint: "Rechts: Wiederholung endet am (leer = unbegrenzt)",
     freqs: ["Keine", "Täglich", "Wöchentlich", "Monatlich", "Jährlich"],
+    rmodes: ["Keine", "Täglich", "Wöchentlich", "Alle 2 Wochen", "Monatlich", "Jährlich", "Benutzerdefiniert …"],
+    everyPre: "Alle", units: { daily: "Tage", weekly: "Wochen", monthly: "Monate", yearly: "Jahre" },
+    every: (n, f) => `Alle ${n} ${({ daily: "Tage", weekly: "Wochen", monthly: "Monate", yearly: "Jahre" })[f]}`, onDays: "An diesen Wochentagen",
     reminder: "Erinnerung (Push)", rem: ["Zum Beginn", "5 Min.", "15 Min.", "30 Min.", "1 Std.", "2 Std.", "1 Tag", "2 Tage", "1 Woche"], remOnDay: "Am Tag",
     remList: ["zu Beginn", "5 Min. vorher", "15 Min. vorher", "30 Min. vorher", "1 Std. vorher", "2 Std. vorher", "1 Tag vorher", "2 Tage vorher", "1 Woche vorher"], remListDay: "am Tag",
     until: (d) => `bis ${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`,
@@ -113,7 +116,7 @@ const I18N = {
     upcoming: "Upcoming", past: "Past", noHits: "No matches.", searching: "Searching …",
     rangeN: (n) => n === 1 ? "1 day selected" : `${n} days selected`, rangeClear: "Clear selection",
     uhr: "", locale: "en-GB", q: (t) => `“${t}”`,
-    household: "Household", editQ: "What would you like to change?", editOnly: "Only this event", editSeries: "Whole series",
+    household: "Household", celebration: "Birthdays & occasions", editQ: "What would you like to change?", editOnly: "Only this event", editSeries: "Whole series",
     occNote: "Only this one event will be changed – the rest of the series stays as it is.", duplicate: "Duplicate",
     undo: "Undo", restored: "Restored", moved: "Event moved", moveQ: "Move recurring event?",
     birthYear: "Year of birth (optional – shows the age)", turns: (n) => `turns ${n}`, dragHint: "Press and hold, then drag to move",
@@ -128,6 +131,9 @@ const I18N = {
     forWho: "For", allDay: "All day", start: "Start", end: "End", repeat: "Repeat",
     untilTip: "Ends on (empty = forever)", untilHint: "Right: repeat ends on (empty = forever)",
     freqs: ["None", "Daily", "Weekly", "Monthly", "Yearly"],
+    rmodes: ["None", "Daily", "Weekly", "Every 2 weeks", "Monthly", "Yearly", "Custom …"],
+    everyPre: "Every", units: { daily: "days", weekly: "weeks", monthly: "months", yearly: "years" },
+    every: (n, f) => `Every ${n} ${({ daily: "days", weekly: "weeks", monthly: "months", yearly: "years" })[f]}`, onDays: "On these days",
     reminder: "Reminder (push)", rem: ["At start", "5 min", "15 min", "30 min", "1 hour", "2 hours", "1 day", "2 days", "1 week"], remOnDay: "On the day",
     remList: ["at start", "5 min before", "15 min before", "30 min before", "1 hour before", "2 hours before", "1 day before", "2 days before", "1 week before"], remListDay: "on the day",
     until: (d) => `until ${d.getDate()} ${I18N.en.months[d.getMonth()]} ${d.getFullYear()}`,
@@ -200,7 +206,7 @@ const I18N = {
     upcoming: "Közelgő események", past: "Korábbi események", noHits: "Nincs találat.", searching: "Keresés …",
     rangeN: (n) => `${n} nap kijelölve`, rangeClear: "Kijelölés megszüntetése",
     uhr: "", locale: "hu-HU", q: (t) => `„${t}”`,
-    household: "Háztartás", editQ: "Mit szeretnél módosítani?", editOnly: "Csak ezt az eseményt", editSeries: "Teljes sorozat",
+    household: "Háztartás", celebration: "Születésnapok és ünnepek", editQ: "Mit szeretnél módosítani?", editOnly: "Csak ezt az eseményt", editSeries: "Teljes sorozat",
     occNote: "Csak ez az egy esemény módosul – a sorozat többi része változatlan marad.", duplicate: "Duplikálás",
     undo: "Visszavonás", restored: "Visszaállítva", moved: "Esemény áthelyezve", moveQ: "Áthelyezed az ismétlődő eseményt?",
     birthYear: "Születési év (nem kötelező – mutatja az életkort)", turns: (n) => `${n} éves lesz`, dragHint: "Tartsd lenyomva, majd húzd az áthelyezéshez",
@@ -215,6 +221,9 @@ const I18N = {
     forWho: "Kinek", allDay: "Egész napos", start: "Kezdés", end: "Befejezés", repeat: "Ismétlés",
     untilTip: "Vége (üres = korlátlan)", untilHint: "Jobb oldalt: az ismétlés vége (üres = korlátlan)",
     freqs: ["Nincs", "Naponta", "Hetente", "Havonta", "Évente"],
+    rmodes: ["Nincs", "Naponta", "Hetente", "Kéthetente", "Havonta", "Évente", "Egyéni …"],
+    everyPre: "", units: { daily: "naponta", weekly: "hetente", monthly: "havonta", yearly: "évente" },
+    every: (n, f) => `${n} ${({ daily: "naponta", weekly: "hetente", monthly: "havonta", yearly: "évente" })[f]}`, onDays: "Ezeken a napokon",
     reminder: "Emlékeztető (push)", rem: ["Kezdéskor", "5 perc", "15 perc", "30 perc", "1 óra", "2 óra", "1 nap", "2 nap", "1 hét"], remOnDay: "Az adott napon",
     remList: ["kezdéskor", "5 perccel előtte", "15 perccel előtte", "30 perccel előtte", "1 órával előtte", "2 órával előtte", "1 nappal előtte", "2 nappal előtte", "1 héttel előtte"], remListDay: "az adott napon",
     until: (d) => `${d.getFullYear()}. ${I18N.hu.months[d.getMonth()]} ${d.getDate()}-ig`,
@@ -337,6 +346,26 @@ const trName = (n) => {
 };
 const REMINDER_MIN = [0, 5, 15, 30, 60, 120, 1440, 2880, 10080];
 const FREQ_KEYS = ["", "daily", "weekly", "monthly", "yearly"];
+const FE_ID = "fe"; // Kategorie Geburts- & Festtage
+const fkUName = (u) => (u ? (u.name || (u.celebration ? T.celebration : (u.household ? T.household : "?"))) : "?");
+const RMODES = ["", "daily", "weekly", "biweekly", "monthly", "yearly", "custom"];
+// Lesbarer Text einer Wiederholung, z. B. „Alle 2 Wochen: Di, Do“
+const recLabel = (rec) => {
+  if (!rec || !rec.freq) return "";
+  const n = Number(rec.interval) || 1;
+  const base = n > 1 ? T.every(n, rec.freq) : T.freqs[Math.max(0, FREQ_KEYS.indexOf(rec.freq))];
+  return rec.byday && rec.byday.length ? `${base}: ${rec.byday.map((d) => T.wd[d]).join(", ")}` : base;
+};
+// Auswahl im Formular aus einer gespeicherten Wiederholung ableiten
+const recMode = (rec, startYmd) => {
+  if (!rec || !rec.freq) return "";
+  const n = Number(rec.interval) || 1, bd = rec.byday || [];
+  const wd = startYmd ? (parseYmd(startYmd).getDay() + 6) % 7 : -1;
+  if (bd.length > 1 || (bd.length === 1 && bd[0] !== wd)) return "custom";
+  if (n === 1) return rec.freq;
+  if (rec.freq === "weekly" && n === 2) return "biweekly";
+  return "custom";
+};
 
 /* ---------- Hilfsfunktionen ---------- */
 // Kürzel: erste zwei Buchstaben, z. B. „Papa“ → „Pa“ (Umlaute/Akzente bleiben erhalten)
@@ -759,6 +788,15 @@ button { font:inherit; color:inherit; cursor:pointer; }
 .narrow .chips { padding:4px 10px 10px; }
 .narrow .add-top { display:none; }
 .narrow .tg-head .dn { font-size:17px; width:32px; height:32px; line-height:32px; }
+.cel { margin-right:3px; }
+/* Benutzerdefinierte Wiederholung */
+.row.rec-custom { margin-top:10px; display:flex; align-items:center; justify-content:flex-start; gap:8px; }
+.row.rec-custom > * { flex:none; }
+.row.rec-custom > span { flex:none; width:auto; }
+.row.rec-custom select { flex:0 1 200px; width:auto; min-width:120px; }
+.rec-custom > span { font-size:14px; color:var(--secondary-text-color,#666); }
+.row.rec-custom .rec-n { width:76px; }
+.rec-days { margin-top:8px; } .rec-days .pills { margin-top:4px; } .rec-days .pill { min-width:40px; justify-content:center; }
 /* Drucken / PDF */
 .dlg-print { width:min(720px, 100%); }
 .prow { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
@@ -939,15 +977,15 @@ const fkSheet = (m) => {
   // Kürzel für Schwarz-weiß; gleiche Kürzel (Mama/Max) werden auf drei Buchstaben verlängert
   const iniMap = new Map();
   m.users.forEach((u) => {
-    const nm = u.name || T.household, i2 = initials(nm);
-    const dup = m.users.some((v) => v !== u && initials(v.name || T.household) === i2);
+    const nm = fkUName(u), i2 = initials(nm);
+    const dup = m.users.some((v) => v !== u && initials(fkUName(v)) === i2);
     const ch = Array.from(nm.replace(/\s+/g, ""));
     iniMap.set(u.id, dup ? (ch[0] || "?").toLocaleUpperCase() + ch.slice(1, 3).join("").toLocaleLowerCase() : i2);
   });
   const ini = (ev) => uOf(ev).map((u) => iniMap.get(u.id)).join("·");
   const evs = m.events.filter((ev) => (ev.users || []).some((id) => sel.has(id)));
   const isBar = (ev) => ev.all_day || ev._e - ev._s >= 86400000;
-  const title = (ev) => ev.title + (ev.age ? ` (${ev.age})` : "");
+  const title = (ev) => ((ev.users || []).includes(FE_ID) ? "🎂 " : "") + ev.title + (ev.age ? ` (${ev.age})` : "");
   const holOn = (d) => m.holidays.get(ymd(d)) || null;
   const ferOn = (d) => { const t = sod(d); return m.ferien.find((f) => f._s <= t && f._e > t) || null; };
   const red = (d) => d.getDay() === 0 || !!holOn(d);
@@ -994,7 +1032,7 @@ const fkSheet = (m) => {
   font(3.3, 500);
   let lx = W - M;
   [...m.users].reverse().forEach((u) => {
-    const name = u.name || T.household;
+    const name = fkUName(u);
     const tw = x.measureText(name).width;
     lx -= tw; x.fillStyle = C.ink; x.fillText(name, lx, 17.8);
     if (bw) {
@@ -1247,7 +1285,7 @@ const fkTtSheet = (m) => {
   const subj = new Map((m.subjects || []).map((s) => [s.id, s]));
 
   // Kopf
-  const name = m.user ? (m.user.name || T.household) : "?";
+  const name = fkUName(m.user);
   const title = T.ttSheetTitle(name);
   font(9, 700); x.fillStyle = C.ink; x.fillText(title, M, 18.5);
   if (plan.label) { const tw = x.measureText(title).width; font(4.2, 500); x.fillStyle = C.sub; x.fillText(fit(plan.label, W - 2 * M - tw - 6), M + tw + 4, 18.5); }
@@ -1480,12 +1518,13 @@ class FamilienkalenderCard extends HTMLElement {
   }
 
   /* ----- Daten-Helfer ----- */
-  _uname(u) { return u ? (u.name || (u.household ? T.household : "?")) : "?"; }
+  _uname(u) { return fkUName(u); }
   _avatar(u, size = 16) {
+    if (u && u.celebration) return svg(ICON.cake).replace("<svg", `<svg style="width:${size}px;height:${size}px;fill:currentColor"`);
     return u && u.household ? svg(ICON.home).replace("<svg", `<svg style="width:${size}px;height:${size}px;fill:currentColor"`) : esc(initials(this._uname(u)));
   }
-  _persons() { return this._users.filter((u) => !u.household); }
-  _title(ev) { return esc(ev.title) + (ev.age ? `<span class="age">(${ev.age})</span>` : ""); }
+  _persons() { return this._users.filter((u) => !u.household && !u.celebration); }
+  _title(ev) { return ((ev.users || []).includes(FE_ID) ? `<span class="cel">🎂</span>` : "") + esc(ev.title) + (ev.age ? `<span class="age">(${ev.age})</span>` : ""); }
   _user(id) { return this._users.find((u) => u.id === id); }
   _evUsers(ev) { return (ev.users || []).map((id) => this._user(id)).filter(Boolean); }
   _visible(ev) { return this._evUsers(ev).some((u) => !this._hidden.has(u.id)); }
@@ -1535,7 +1574,7 @@ class FamilienkalenderCard extends HTMLElement {
     if (this._search && this._search.q.trim().length >= 1) body = `<div class="sres">${this._searchHtml()}</div>`;
 
     root.innerHTML = `<style>${STYLE}</style>
-      <div class="card ${this._narrow ? "narrow" : "wide"} ${this._night ? "night" : ""} ${this._bg ? "solid" : ""}" style="--fk-all:${this._users.filter((u) => !u.household).map((u) => u.color).join(",") || "#888,#888"}">
+      <div class="card ${this._narrow ? "narrow" : "wide"} ${this._night ? "night" : ""} ${this._bg ? "solid" : ""}" style="--fk-all:${this._users.filter((u) => !u.household && !u.celebration).map((u) => u.color).join(",") || "#888,#888"}">
         ${this._loading ? '<div class="loading"></div>' : ""}
         <div class="nightveil"></div>
         ${this._header()}
@@ -1931,8 +1970,8 @@ class FamilienkalenderCard extends HTMLElement {
     if (whenOverride) when = whenOverride;
     const W = words || [];
     const tags = this._evUsers(ev).map((u) => `<span class="tag"><i style="background:${u.color}"></i>${this._hl(this._uname(u), W)}</span>`).join("");
-    const title = W.length ? this._hl(ev.title, W) + (ev.age ? ` <span class="age">(${ev.age})</span>` : "") : this._title(ev);
-    const rec = ev.recurrence ? `<span title="${T.recurring}">↻${W.length ? " " + esc(T.freqs[Math.max(0, FREQ_KEYS.indexOf(ev.recurrence.freq))]) : ""}</span>` : "";
+    const title = W.length ? ((ev.users || []).includes(FE_ID) ? `<span class="cel">🎂</span>` : "") + this._hl(ev.title, W) + (ev.age ? ` <span class="age">(${ev.age})</span>` : "") : this._title(ev);
+    const rec = ev.recurrence ? `<span title="${esc(recLabel(ev.recurrence))}">↻${W.length ? " " + esc(recLabel(ev.recurrence)) : ""}</span>` : "";
     return `<div class="ag-item" data-a="open" data-k="${esc(ev.key)}">
       <div class="bar" style="background:${this._gradient(cols, "180deg")}"></div>
       <div class="when">${when}</div>
@@ -2104,9 +2143,14 @@ class FamilienkalenderCard extends HTMLElement {
         <div class="fld"><label>${T.start}</label><div class="row"><input class="inp" type="date" id="f-sd" value="${x.sd}">${x.all_day ? "" : `<input class="inp tm" type="time" id="f-st" value="${x.st}">`}</div></div>
         <div class="fld"><label>${T.end}</label><div class="row"><input class="inp" type="date" id="f-ed" value="${x.ed}">${x.all_day ? "" : `<input class="inp tm" type="time" id="f-et" value="${x.et}">`}</div></div>
         ${d.occ ? "" : `<div class="fld"><label>${T.repeat}</label><div class="row">
-          <select class="inp" id="f-freq">${FREQ_KEYS.map((k, i) => `<option value="${k}" ${x.freq === k ? "selected" : ""}>${T.freqs[i]}</option>`).join("")}</select>
+          <select class="inp" id="f-freq">${RMODES.map((k, i) => `<option value="${k}" ${(x.rmode || "") === k ? "selected" : ""}>${T.rmodes[i]}</option>`).join("")}</select>
           ${x.freq ? `<input class="inp" type="date" id="f-until" value="${x.until || ""}" title="${T.untilTip}">` : ""}
-        </div>${x.freq ? `<div style="font-size:12px;color:var(--secondary-text-color);margin-top:4px">${T.untilHint}</div>` : ""}</div>`}
+        </div>
+        ${x.freq ? `<div style="font-size:12px;color:var(--secondary-text-color);margin-top:4px">${T.untilHint}</div>` : ""}
+        ${x.rmode === "custom" ? `<div class="row rec-custom">${T.everyPre ? `<span>${T.everyPre}</span>` : ""}
+          <input class="inp rec-n" type="number" inputmode="numeric" id="f-int" min="1" max="99" value="${esc(x.interval)}">
+          <select class="inp" id="f-unit">${FREQ_KEYS.slice(1).map((k) => `<option value="${k}" ${x.unit === k ? "selected" : ""}>${T.units[k]}</option>`).join("")}</select></div>
+          ${x.unit === "weekly" ? `<div class="rec-days"><span class="lbl2">${T.onDays}</span><div class="pills">${T.wd.map((w, i) => `<button class="pill ${x.byday.includes(i) ? "on" : ""}" data-a="f-wd" data-i="${i}">${w}</button>`).join("")}</div></div>` : ""}` : ""}</div>`}
         ${!d.occ && x.freq === "yearly" ? `<div class="fld"><label>${T.birthYear}</label><input class="inp" type="number" inputmode="numeric" id="f-by" min="1850" max="${new Date().getFullYear()}" placeholder="1985" value="${esc(x.birth_year || "")}"></div>` : ""}
         <div class="fld"><span class="lbl2">${T.reminder}</span><div class="pills">
           ${REMINDER_MIN.map((m, i) => (x.all_day && m > 0 && m < 1440) ? "" : `<button class="pill ${x.reminders.includes(m) ? "on" : ""}" data-a="f-rem" data-m="${m}">${x.all_day && m === 0 ? T.remOnDay : T.rem[i]}</button>`).join("")}
@@ -2124,7 +2168,7 @@ class FamilienkalenderCard extends HTMLElement {
         when = sameDay(ev._s, last) ? longDate(ev._s) : `${longDate(ev._s)} –<br>${longDate(last)}`;
         when += ` · ${T.alldayDetail}`;
       } else when = sameDay(ev._s, ev._e) ? `${longDate(ev._s)}<br>${hm(ev._s)} – ${hm(ev._e)}${T.uhr}` : `${longDate(ev._s)}, ${hm(ev._s)} –<br>${longDate(ev._e)}, ${hm(ev._e)}${T.uhr}`;
-      const freqName = ev.recurrence ? T.freqs[Math.max(0, FREQ_KEYS.indexOf(ev.recurrence.freq))] : "";
+      const freqName = ev.recurrence ? esc(recLabel(ev.recurrence)) : "";
       body = `<div class="detail">
         <div style="height:6px;border-radius:3px;background:${this._gradient(cols)};margin-bottom:14px"></div>
         <div class="n">${esc(ev.title)}</div>
@@ -2728,7 +2772,7 @@ class FamilienkalenderCard extends HTMLElement {
   _newDraft(day, hour) {
     const r = day === undefined ? this._rangeDays() : null;
     if (r) {
-      return { title: "", users: [], all_day: true, sd: ymd(r.a), st: "09:00", ed: ymd(r.b), et: "10:00", freq: "", until: "",
+      return { title: "", users: [], all_day: true, sd: ymd(r.a), st: "09:00", ed: ymd(r.b), et: "10:00", freq: "", until: "", rmode: "", interval: 2, unit: "weekly", byday: [],
         reminders: [...(this._defaults?.reminders || [])], location: "", description: "", birth_year: "" };
     }
     const base = day ? sod(day) : sod(this._view === "month" ? this._sel : this._date);
@@ -2739,7 +2783,7 @@ class FamilienkalenderCard extends HTMLElement {
       s = new Date(base); s.setHours(sameDay(base, now) ? Math.min(now.getHours() + 1, 23) : 9, 0, 0, 0);
     }
     const e = new Date(s.getTime() + 3600000);
-    return { title: "", users: [], all_day: false, sd: ymd(s), st: hm(s), ed: ymd(e), et: hm(e), freq: "", until: "", reminders: [...(this._defaults?.reminders || [])], location: "", description: "", birth_year: "" };
+    return { title: "", users: [], all_day: false, sd: ymd(s), st: hm(s), ed: ymd(e), et: hm(e), freq: "", until: "", rmode: "", interval: 2, unit: "weekly", byday: [], reminders: [...(this._defaults?.reminders || [])], location: "", description: "", birth_year: "" };
   }
 
   _draftFromEvent(ev, occurrence = false) {
@@ -2750,7 +2794,27 @@ class FamilienkalenderCard extends HTMLElement {
       birth_year: ev.birth_year || "",
       title: ev.title, users: [...ev.users], all_day: !!ev.all_day, sd: ymd(s), st: ev.all_day ? "09:00" : hm(s), ed: ymd(e), et: ev.all_day ? "10:00" : hm(e),
       freq: ev.recurrence ? ev.recurrence.freq : "", until: ev.recurrence?.until || "", reminders: [...(ev.reminders || [])], location: ev.location || "", description: ev.description || "",
+      ...this._recDraft(ev.recurrence, ymd(s)),
     };
+  }
+
+  _recDraft(rec, sd) {
+    const mode = recMode(rec, sd);
+    return { rmode: mode, interval: rec && rec.interval > 1 ? rec.interval : 2, unit: rec ? rec.freq : "weekly",
+      byday: rec && rec.byday && rec.byday.length ? [...rec.byday] : [] };
+  }
+
+  _recFromDraft(x) {
+    const m = x.rmode || "";
+    if (!m) return null;
+    if (m === "custom") {
+      const n = Math.min(99, Math.max(1, parseInt(x.interval, 10) || 1));
+      const r = { freq: x.unit || "weekly", interval: n, until: x.until || null };
+      if (r.freq === "weekly" && x.byday && x.byday.length) r.byday = [...new Set(x.byday)].sort((a, b) => a - b);
+      return r;
+    }
+    if (m === "biweekly") return { freq: "weekly", interval: 2, until: x.until || null };
+    return { freq: m, interval: 1, until: x.until || null };
   }
 
   _sync() {
@@ -2763,7 +2827,13 @@ class FamilienkalenderCard extends HTMLElement {
     if (v("f-ed")) x.ed = v("f-ed").value;
     if (v("f-st")) x.st = v("f-st").value;
     if (v("f-et")) x.et = v("f-et").value;
-    if (v("f-freq")) x.freq = v("f-freq").value;
+    if (v("f-freq")) x.rmode = v("f-freq").value;
+    if (v("f-int")) x.interval = v("f-int").value;
+    if (v("f-unit")) x.unit = v("f-unit").value;
+    if (x.rmode !== undefined) {
+      if (x.rmode === "custom" && x.unit === "weekly" && !(x.byday || []).length && x.sd) x.byday = [(parseYmd(x.sd).getDay() + 6) % 7];
+      x.freq = x.rmode === "custom" ? x.unit : (x.rmode === "biweekly" ? "weekly" : x.rmode);
+    }
     if (v("f-until")) x.until = v("f-until").value;
     if (v("f-loc")) x.location = v("f-loc").value;
     if (v("f-desc")) x.description = v("f-desc").value;
@@ -2789,7 +2859,7 @@ class FamilienkalenderCard extends HTMLElement {
     }
     const event = {
       title: x.title.trim(), users: x.users, all_day: x.all_day, start, end,
-      recurrence: x.freq ? { freq: x.freq, interval: 1, until: x.until || null } : null,
+      recurrence: this._recFromDraft(x),
       reminders: x.all_day ? [...new Set(x.reminders.map((m) => (m < 1440 ? 0 : m)))] : x.reminders,
       location: x.location.trim(), description: x.description.trim(),
       birth_year: !d.occ && x.freq === "yearly" && String(x.birth_year || "").trim() ? Number(x.birth_year) : null,
@@ -3046,7 +3116,12 @@ class FamilienkalenderCard extends HTMLElement {
         // ganze Serie um denselben Abstand verschieben
         const ds = g.s - ev._s, de = g.e - ev._e;
         const ss = new Date(new Date(ev.series_start).getTime() + ds), se = new Date(new Date(ev.series_end).getTime() + de);
-        await this._hass.callWS({ type: "familienkalender/update", uid: ev.uid, event: this._payload(ev, ss, se) });
+        const payload = this._payload(ev, ss, se);
+        if (ev.recurrence && ev.recurrence.byday && ev.recurrence.byday.length) {
+          const shift = Math.round((sod(g.s) - sod(ev._s)) / 86400000);
+          payload.recurrence = { ...ev.recurrence, byday: [...new Set(ev.recurrence.byday.map((k) => (((k + shift) % 7) + 7) % 7))].sort((a, b) => a - b) };
+        }
+        await this._hass.callWS({ type: "familienkalender/update", uid: ev.uid, event: payload });
         this._toast(T.moved);
       } else {
         await this._hass.callWS({ type: "familienkalender/update", uid: ev.uid, event: this._payload(ev, g.s, g.e) });
@@ -3199,7 +3274,15 @@ class FamilienkalenderCard extends HTMLElement {
     if (!root) return;
     root.querySelectorAll("[data-a]").forEach((el) => el.addEventListener("click", (e) => this._click(e, el)));
     const freq = root.getElementById("f-freq");
-    if (freq) freq.addEventListener("change", () => { this._sync(); this._render(); });
+    if (freq) freq.addEventListener("change", () => {
+      const x = this._dlg && this._dlg.draft, prev = x ? x.freq : "", prevMode = x ? x.rmode : "";
+      this._sync();
+      // Wechsel zu „Benutzerdefiniert“: bisherige Einheit übernehmen (z. B. jährlich)
+      if (x && x.rmode === "custom" && prevMode !== "custom" && prev) { x.unit = prev; x.freq = prev; if (prev !== "weekly") x.byday = []; }
+      this._render();
+    });
+    const unit = root.getElementById("f-unit");
+    if (unit) unit.addEventListener("change", () => { this._sync(); this._render(); });
     const sd = root.getElementById("f-sd");
     if (sd) sd.addEventListener("change", () => {
       // Ende mitziehen, wenn es vor dem Beginn läge
@@ -3267,9 +3350,20 @@ class FamilienkalenderCard extends HTMLElement {
       }
       case "pick": { const id = el.dataset.id; d.users = d.users.includes(id) ? d.users.filter((x) => x !== id) : [...d.users, id]; return this._render(); }
       case "pick-all": { const ps = this._persons(); d.users = ps.every((u) => d.users.includes(u.id)) ? d.users.filter((id) => !ps.some((u) => u.id === id)) : [...new Set([...d.users, ...ps.map((u) => u.id)])]; return this._render(); }
-      case "who-next": d.draft.users = [...d.users]; this._dlg = { mode: "form", draft: d.draft }; this._focusNext = true; return this._render();
-      case "f-user": { this._sync(); const x = d.draft, id = el.dataset.id; x.users = x.users.includes(id) ? x.users.filter((u) => u !== id) : [...x.users, id]; return this._render(); }
+      case "who-next": {
+        d.draft.users = [...d.users];
+        // Geburts-/Festtag: ganztägig und jährlich vorschlagen
+        if (d.users.includes(FE_ID) && !d.draft.rmode) { Object.assign(d.draft, { all_day: true, rmode: "yearly", freq: "yearly", ed: d.draft.sd }); }
+        this._dlg = { mode: "form", draft: d.draft }; this._focusNext = true; return this._render();
+      }
+      case "f-user": {
+        this._sync(); const x = d.draft, id = el.dataset.id, add = !x.users.includes(id);
+        x.users = add ? [...x.users, id] : x.users.filter((u) => u !== id);
+        if (add && id === FE_ID && !d.uid && !d.occ && !x.rmode) { x.all_day = true; x.rmode = "yearly"; x.freq = "yearly"; x.ed = x.sd; }
+        return this._render();
+      }
       case "f-allday": this._sync(); d.draft.all_day = !d.draft.all_day; return this._render();
+      case "f-wd": { this._sync(); const i = +el.dataset.i, x = d.draft; x.byday = x.byday.includes(i) ? x.byday.filter((k) => k !== i) : [...x.byday, i].sort((a, b) => a - b); return this._render(); }
       case "f-rem": { this._sync(); const m = Number(el.dataset.m), x = d.draft; x.reminders = x.reminders.includes(m) ? x.reminders.filter((r) => r !== m) : [...x.reminders, m].sort((p, q) => p - q); return this._render(); }
       case "save": return this._save();
       case "open": {
@@ -3282,7 +3376,7 @@ class FamilienkalenderCard extends HTMLElement {
         this._dlg = { mode: "form", uid: d.ev.uid, draft: this._draftFromEvent(d.ev) }; return this._render();
       case "scope-one":
         if (d.drag) return this._applyDrag(d.drag, "one");
-        this._dlg = { mode: "form", uid: d.ev.uid, occ: ymd(d.ev._s), draft: { ...this._draftFromEvent(d.ev, true), freq: "", until: "" } }; return this._render();
+        this._dlg = { mode: "form", uid: d.ev.uid, occ: ymd(d.ev._s), draft: { ...this._draftFromEvent(d.ev, true), freq: "", until: "", rmode: "" } }; return this._render();
       case "scope-all":
         if (d.drag) return this._applyDrag(d.drag, "all");
         this._dlg = { mode: "form", uid: d.ev.uid, draft: this._draftFromEvent(d.ev) }; return this._render();
@@ -3290,6 +3384,7 @@ class FamilienkalenderCard extends HTMLElement {
       case "dup": {
         const dr = this._draftFromEvent(d.ev, true);
         dr.freq = d.ev.recurrence ? d.ev.recurrence.freq : ""; dr.until = d.ev.recurrence?.until || "";
+        Object.assign(dr, this._recDraft(d.ev.recurrence, dr.sd));
         this._dlg = { mode: "form", draft: dr }; this._focusNext = true; return this._render();
       }
       case "toast-act": { const act = this._toastAct; this._toastMsg = null; this._toastAct = null; clearTimeout(this._tt); this._render(); if (act) act.fn(); return; }

@@ -199,7 +199,9 @@
     "slot": {
       "options": {
         "hh_on": "🏠 Háztartás ✓",
-        "hh_off": "🏠 Háztartás ✗"
+        "hh_off": "🏠 Háztartás ✗",
+        "fe_on": "🎂 Születésnapok és ünnepek ✓",
+        "fe_off": "🎂 Születésnapok és ünnepek ✗"
       }
     }
   },
@@ -213,6 +215,9 @@
       },
       "household": {
         "name": "Háztartás"
+      },
+      "celebrations": {
+        "name": "Születésnapok és ünnepek"
       }
     }
   },

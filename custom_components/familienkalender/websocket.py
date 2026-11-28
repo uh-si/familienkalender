@@ -114,7 +114,8 @@ async def ws_config(hass, connection, msg):
         o = entry.options
         kiosk_on = bool(connection.user and (o.get(OPT_KIOSK) or {}).get(connection.user.id))
         connection.send_result(msg["id"], {
-            "users": [{**{k: u[k] for k in ("id", "name", "color", "active", "household")}, "push": bool(u.get("notify"))}
+            "users": [{**{k: u[k] for k in ("id", "name", "color", "active", "household")},
+                       "celebration": bool(u.get("celebration")), "push": bool(u.get("notify"))}
                       for u in rt.data.users],
             "kiosk": {"enabled": kiosk_on, "timeout": int(o.get(OPT_KIOSK_TIMEOUT, 5)),
                       "night": bool(o.get(OPT_KIOSK_NIGHT, True)), "night_start": o.get(OPT_KIOSK_NIGHT_START, "22:00"),

@@ -145,7 +145,7 @@ class ReminderService:
             dname = t["on"](t["wd"][day.weekday()], day)
         when = dname if o.all_day else t["at"](dname, f"{o.start.astimezone(self.data.tz):%H:%M}")  # type: ignore[union-attr]
         names = self.data.user_names(lang)
-        persons = [names.get(u, u) for u in o.event["users"] if u != "hh"]
+        persons = [names.get(u, u) for u in o.event["users"] if u not in ("hh", "fe")]
         who = t["and"].join(persons) if len(persons) <= 2 else ", ".join(persons[:-1]) + t["and"] + persons[-1]
         title = o.event["title"]
         if o.event.get("birth_year"):

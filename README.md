@@ -10,11 +10,11 @@
 
 ## Features
 
-- **Up to 10 people**, each with their own colour, plus a *Household* entry for events that belong to nobody in particular. Only active people are shown.
+- **Up to 10 people**, each with their own colour, plus a *Household* entry for events that belong to nobody in particular and a *🎂 Birthdays & occasions* category (all-day and yearly by default, with age). Only active people are shown.
 - **New event in seconds:** tap **+** → *For whom?* → done. Shared events for several people are shown in several colours.
 - **Month, week, day and agenda view** (agenda up to one year) and a **search** across title, location, notes and people.
 - **Select several days** (drag with the mouse, or long-press and drag on touch screens) to create a multi-day event.
-- **Recurring events** (daily, weekly, monthly, yearly), change a single occurrence, drag & drop to move or resize, undo, birthdays with age.
+- **Recurring events** (daily, weekly, every 2 weeks, monthly, yearly or custom – e.g. every 2 weeks on Tue and Thu), change a single occurrence, drag & drop to move or resize, undo, birthdays with age.
 - **Reminders** as push notifications and as **voice announcements** on speakers (TTS) or Alexa devices, with quiet hours.
 - **Public holidays and school holidays** for every German state. Public holidays are calculated offline; school holidays are downloaded from the OpenHolidays API (see [Privacy & internet access](#privacy--internet-access)).
 - **Permissions per Home Assistant user:** read only, write, or write and delete.
@@ -95,11 +95,11 @@ This is a community project. It is not made, tested or supported by the Home Ass
 
 **Ein gemeinsamer Familienkalender mit Stundenplan für Home Assistant – fürs Wandtablet, Smartphone und den PC. Deine Termine bleiben in Home Assistant – kein Cloud-Konto nötig.**
 
-- Bis zu **10 Personen** mit eigener Farbe, dazu **Haushalt** für Termine ohne bestimmte Person.
+- Bis zu **10 Personen** mit eigener Farbe, dazu **Haushalt** für Termine ohne bestimmte Person und die Kategorie **🎂 Geburts- & Festtage** (automatisch ganztägig und jährlich, mit Alter).
 - Neuer Termin in Sekunden: **+** → **Für wen?** → fertig. Gemeinsame Termine erscheinen mehrfarbig.
 - **Monat, Woche, Tag und Übersicht** (bis zu einem Jahr) sowie eine **Suche**.
 - **Mehrere Tage markieren** und daraus einen mehrtägigen Termin anlegen.
-- Wiederholungen, einzelne Termine einer Serie ändern, Verschieben per Ziehen, Rückgängig, Geburtstage mit Alter.
+- Wiederholungen – auch alle 2 Wochen oder benutzerdefiniert (z. B. alle 2 Wochen Di + Do) –, einzelne Termine einer Serie ändern, Verschieben per Ziehen, Rückgängig, Geburtstage mit Alter.
 - **Erinnerungen** per Push und **Sprachansage** (Lautsprecher oder Alexa), mit Ruhezeit.
 - **Feiertage und Schulferien** für jedes Bundesland. Feiertage werden offline berechnet, Schulferien von der OpenHolidays API geladen (siehe unten).
 - **Rechte pro Benutzer:** nur lesen, schreiben oder auch löschen.

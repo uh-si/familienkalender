@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 DOMAIN = "familienkalender"
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 MAX_USERS = 10
 
 URL_BASE = "/familienkalender_static"
@@ -43,6 +43,9 @@ OPT_TT_REMIND = "timetable_remind_time"  # Uhrzeit der Erinnerung am Vorabend
 HOUSEHOLD_ID = "hh"
 HOUSEHOLD_COLOR = "#78909c"
 HOUSEHOLD_NAMES = {"de": "Haushalt", "en": "Household", "hu": "Háztartás"}
+CELEBRATION_ID = "fe"
+CELEBRATION_COLOR = "#fbc02d"
+CELEBRATION_NAMES = {"de": "Geburts- & Festtage", "en": "Birthdays & occasions", "hu": "Születésnapok és ünnepek"}
 
 PERM_READ = "read"
 PERM_WRITE = "write"
@@ -82,4 +85,7 @@ def default_users() -> list[dict]:
     # Platz für Termine ohne bestimmte Person (z. B. Müll, Handwerker)
     users.append({"id": HOUSEHOLD_ID, "name": "", "color": HOUSEHOLD_COLOR, "active": True, "notify": [], "lang": "de",
                   "speak_media": [], "speak_alexa": [], "household": True})
+    # Eigene Kategorie für Geburtstage, Jahrestage und Festtage
+    users.append({"id": CELEBRATION_ID, "name": "", "color": CELEBRATION_COLOR, "active": True, "notify": [], "lang": "de",
+                  "speak_media": [], "speak_alexa": [], "household": False, "celebration": True})
     return users

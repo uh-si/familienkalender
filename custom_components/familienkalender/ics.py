@@ -240,31 +240,18 @@ def _to_raw(e: dict[str, Any], tz: tzinfo) -> list[dict[str, Any]]:
     if "UNTIL" in rr:
         u = _parse_value(rr["UNTIL"], {}, tz)
         until = u.date() if isinstance(u, datetime) else u
-    byday = [d[-2:] for d in rr.get("BYDAY", "").split(",") if d]
+    # Wöchentlich an bestimmten Wochentagen (BYDAY=MO,WE) – als eine Serie
+    byday = sorted({WEEKDAYS.index(d[-2:]) for d in rr.get("BYDAY", "").split(",") if d and d[-2:] in WEEKDAYS}) if freq == "weekly" else []
+    first = s if all_day else s.date()
+    if byday == [first.weekday()]:
+        byday = []
     if "COUNT" in rr and not until:
-        cnt = int(rr["COUNT"])
-        if freq == "weekly" and len(byday) > 1:
-            cnt = -(-cnt // len(byday))
-        dates = list(iter_dates(s if all_day else s.date(), freq, interval, None, cnt))
-        until = dates[-1] + (timedelta(days=6) if freq == "weekly" and len(byday) > 1 else timedelta(0)) if dates else None
-
-    starts = [s]
-    if freq == "weekly" and len(byday) > 1:
-        # Mehrere Wochentage -> eine Serie je Wochentag
-        first = s if all_day else s.date()
-        starts = []
-        for wd in byday:
-            if wd not in WEEKDAYS:
-                continue
-            delta = (WEEKDAYS.index(wd) - first.weekday()) % 7
-            starts.append(s + timedelta(days=delta))
+        dates = list(iter_dates(first, freq, interval, None, int(rr["COUNT"]), byday or None))
+        until = dates[-1] if dates else None
     rec = {"freq": freq, "interval": interval, "until": until.isoformat() if until else None}
-    out = []
-    for i, st in enumerate(starts):
-        en = st + (end - s)
-        uid = base["ics_uid"] if i == 0 else f"{base['ics_uid']}#{i}"
-        out.append({**base, "ics_uid": uid, "start": _iso(st), "end": _iso(en), "recurrence": rec})
-    return out
+    if byday:
+        rec["byday"] = byday
+    return [{**base, "start": _iso(s), "end": _iso(end), "recurrence": rec}]
 
 
 def _iso(v: date | datetime) -> str:
@@ -323,6 +310,8 @@ def build_ics(events: list[dict[str, Any]], user_names: dict[str, str], tz: tzin
         rec = ev.get("recurrence")
         if rec:
             rule = f"RRULE:FREQ={FREQ_BACK[rec['freq']]};INTERVAL={rec.get('interval', 1)}"
+            if rec.get("byday"):
+                rule += ";BYDAY=" + ",".join(WEEKDAYS[d] for d in rec["byday"])
             if rec.get("until"):
                 u = date.fromisoformat(rec["until"])
                 if all_day:

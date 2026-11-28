@@ -139,7 +139,7 @@ class FamilienkalenderOptionsFlow(OptionsFlow):
         users = normalize_users(self._o.get(OPT_USERS))
         if user_input is not None:
             slot = user_input["slot"]
-            self._slot = "hh" if slot.startswith("hh") else slot
+            self._slot = "hh" if slot.startswith("hh") else ("fe" if slot.startswith("fe") else slot)
             return await self.async_step_person()
         # Beschriftung: ✓ = aktiv, ✗ = inaktiv, — = frei. Der Haushalt ohne eigenen Namen wird über
         # die Übersetzung beschriftet (Werte „hh_on“/„hh_off“ → „🏠 Háztartás ✓“ usw.).
@@ -149,6 +149,9 @@ class FamilienkalenderOptionsFlow(OptionsFlow):
             if u.get("household"):
                 value = "hh_named" if u["name"] else ("hh_on" if u["active"] else "hh_off")
                 options.append(sel.SelectOptionDict(value=value, label=f"🏠 {u['name'] or 'Haushalt'} {mark}"))
+            elif u.get("celebration"):
+                value = "fe_named" if u["name"] else ("fe_on" if u["active"] else "fe_off")
+                options.append(sel.SelectOptionDict(value=value, label=f"🎂 {u['name'] or 'Geburts- & Festtage'} {mark}"))
             else:
                 options.append(sel.SelectOptionDict(value=u["id"], label=f"{i + 1} · " + (f"{u['name']} {mark}" if u["name"] else "—")))
         return self.async_show_form(step_id="personen", data_schema=vol.Schema({
@@ -163,7 +166,7 @@ class FamilienkalenderOptionsFlow(OptionsFlow):
         if user_input is not None:
             name = str(user_input.get("name") or "").strip()
             active = bool(user_input.get("active"))
-            if active and not name and not u.get("household"):
+            if active and not name and not u.get("household") and not u.get("celebration"):
                 errors["name"] = "name_fehlt"
             else:
                 u.update({"name": name, "color": _rgb_to_hex(user_input.get("color")), "active": active,
@@ -192,7 +195,7 @@ class FamilienkalenderOptionsFlow(OptionsFlow):
                 sel.EntitySelectorConfig(domain="media_player", multiple=True)),
             vol.Optional("speak_alexa", default=[a for a in u.get("speak_alexa", []) if a in alexa] or []): sel.SelectSelector(
                 sel.SelectSelectorConfig(options=alexa, multiple=True, custom_value=True, mode=sel.SelectSelectorMode.DROPDOWN)),
-        }), errors=errors, description_placeholders={"slot": "🏠" if u.get("household") else self._slot[1:]})
+        }), errors=errors, description_placeholders={"slot": "🏠" if u.get("household") else ("🎂" if u.get("celebration") else self._slot[1:])})
 
     # ----------------------------------------------------- Wandtablet-Modus
     async def async_step_wandtablet(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:

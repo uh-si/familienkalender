@@ -70,7 +70,14 @@ def clean_event(raw: dict[str, Any], valid_users: set[str], tz: tzinfo) -> dict[
                 raise EventError("Ungültiges Enddatum der Wiederholung.", "recurrence") from err
             if until < start[:10]:
                 raise EventError("Die Wiederholung endet vor dem ersten Termin.", "recurrence_end")
-        recurrence = {"freq": rec["freq"], "interval": max(1, int(rec.get("interval") or 1)), "until": until}
+        try:
+            interval = min(99, max(1, int(rec.get("interval") or 1)))
+            byday = sorted({int(d) for d in (rec.get("byday") or []) if 0 <= int(d) <= 6}) if rec["freq"] == "weekly" else []
+        except (TypeError, ValueError) as err:
+            raise EventError("Ungültige Wiederholung.", "recurrence") from err
+        recurrence = {"freq": rec["freq"], "interval": interval, "until": until}
+        if byday:
+            recurrence["byday"] = byday
 
     reminders = sorted({int(m) for m in (raw.get("reminders") or []) if 0 <= int(m) <= 60 * 24 * 31})
     birth_year = None
@@ -136,7 +143,7 @@ def expand(ev: dict[str, Any], range_start: datetime, range_end: datetime, tz: t
         s, e = parse_date(ev["start"]), parse_date(ev["end"])
         span = max(1, (e - s).days)
         for d in occurrences(s, span, freq, rs.date() - timedelta(days=1), re_.date() + timedelta(days=1),
-                             rec.get("interval", 1), until, exdates):
+                             rec.get("interval", 1), until, exdates, byday=rec.get("byday") or None):
             o_s, o_e = d, d + timedelta(days=span)
             if datetime.combine(o_s, time(), tzinfo=tz) < re_ and datetime.combine(o_e, time(), tzinfo=tz) > rs:
                 out.append(Occurrence(ev, o_s, o_e))
@@ -146,7 +153,7 @@ def expand(ev: dict[str, Any], range_start: datetime, range_end: datetime, tz: t
         dur = e.replace(tzinfo=None) - wall_s
         span = (e.date() - s.date()).days + 1
         for d in occurrences(s.date(), span, freq, rs.date() - timedelta(days=1), re_.date() + timedelta(days=1),
-                             rec.get("interval", 1), until, exdates):
+                             rec.get("interval", 1), until, exdates, byday=rec.get("byday") or None):
             o_wall = datetime.combine(d, wall_s.time())
             o_s = o_wall.replace(tzinfo=tz)
             o_e = (o_wall + dur).replace(tzinfo=tz)

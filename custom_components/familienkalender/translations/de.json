@@ -199,7 +199,9 @@
     "slot": {
       "options": {
         "hh_on": "🏠 Haushalt ✓",
-        "hh_off": "🏠 Haushalt ✗"
+        "hh_off": "🏠 Haushalt ✗",
+        "fe_on": "🎂 Geburts- & Festtage ✓",
+        "fe_off": "🎂 Geburts- & Festtage ✗"
       }
     }
   },
@@ -213,6 +215,9 @@
       },
       "household": {
         "name": "Haushalt"
+      },
+      "celebrations": {
+        "name": "Geburts- & Festtage"
       }
     }
   },

@@ -1,5 +1,15 @@
 # Changelog / Änderungsprotokoll
 
+## 2.1.0 – 28.11.2026
+
+### Neu
+- Benutzerdefinierte Wiederholungen: „Alle 2 Wochen“ direkt wählbar, dazu „Benutzerdefiniert …“ mit „Alle [n] Tage/Wochen/Monate/Jahre“ und – bei Wochen – bestimmten Wochentagen (z. B. alle 2 Wochen Di + Do). Anzeige im Klartext.
+- Neue Kategorie „🎂 Geburts- & Festtage“ (wie Haushalt): eigene Farbe, Filter, Kalender-Entität, Push-Empfänger und Sprachansage. Neue Termine darin werden automatisch ganztägig und jährlich; Tortensymbol vor dem Titel.
+- ICS-Import/-Export mit Wochentagen (BYDAY): importierte Serien „Mo und Mi“ bleiben eine Serie.
+
+### Behoben
+- Beim Bearbeiten einer Serie „alle 2 Wochen“ (z. B. aus einem ICS-Import) ging der Abstand verloren und die Serie wurde wöchentlich.
+
 ## 2.0.1 – 27.11.2026
 
 ### Behoben

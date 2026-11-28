@@ -15,6 +15,8 @@ from homeassistant.util import dt as dt_util
 
 from .const import (
     DEFAULT_COLORS,
+    CELEBRATION_ID,
+    CELEBRATION_NAMES,
     HOUSEHOLD_ID,
     HOUSEHOLD_NAMES,
     MAX_USERS,
@@ -41,13 +43,14 @@ class EventStore(Store):
 
 
 def normalize_users(raw: list[dict] | None) -> list[dict]:
-    """Benutzerliste aus den Optionen prüfen (10 Personen + Haushalt)."""
+    """Benutzerliste aus den Optionen prüfen (10 Personen + Haushalt + Geburts-/Festtage)."""
     base = default_users()
     by_id = {u.get("id"): u for u in raw or [] if isinstance(u, dict)}
     out = []
     for i, d in enumerate(base):
         u = by_id.get(d["id"], {})
         hh = d["id"] == HOUSEHOLD_ID
+        fe = d["id"] == CELEBRATION_ID
         color = str(u.get("color") or d["color"])
         name = str(u.get("name") or "").strip()[:40]
         out.append({
@@ -55,13 +58,14 @@ def normalize_users(raw: list[dict] | None) -> list[dict]:
             "name": name,
             "color": color if HEX.match(color) else d["color"],
             # Haushalt braucht keinen Namen und ist standardmäßig aktiv
-            "active": bool(u.get("active", True)) if hh else (bool(u.get("active")) and bool(name)),
+            "active": bool(u.get("active", True)) if hh or fe else (bool(u.get("active")) and bool(name)),
             "notify": [str(n) for n in (u.get("notify") or []) if isinstance(n, str)][:10],
             "lang": u.get("lang") if u.get("lang") in ("de", "hu", "en") else "de",
             # Sprachansagen: Lautsprecher (media_player.…) und Alexa (notify.…)
             "speak_media": [str(e) for e in (u.get("speak_media") or []) if str(e).startswith("media_player.")][:10],
             "speak_alexa": [str(e) for e in (u.get("speak_alexa") or []) if str(e).startswith("notify.")][:10],
             "household": hh,
+            "celebration": fe,
         })
     return out
 
@@ -90,8 +94,13 @@ class CalendarData:
         return {u["id"] for u in self.users if u["active"]}
 
     def user_names(self, lang: str = "de") -> dict[str, str]:
-        return {u["id"]: u["name"] or (HOUSEHOLD_NAMES.get(lang, "Haushalt") if u["id"] == HOUSEHOLD_ID else u["id"])
-                for u in self.users}
+        def special(uid: str) -> str:
+            if uid == HOUSEHOLD_ID:
+                return HOUSEHOLD_NAMES.get(lang, "Haushalt")
+            if uid == CELEBRATION_ID:
+                return CELEBRATION_NAMES.get(lang, "Geburts- & Festtage")
+            return uid
+        return {u["id"]: u["name"] or special(u["id"]) for u in self.users}
 
     async def async_load(self) -> None:
         raw = await self._store.async_load() or {}

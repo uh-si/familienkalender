@@ -28,14 +28,35 @@ def iter_dates(
     interval: int = 1,
     until: date | None = None,
     count: int | None = None,
+    byday: list[int] | None = None,
 ) -> Iterator[date]:
-    """Alle Startdaten einer Serie (ohne Ausnahmen), aufsteigend."""
+    """Alle Startdaten einer Serie (ohne Ausnahmen), aufsteigend.
+
+    byday (nur wöchentlich): Wochentage 0=Mo … 6=So, z. B. [0, 2] = Mo und Mi.
+    """
     if not freq:
         yield start
         return
     interval = max(1, int(interval or 1))
     n = 0
     produced = 0
+    if freq == "weekly" and byday:
+        days = sorted({int(d) for d in byday if 0 <= int(d) <= 6})
+        week0 = start - timedelta(days=start.weekday())
+        while n < MAX_ITER:
+            monday = week0 + timedelta(weeks=n * interval)
+            n += 1
+            for wd in days:
+                d = monday + timedelta(days=wd)
+                if d < start:
+                    continue
+                if until and d > until:
+                    return
+                yield d
+                produced += 1
+                if count and produced >= count:
+                    return
+        return
     while n < MAX_ITER:
         if freq == "daily":
             d: date | None = start + timedelta(days=n * interval)
@@ -68,6 +89,7 @@ def occurrences(
     until: date | None = None,
     exdates: set[date] | None = None,
     count: int | None = None,
+    byday: list[int] | None = None,
 ) -> list[date]:
     """Startdaten der Vorkommen, die den Zeitraum [range_start, range_end) berühren.
 
@@ -76,7 +98,7 @@ def occurrences(
     exdates = exdates or set()
     span = max(1, span_days)
     out: list[date] = []
-    for d in iter_dates(start, freq, interval, until, count):
+    for d in iter_dates(start, freq, interval, until, count, byday):
         if d >= range_end:
             break
         if d + timedelta(days=span) <= range_start:

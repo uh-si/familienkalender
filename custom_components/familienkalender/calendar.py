@@ -115,10 +115,12 @@ class PersonCalendar(_Base):
             self._attr_name = user["name"]
         elif user.get("household"):
             self._attr_translation_key = "household"  # Haushalt / Household / Háztartás
+        elif user.get("celebration"):
+            self._attr_translation_key = "celebrations"  # Geburts- & Festtage
         else:
             self._attr_name = user["id"]
         self._attr_unique_id = f"{entry.entry_id}_{user['id']}"
-        self._attr_icon = "mdi:account-clock"
+        self._attr_icon = "mdi:cake-variant" if user.get("celebration") else "mdi:account-clock"
 
     def _collect(self, start: datetime, end: datetime) -> list[CalendarEvent]:
         data = self.entry.runtime_data.data
